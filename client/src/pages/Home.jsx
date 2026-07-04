@@ -1,4 +1,5 @@
 import Navbar from "../components/Layout/navbar";
+
 import Hero from "../components/Home/Hero";
 import Stats from "../components/Home/Stats";
 import About from "../components/Home/About";
@@ -11,12 +12,19 @@ function Home() {
   return (
     <>
       <Navbar />
+
       <Hero />
+
       <Stats />
+
       <About />
+
       <Programs />
+
       <Events />
+
       <News />
+
       <Partners />
     </>
   );
