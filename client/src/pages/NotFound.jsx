@@ -1,0 +1,17 @@
+import { Link } from "react-router-dom";
+
+function NotFound() {
+  return (
+    <div style={{ padding: "50px", textAlign: "center" }}>
+      <h1>404</h1>
+
+      <p>Page Not Found</p>
+
+      <br />
+
+      <Link to="/">Return Home</Link>
+    </div>
+  );
+}
+
+export default NotFound;

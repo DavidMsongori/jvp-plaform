@@ -1,0 +1,67 @@
+.programs{
+
+    padding:80px 8%;
+
+    text-align:center;
+
+}
+
+.programs h2{
+
+    font-size:42px;
+
+    margin-bottom:20px;
+
+    color:var(--primary);
+
+}
+
+.programs p{
+
+    max-width:700px;
+
+    margin:auto;
+
+    margin-bottom:50px;
+
+    color:var(--text-secondary);
+
+}
+
+.program-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:25px;
+
+}
+
+.program-card{
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:18px;
+
+    box-shadow:var(--shadow-sm);
+
+    font-size:20px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.program-card:hover{
+
+    background:var(--primary);
+
+    color:white;
+
+    transform:translateY(-8px);
+
+}

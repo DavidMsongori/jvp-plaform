@@ -97,11 +97,17 @@ const memberSchema = new mongoose.Schema(
       default: "",
     },
 
-    membershipCategory: {
-      type: String,
-      enum: ["ORDINARY", "LEADERSHIP"],
-      default: "ORDINARY",
-    },
+    membershipStatus: {
+    type: String,
+    enum: [
+        "PENDING_PAYMENT",
+        "ACTIVE",
+        "EXPIRED",
+        "SUSPENDED",
+        "REJECTED",
+    ],
+    default: "PENDING_PAYMENT",
+},
 
     membershipStatus: {
       type: String,
@@ -124,10 +130,6 @@ const memberSchema = new mongoose.Schema(
   }
 );
 
-// Database indexes
-memberSchema.index({ membershipNumber: 1 });
-memberSchema.index({ nationalId: 1 });
-memberSchema.index({ phone: 1 });
-memberSchema.index({ county: 1 });
+
 
 module.exports = mongoose.model("Member", memberSchema);
