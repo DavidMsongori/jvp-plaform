@@ -1,16 +1,16 @@
-import Navbar from "../components/layout/Navbar";
+import Navbar from "../components/Layout/navbar";
 import Hero from "../components/home/Hero";
-import Stats from "../components/home/Stats";
-import About from "../components/home/About";
-import Programs from "../components/home/Programs";
-import Events from "../components/home/Events";
-import News from "../components/home/News";
-import Partners from "../components/home/Partners";
+import Stats from "../components/Home/Stats";
+import About from "../components/Home/About";
+import Programs from "../components/Home/Programs";
+import Events from "../components/Home/Events";
+import News from "../components/Home/News";
+import Partners from "../components/Home/Partners";
 
 function Home() {
   return (
     <>
-      <Navbar />
+      <navbar />
       <Hero />
       <Stats />
       <Programs />
