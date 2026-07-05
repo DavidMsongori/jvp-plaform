@@ -1,8 +1,8 @@
 import "./AuthHero.css";
 
-import logo from "../../assets/logo.png";
+import logo from "../../assets/images/jvp-logo.png";
 
-import hero from "../../assets/auth/auth-bg.jpg";
+import hero from "../../assets/images/coastal-hero.jpg";
 
 function AuthHero() {
 
