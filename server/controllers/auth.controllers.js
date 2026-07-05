@@ -1,6 +1,7 @@
 const Member = require("../models/Member");
 const generateToken = require("../utils/generateToken");
 const generateOTP = require("../utils/generateOTP");
+const generateMembershipNumber = require("../utils/generateMembershipNumber");
 
 /* ==========================================
    ACTIVATE EXISTING MEMBER
@@ -177,6 +178,13 @@ const createPassword = async (req, res) => {
     }
 
     member.password = password;
+
+    if (!member.membershipNumber) {
+
+  member.membershipNumber =
+    await generateMembershipNumber(member.county);
+
+}
 
     member.activationStatus = "Activated";
     member.activationDate = new Date();
