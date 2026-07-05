@@ -2,6 +2,8 @@ import PageLayout from "../../components/common/PageLayout";
 import PageHero from "../../components/common/PageHero";
 import PageSection from "../../components/common/PageSection";
 
+import ClaimForm from "../../components/auth/ClaimForm";
+
 function ClaimMembership() {
   return (
     <PageLayout>
@@ -14,10 +16,7 @@ function ClaimMembership() {
         title="Membership Activation"
         subtitle="Verify your existing membership."
       >
-        <p>
-          Existing members will enter their email or phone number to begin
-          activating their account.
-        </p>
+        <ClaimForm />
       </PageSection>
     </PageLayout>
   );

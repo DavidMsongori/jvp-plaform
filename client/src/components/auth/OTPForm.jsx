@@ -1,73 +1,131 @@
 import { useState } from "react";
-import "./OTPForm.css";
+import { useNavigate } from "react-router-dom";
 
-function OTPForm() {
+import api from "../../services/api";
+
+function OTPForm({ member }) {
+
+  const navigate = useNavigate();
 
   const [otp, setOtp] = useState("");
 
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    console.log(otp);
+    try {
+
+      setLoading(true);
+
+      const payload = {
+
+        otp
+
+      };
+
+      if (member.email) {
+
+        payload.email = member.email;
+
+      } else {
+
+        payload.phone = member.phone;
+
+      }
+
+      const response = await api.post(
+
+        "/auth/verify-otp",
+
+        payload
+
+      );
+
+      alert(response.data.message);
+
+      navigate(
+
+        "/create-password",
+
+        {
+
+          state: {
+
+            member
+
+          }
+
+        }
+
+      );
+
+    } catch (error) {
+
+      alert(
+
+        error.response?.data?.message ||
+
+        "OTP verification failed."
+
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
 
   };
 
   return (
 
-    <>
+    <form onSubmit={handleSubmit}>
 
-      <div className="otp-header">
+      <label>
 
-        <h2>
+        Verification Code
 
-          Verify Your Identity
+      </label>
 
-        </h2>
+      <input
 
-        <p>
+        type="text"
 
-          We have sent a 6-digit verification
-          code to your phone number or email.
+        placeholder="Enter 6-digit OTP"
 
-        </p>
+        value={otp}
 
-      </div>
+        onChange={(e)=>setOtp(e.target.value)}
 
-      <form
-        onSubmit={handleSubmit}
-        className="otp-form"
+      />
+
+      <button
+
+        type="submit"
+
+        disabled={loading}
+
       >
 
-        <input
+        {
 
-          type="text"
+          loading
 
-          maxLength={6}
+          ?
 
-          placeholder="Enter 6-digit code"
+          "Verifying..."
 
-          value={otp}
+          :
 
-          onChange={(e)=>setOtp(e.target.value)}
+          "Verify OTP"
 
-        />
-
-        <button>
-
-          Verify Code
-
-        </button>
-
-      </form>
-
-      <button className="resend">
-
-        Resend Code
+        }
 
       </button>
 
-    </>
+    </form>
 
   );
 

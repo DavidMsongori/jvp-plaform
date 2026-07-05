@@ -1,0 +1,47 @@
+.dashboard-sidebar{
+
+    width:260px;
+
+    background:#003366;
+
+    color:white;
+
+    padding:30px;
+
+}
+
+.dashboard-sidebar h2{
+
+    margin-bottom:40px;
+
+}
+
+.dashboard-sidebar nav{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.dashboard-sidebar a{
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:10px;
+
+    border-radius:8px;
+
+    transition:.3s;
+
+}
+
+.dashboard-sidebar a:hover{
+
+    background:#0056b3;
+
+}

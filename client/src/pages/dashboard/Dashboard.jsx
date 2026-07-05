@@ -1,20 +1,17 @@
-import PageLayout from "../../components/common/PageLayout";
-import PageSection from "../../components/common/PageSection";
+import DashboardLayout from "../../components/dashboard/DashboardLayout";
+
+import DashboardOverview from "../../components/dashboard/DashboardOverview";
+import QuickActions from "../../components/dashboard/QuickActions";
 
 function Dashboard() {
   return (
-    <PageLayout>
-      <PageSection
-        title="Member Dashboard"
-        subtitle="Welcome to your JVP Connect dashboard."
-      >
-        <p>
-          This dashboard will display your membership
-          status, events, opportunities, notifications
-          and achievements.
-        </p>
-      </PageSection>
-    </PageLayout>
+    <DashboardLayout>
+
+      <DashboardOverview />
+
+      <QuickActions />
+
+    </DashboardLayout>
   );
 }
 

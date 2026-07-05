@@ -1,52 +1,58 @@
 const jwt = require("jsonwebtoken");
-
 const Member = require("../models/Member");
 
 const protect = async (req, res, next) => {
 
-    try {
+  try {
 
-        const token = req.headers.authorization?.split(" ")[1];
+    let token;
 
-        if (!token) {
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
 
-            return res.status(401).json({
-
-                success:false,
-
-                message:"Unauthorized",
-
-            });
-
-        }
-
-        const decoded = jwt.verify(
-
-            token,
-
-            process.env.JWT_SECRET
-
-        );
-
-        req.member = await Member.findById(
-
-            decoded.id
-
-        ).select("-password");
-
-        next();
-
-    } catch (error) {
-
-        return res.status(401).json({
-
-            success:false,
-
-            message:"Invalid token",
-
-        });
+      token = req.headers.authorization.split(" ")[1];
 
     }
+
+    if (!token) {
+
+      return res.status(401).json({
+        success: false,
+        message: "Not authorized."
+      });
+
+    }
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    req.member = await Member.findById(decoded.id).select("-password");
+
+    if (!req.member) {
+
+      return res.status(401).json({
+        success: false,
+        message: "Member not found."
+      });
+
+    }
+
+    next();
+
+  }
+
+  catch (error) {
+
+    return res.status(401).json({
+      success: false,
+      message: "Invalid token."
+    });
+
+  }
 
 };
 

@@ -2,28 +2,24 @@ const express = require("express");
 
 const router = express.Router();
 
-const{
+const {
 
-    activateMembership,
+  activateMembership,
 
-    login
+  verifyOTP,
 
-}=require("../controllers/auth.controllers");
+  login,
 
-router.post(
+  createPassword
 
-    "/activate",
+} = require("../controllers/auth.controllers");
 
-    activateMembership
+router.post("/activate", activateMembership);
 
-);
+router.post("/verify-otp", verifyOTP);
 
-router.post(
+router.post("/create-password", createPassword);
 
-    "/login",
+router.post("/login", login);
 
-    login
-
-);
-
-module.exports=router;
+module.exports = router;

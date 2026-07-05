@@ -4,9 +4,9 @@ import PageLayout from "../../components/common/PageLayout";
 import PageHero from "../../components/common/PageHero";
 import PageSection from "../../components/common/PageSection";
 
-import OTPForm from "../../components/auth/OTPForm";
+import CreatePasswordForm from "../../components/auth/CreatePasswordForm";
 
-function VerifyOTP() {
+function CreatePassword() {
 
   const location = useLocation();
 
@@ -16,23 +16,25 @@ function VerifyOTP() {
     <PageLayout>
 
       <PageHero
-        title="Verify Membership"
-        subtitle="Enter the OTP sent to your phone or email."
+        title="Create Password"
+        subtitle="Secure your JVP Connect account."
       />
 
       <PageSection
-        title="OTP Verification"
+        title="Account Security"
         subtitle={
           member
             ? `Welcome ${member.firstName}`
-            : "Enter the verification code."
+            : "Create your password"
         }
       >
-        <OTPForm member={member} />
+
+        <CreatePasswordForm member={member} />
+
       </PageSection>
 
     </PageLayout>
   );
 }
 
-export default VerifyOTP;
+export default CreatePassword;

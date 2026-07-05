@@ -49,12 +49,21 @@ const memberSchema = new mongoose.Schema(
       enum: [
         "Not Activated",
         "Pending OTP",
+        "OTP Verified",
         "Activated",
       ],
       default: "Not Activated",
     },
 
-    activationDate: Date,
+    activationDate: {
+      type: Date,
+      default: null,
+    },
+
+    memberSince: {
+      type: Date,
+      default: null,
+    },
 
     membershipStatus: {
       type: String,
@@ -77,7 +86,55 @@ const memberSchema = new mongoose.Schema(
       default: "Pending",
     },
 
-    memberSince: Date,
+    password: {
+      type: String,
+      default: null,
+    },
+
+    passwordCreatedAt: {
+      type: Date,
+      default: null,
+    },
+
+    lastLogin: {
+      type: Date,
+      default: null,
+    },
+
+    loginCount: {
+      type: Number,
+      default: 0,
+    },
+
+    failedLoginAttempts: {
+      type: Number,
+      default: 0,
+    },
+
+    accountLockedUntil: {
+      type: Date,
+      default: null,
+    },
+
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    refreshToken: {
+      type: String,
+      default: null,
+    },
+
+    otp: {
+      type: String,
+      default: null,
+    },
+
+    otpExpires: {
+      type: Date,
+      default: null,
+    },
 
     /* ===================================================
        PERSONAL INFORMATION
@@ -122,14 +179,13 @@ const memberSchema = new mongoose.Schema(
       sparse: true,
       lowercase: true,
       trim: true,
+      match: /^\S+@\S+\.\S+$/,
     },
 
-    password: {
+    profilePhoto: {
       type: String,
-      required: true,
+      default: "",
     },
-
-    profilePhoto: String,
 
     /* ===================================================
        LOCATION
@@ -167,6 +223,10 @@ const memberSchema = new mongoose.Schema(
 
     employer: String,
 
+    businessName: String,
+
+    yearsExperience: Number,
+
     /* ===================================================
        LEADERSHIP
     =================================================== */
@@ -178,7 +238,7 @@ const memberSchema = new mongoose.Schema(
     leadershipOrganization: String,
 
     /* ===================================================
-       JVP PROFILE
+       PROFILE
     =================================================== */
 
     skills: {
@@ -213,6 +273,11 @@ const memberSchema = new mongoose.Schema(
       default: "",
     },
 
+    lastProfileUpdate: {
+      type: Date,
+      default: null,
+    },
+
     /* ===================================================
        SOCIAL MEDIA
     =================================================== */
@@ -226,28 +291,6 @@ const memberSchema = new mongoose.Schema(
     x: String,
 
     tiktok: String,
-
-    /* ===================================================
-       SECURITY
-    =================================================== */
-
-    lastLogin: Date,
-
-    loginCount: {
-      type: Number,
-      default: 0,
-    },
-
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-
-    otp: String,
-
-    otpExpires: Date,
-
-    refreshToken: String,
   },
   {
     timestamps: true,
@@ -259,15 +302,13 @@ const memberSchema = new mongoose.Schema(
 =================================================== */
 
 memberSchema.pre("save", async function (next) {
-
-  if (!this.isModified("password")) {
+  if (!this.isModified("password") || !this.password) {
     return next();
   }
 
   this.password = await bcrypt.hash(this.password, 12);
 
   next();
-
 });
 
 /* ===================================================
@@ -277,12 +318,14 @@ memberSchema.pre("save", async function (next) {
 memberSchema.methods.comparePassword = async function (
   enteredPassword
 ) {
+  if (!this.password) {
+    return false;
+  }
 
   return await bcrypt.compare(
     enteredPassword,
     this.password
   );
-
 };
 
 module.exports = mongoose.model(
