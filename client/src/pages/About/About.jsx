@@ -1,10 +1,10 @@
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/layout/Footer";
 
-import AboutHero from "../../components/about/AboutHero";
+import AboutHero from "../../components/About/AboutHero";
 import OurJourney from "../../components/About/OurJourney";
 import LeadershipStructure from "../../components/About/LeadershipStructure";
-import PartnersSection from "../../components/about/PartnersSection";
+import PartnersSection from "../../components/About/PartnersSection";
 import JoinMovement from "../../components/About/JoinMovement";
 
 function About() {
