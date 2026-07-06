@@ -5,8 +5,11 @@ const router = express.Router();
 const {
   activateMembership,
   verifyOTP,
+  resendOTP,
   createPassword,
   login,
+  forgotPassword,
+  resetPassword,
   me,
 } = require("../controllers/auth.controller");
 
@@ -31,6 +34,12 @@ router.post("/activate", activateMembership);
 router.post("/verify-otp", verifyOTP);
 
 /**
+ * Resend OTP
+ * POST /api/auth/resend-otp
+ */
+router.post("/resend-otp", resendOTP);
+
+/**
  * Create password after OTP verification
  * POST /api/auth/create-password
  */
@@ -41,6 +50,18 @@ router.post("/create-password", createPassword);
  * POST /api/auth/login
  */
 router.post("/login", login);
+
+/**
+ * Forgot Password
+ * POST /api/auth/forgot-password
+ */
+router.post("/forgot-password", forgotPassword);
+
+/**
+ * Reset Password
+ * POST /api/auth/reset-password
+ */
+router.post("/reset-password", resetPassword);
 
 /* =====================================================
    PROTECTED ROUTES

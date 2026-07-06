@@ -1,0 +1,192 @@
+/* ==========================================
+   MEMBER CARD
+========================================== */
+
+.member-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.member-card-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.member-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #008751;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.member-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-card-header h2 {
+  margin: 0;
+  font-size: 1.7rem;
+  color: #1d3557;
+}
+
+.member-role {
+  margin-top: 8px;
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* ==========================================
+   DETAILS
+========================================== */
+
+.member-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.detail {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail span {
+  font-size: 0.82rem;
+  color: #777;
+  margin-bottom: 6px;
+}
+
+.detail strong {
+  font-size: 1rem;
+  color: #1d3557;
+  font-weight: 700;
+}
+
+.status-active {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(0, 135, 81, 0.12);
+  color: #008751 !important;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.member-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.member-actions a {
+  text-decoration: none;
+}
+
+.btn-primary,
+.btn-outline {
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-primary {
+  background: #008751;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #006c41;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  border: 2px solid #008751;
+  color: #008751;
+  background: #ffffff;
+}
+
+.btn-outline:hover {
+  background: #008751;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 992px) {
+
+  .member-details {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .member-card {
+    padding: 22px;
+  }
+
+  .member-card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .member-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 1.7rem;
+  }
+
+  .member-card-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .member-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-outline {
+    width: 100%;
+  }
+
+}

@@ -1,106 +1,118 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEnvelope } from "react-icons/fa";
 
-import api from "../../services/api";
+import { activateMembership } from "../../services/auth.service";
 
 import "./ClaimForm.css";
 
 function ClaimForm() {
   const navigate = useNavigate();
 
-  const [value, setValue] = useState("");
+  const [identifier, setIdentifier] = useState("");
+
   const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState("");
+
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!value.trim()) {
-      alert("Please enter your email address or phone number.");
+    setError("");
+    setSuccess("");
+
+    if (!identifier.trim()) {
+      setError("Please enter your phone number or email address.");
       return;
+    }
+
+    let payload = {};
+
+    if (identifier.includes("@")) {
+      payload.email = identifier.trim().toLowerCase();
+    } else {
+      payload.phone = identifier.trim();
     }
 
     try {
       setLoading(true);
 
-      const payload = {};
+      const response = await activateMembership(payload);
 
-      if (value.includes("@")) {
-        payload.email = value.trim().toLowerCase();
-      } else {
-        payload.phone = value.trim();
-      }
+      setSuccess(response.message);
 
-      const response = await api.post("/auth/activate", payload);
-
-      console.log("Activation Response:", response.data);
-
-      alert(response.data.message);
-
-      // Navigate to OTP page and pass member details
-      navigate("/verify-otp", {
-        state: {
-          member: response.data.member,
-        },
-      });
-
-      // Clear the form
-      setValue("");
-
-    } catch (error) {
-      console.error("Activation Error:", error);
-
-      if (error.response) {
-        alert(error.response.data.message);
-      } else {
-        alert(
-          "Unable to connect to the server. Please try again."
-        );
-      }
+      setTimeout(() => {
+        navigate("/verify-otp", {
+          state: {
+            member: response.data.member,
+          },
+        });
+      }, 1000);
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "Unable to activate membership."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="claim-header">
-        <h2>Activate Existing Membership</h2>
-
-        <p>
-          If you were previously registered with JVP, enter the
-          email address or phone number you used when registering.
-        </p>
-      </div>
-
-      <form
-        className="claim-form"
-        onSubmit={handleSubmit}
-      >
-        <label>
-          Email Address or Phone Number
-        </label>
-
-        <div className="claim-input">
-          <FaEnvelope />
+    <div className="claim-form-container">
+      <form className="claim-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>
+            Phone Number or Email Address
+          </label>
 
           <input
             type="text"
-            placeholder="Enter your email or phone number"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            disabled={loading}
+            placeholder="0794151842 or member@email.com"
+            value={identifier}
+            onChange={(e) =>
+              setIdentifier(e.target.value)
+            }
+            autoComplete="off"
           />
         </div>
 
+        {error && (
+          <div className="form-error">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="form-success">
+            {success}
+          </div>
+        )}
+
         <button
           type="submit"
+          className="btn-primary"
           disabled={loading}
         >
-          {loading ? "Checking Membership..." : "Continue"}
+          {loading
+            ? "Searching Member..."
+            : "Activate Membership"}
         </button>
       </form>
-    </>
+
+      <div className="claim-footer">
+        Already activated?
+
+        <button
+          type="button"
+          className="link-button"
+          onClick={() => navigate("/login")}
+        >
+          Login
+        </button>
+      </div>
+    </div>
   );
 }
 

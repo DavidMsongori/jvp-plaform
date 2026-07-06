@@ -1,0 +1,163 @@
+/* ==========================================
+   UPCOMING EVENTS
+========================================== */
+
+.upcoming-events {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  gap: 20px;
+}
+
+.widget-header h2 {
+  margin: 0;
+  color: #1d3557;
+  font-size: 1.4rem;
+}
+
+.widget-header p {
+  margin-top: 6px;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.view-all-link {
+  color: #008751;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.view-all-link:hover {
+  text-decoration: underline;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.event-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px;
+  border: 1px solid #ececec;
+  border-radius: 14px;
+  transition: all 0.25s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-2px);
+  border-color: #008751;
+}
+
+.event-date {
+  width: 72px;
+  min-width: 72px;
+  height: 72px;
+  border-radius: 14px;
+  background: #008751;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.event-date span {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.event-date small {
+  margin-top: 6px;
+  font-size: 0.78rem;
+}
+
+.event-details {
+  flex: 1;
+}
+
+.event-details h3 {
+  margin: 0;
+  color: #1d3557;
+  font-size: 1.05rem;
+}
+
+.event-details p {
+  margin-top: 6px;
+  color: #666;
+}
+
+.status {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.status.registered {
+  background: rgba(0, 135, 81, 0.12);
+  color: #008751;
+}
+
+.status.open {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+}
+
+@media (max-width: 768px) {
+
+  .widget-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .event-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .event-date {
+    width: 65px;
+    height: 65px;
+  }
+
+  .event-status {
+    width: 100%;
+  }
+
+}
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  border: 2px dashed #d9d9d9;
+  border-radius: 14px;
+}
+
+.empty-state h3 {
+  margin: 0;
+  color: #1d3557;
+}
+
+.empty-state p {
+  margin-top: 10px;
+  color: #777;
+}

@@ -6,6 +6,8 @@ const generateOTP = require("../utils/generateOTP");
 const generateMembershipNumber = require("../utils/generateMembershipNumber");
 const generateToken = require("../utils/generateToken");
 
+const emailService = require("./email.service");
+
 class AuthService {
 
   /* =====================================================
@@ -56,12 +58,42 @@ class AuthService {
     const updatedMember =
       await Member.findById(member._id);
 
+    if (updatedMember.email) {
+
+      try {
+
+        await emailService.sendOTPEmail({
+          email: updatedMember.email,
+          firstName: updatedMember.firstName,
+          otp,
+        });
+
+        console.log(
+          `OTP email sent to ${updatedMember.email}`
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Failed to send OTP email:",
+          error.message
+        );
+
+      }
+
+    }
+
     return {
+
       success: true,
-      message: "Member found successfully.",
+
+      message:
+        "Member found successfully. A verification code has been sent to your email.",
+
       member: updatedMember,
-      otp,
+
     };
+
   }
 
   /* =====================================================
@@ -113,17 +145,119 @@ class AuthService {
       await Member.findById(member._id);
 
     return {
+
       success: true,
-      message: "OTP verified successfully.",
+
+      message:
+        "OTP verified successfully.",
+
       member: updatedMember,
+
     };
+
   }
+
+  /* =====================================================
+     RESEND OTP
+  ===================================================== */
+
+  async resendOTP({ phone, email }) {
+
+    if (phone) phone = phone.trim();
+
+    if (email) email = email.trim().toLowerCase();
+
+    if (!phone && !email) {
+      throw new Error(
+        "Phone number or email is required."
+      );
+    }
+
+    let member = null;
+
+    if (phone) {
+      member = await Member.findOne({ phone });
+    }
+
+    if (!member && email) {
+      member = await Member.findOne({ email });
+    }
+
+    if (!member) {
+      throw new Error("Member not found.");
+    }
+
+    if (
+      member.activationStatus === "Activated"
+    ) {
+      throw new Error(
+        "This account has already been activated."
+      );
+    }
+
+    const otp = generateOTP();
+
+    const otpExpires = new Date(
+      Date.now() + 10 * 60 * 1000
+    );
+
+    await Member.updateOne(
+      { _id: member._id },
+      {
+        $set: {
+          otp,
+          otpExpires,
+          activationStatus: "Pending OTP",
+        },
+      }
+    );
+
+    const updatedMember =
+      await Member.findById(member._id);
+
+    if (updatedMember.email) {
+
+      try {
+
+        await emailService.sendOTPEmail({
+          email: updatedMember.email,
+          firstName: updatedMember.firstName,
+          otp,
+        });
+
+        console.log(
+          `Resent OTP email to ${updatedMember.email}`
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Failed to resend OTP email:",
+          error.message
+        );
+
+      }
+
+    }
+
+    return {
+
+      success: true,
+
+      message:
+        "A new verification code has been sent to your email.",
+
+      member: updatedMember,
+
+    };
+
+  }
+
 
   /* =====================================================
      CREATE PASSWORD
   ===================================================== */
-
-  async createPassword({
+    async createPassword({
     memberId,
     password,
   }) {
@@ -165,39 +299,26 @@ class AuthService {
       member.membershipNumber;
 
     if (!membershipNumber) {
-
       membershipNumber =
         await generateMembershipNumber(
           member.county
         );
-
     }
 
     await Member.updateOne(
       { _id: member._id },
       {
         $set: {
-
           password: hashedPassword,
-
           membershipNumber,
-
           activationStatus: "Activated",
-
           membershipStatus: "Active",
-
           memberSince: new Date(),
-
           activationDate: new Date(),
-
           passwordCreatedAt: new Date(),
-
           migrationCompleted: true,
-
           otp: null,
-
           otpExpires: null,
-
         },
       }
     );
@@ -209,16 +330,11 @@ class AuthService {
       generateToken(updatedMember);
 
     return {
-
       success: true,
-
       message:
         "Account activated successfully.",
-
       token,
-
       member: updatedMember,
-
     };
 
   }
@@ -242,23 +358,15 @@ class AuthService {
     let member = null;
 
     if (phone) {
-
-      member =
-        await Member.findOne({
-          phone: phone.trim(),
-        });
-
+      member = await Member.findOne({
+        phone: phone.trim(),
+      });
     }
 
     if (!member && email) {
-
-      member =
-        await Member.findOne({
-          email: email
-            .trim()
-            .toLowerCase(),
-        });
-
+      member = await Member.findOne({
+        email: email.trim().toLowerCase(),
+      });
     }
 
     if (!member) {
@@ -267,7 +375,7 @@ class AuthService {
 
     if (!member.password) {
       throw new Error(
-        "Please activate your account."
+        "Please activate your account first."
       );
     }
 
@@ -302,16 +410,10 @@ class AuthService {
       generateToken(updatedMember);
 
     return {
-
       success: true,
-
-      message:
-        "Login successful.",
-
+      message: "Login successful.",
       token,
-
       member: updatedMember,
-
     };
 
   }
@@ -331,14 +433,148 @@ class AuthService {
     }
 
     return {
-
       success: true,
-
       message:
         "Member retrieved successfully.",
-
       member,
+    };
 
+  }
+
+  /* =====================================================
+     FORGOT PASSWORD
+  ===================================================== */
+
+  async forgotPassword({
+    phone,
+    email,
+  }) {
+
+    if (phone) phone = phone.trim();
+
+    if (email) email = email.trim().toLowerCase();
+
+    if (!phone && !email) {
+      throw new Error(
+        "Phone number or email is required."
+      );
+    }
+
+    let member = null;
+
+    if (phone) {
+      member = await Member.findOne({ phone });
+    }
+
+    if (!member && email) {
+      member = await Member.findOne({ email });
+    }
+
+    if (!member) {
+      throw new Error("Member not found.");
+    }
+
+    if (!member.password) {
+      throw new Error(
+        "This account has not been activated."
+      );
+    }
+
+    const otp = generateOTP();
+
+    const otpExpires = new Date(
+      Date.now() + 10 * 60 * 1000
+    );
+
+    await Member.updateOne(
+      { _id: member._id },
+      {
+        $set: {
+          otp,
+          otpExpires,
+        },
+      }
+    );
+
+    return {
+      success: true,
+      message:
+        "Password reset OTP generated successfully.",
+
+      // DEVELOPMENT ONLY
+      otp,
+    };
+
+  }
+
+  /* =====================================================
+     RESET PASSWORD
+  ===================================================== */
+
+  async resetPassword({
+    memberId,
+    otp,
+    password,
+  }) {
+
+    if (
+      !memberId ||
+      !otp ||
+      !password
+    ) {
+      throw new Error(
+        "Member ID, OTP and password are required."
+      );
+    }
+
+    const member =
+      await Member.findById(memberId);
+
+    if (!member) {
+      throw new Error("Member not found.");
+    }
+
+    if (
+      String(member.otp) !== String(otp)
+    ) {
+      throw new Error("Invalid OTP.");
+    }
+
+    if (
+      member.otpExpires &&
+      new Date() > member.otpExpires
+    ) {
+      throw new Error("OTP has expired.");
+    }
+
+    const hashedPassword =
+      await bcrypt.hash(password, 12);
+
+    await Member.updateOne(
+      { _id: member._id },
+      {
+        $set: {
+          password: hashedPassword,
+          otp: null,
+          otpExpires: null,
+          passwordUpdatedAt:
+            new Date(),
+        },
+      }
+    );
+
+    const updatedMember =
+      await Member.findById(member._id);
+
+    const token =
+      generateToken(updatedMember);
+
+    return {
+      success: true,
+      message:
+        "Password reset successfully.",
+      token,
+      member: updatedMember,
     };
 
   }

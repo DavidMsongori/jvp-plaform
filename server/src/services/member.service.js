@@ -196,10 +196,13 @@ class MemberService {
 
       success: true,
 
-      message:
-        "Dashboard loaded successfully.",
+      message: "Dashboard loaded successfully.",
 
       dashboard: {
+
+        /* ======================================
+           MEMBER SUMMARY
+        ====================================== */
 
         member: {
 
@@ -210,6 +213,9 @@ class MemberService {
 
           firstName:
             member.firstName,
+
+          middleName:
+            member.middleName,
 
           lastName:
             member.lastName,
@@ -239,30 +245,135 @@ class MemberService {
             member.memberSince,
 
           profileCompleted:
-            member.profileCompleted
+            member.profileCompleted,
 
         },
 
-        statistics: {
+        /* ======================================
+           DASHBOARD STATISTICS
+        ====================================== */
+
+        stats: {
+
+          profileCompletion:
+            member.profileCompleted || 0,
+
+          events: 0,
+
+          programs: 0,
+
+          certificates: 0,
+
+          volunteerHours: 0,
 
           loginCount:
-            member.loginCount,
+            member.loginCount || 0,
 
           lastLogin:
             member.lastLogin,
 
-          lastProfileUpdate:
-            member.lastProfileUpdate
-
         },
 
-        announcements: [],
+        /* ======================================
+           UPCOMING EVENTS
+        ====================================== */
 
-        events: [],
+        events: [
 
-        opportunities: []
+          {
+            id: 1,
+            title: "Coastal Youth Summit 2026",
+            date: "2026-08-06",
+            location: "Malindi, Kilifi",
+            registered: true,
+          },
 
-      }
+          {
+            id: 2,
+            title: "Beach Cleanup Exercise",
+            date: "2026-08-16",
+            location: "Mombasa",
+            registered: false,
+          },
+
+          {
+            id: 3,
+            title: "Leadership Bootcamp",
+            date: "2026-09-05",
+            location: "Kwale",
+            registered: false,
+          },
+
+        ],
+
+        /* ======================================
+           NOTIFICATIONS
+        ====================================== */
+
+        notifications: [
+
+          {
+            id: 1,
+            title: "Membership Activated",
+            message:
+              "Your JVP Connect account is active.",
+            type: "success",
+            time: "Today",
+          },
+
+          {
+            id: 2,
+            title: "Complete Your Profile",
+            message:
+              "Finish your profile to unlock all features.",
+            type: "info",
+            time: "Today",
+          },
+
+          {
+            id: 3,
+            title: "Coastal Youth Summit",
+            message:
+              "Registration is now open.",
+            type: "warning",
+            time: "2 days ago",
+          },
+
+        ],
+
+        /* ======================================
+           LATEST NEWS
+        ====================================== */
+
+        news: [
+
+          {
+            id: 1,
+            title:
+              "Registration for Coastal Youth Summit 2026 Now Open",
+            category: "Events",
+            date: "Today",
+          },
+
+          {
+            id: 2,
+            title:
+              "JVP Signs New Youth Empowerment Partnership",
+            category: "Partnership",
+            date: "Yesterday",
+          },
+
+          {
+            id: 3,
+            title:
+              "Applications Open for County Volunteer Leaders",
+            category: "Leadership",
+            date: "3 days ago",
+          },
+
+        ],
+
+      },
 
     };
 

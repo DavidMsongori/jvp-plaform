@@ -1,5 +1,10 @@
 import axios from "axios";
 
+console.log(
+  "API URL:",
+  import.meta.env.VITE_API_URL
+);
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
@@ -7,12 +12,14 @@ const api = axios.create({
   },
 });
 
-/* ==========================================
-   Attach JWT Token Automatically
-========================================== */
-
 api.interceptors.request.use(
   (config) => {
+
+    console.log("================================");
+    console.log(config.method?.toUpperCase(), config.baseURL + config.url);
+    console.log("Payload:", config.data);
+    console.log("================================");
+
     const token = localStorage.getItem("token");
 
     if (token) {
@@ -24,15 +31,18 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-/* ==========================================
-   Handle Unauthorized Responses
-========================================== */
-
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+
+    console.log("Response:", response.data);
+
+    return response;
+  },
   (error) => {
+
+    console.log("API Error:", error.response?.data);
+
     if (error.response?.status === 401) {
-      // Optional: clear invalid login
       localStorage.removeItem("token");
       localStorage.removeItem("member");
     }

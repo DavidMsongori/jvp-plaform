@@ -1,114 +1,70 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEnvelope, FaLock } from "react-icons/fa";
 
-import api from "../../services/api";
-import { useAuth } from "../../context/AuthContext";
+import { login } from "../../services/auth.service";
 
 import "./LoginForm.css";
 
 function LoginForm() {
-
   const navigate = useNavigate();
-
-  const { login } = useAuth();
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const [error, setError] = useState("");
 
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!identifier || !password) {
+    setError("");
 
-      return alert("Please enter your login details.");
+    if (!identifier.trim()) {
+      setError("Please enter your phone number or email address.");
+      return;
+    }
 
+    if (!password) {
+      setError("Please enter your password.");
+      return;
+    }
+
+    const payload = {
+      password,
+    };
+
+    if (identifier.includes("@")) {
+      payload.email = identifier.trim().toLowerCase();
+    } else {
+      payload.phone = identifier.trim();
     }
 
     try {
-
       setLoading(true);
 
-      const payload = {
-
-        password,
-
-      };
-
-      if (identifier.includes("@")) {
-
-        payload.email = identifier;
-
-      } else {
-
-        payload.phone = identifier;
-
-      }
-
-      const response = await api.post(
-
-        "/auth/login",
-
-        payload
-
-      );
-
-      login(
-
-        response.data.member,
-
-        response.data.token
-
-      );
+      await login(payload);
 
       navigate("/dashboard");
 
-    }
+    } catch (err) {
 
-    catch (error) {
-
-      console.error(error);
-
-      alert(
-
-        error.response?.data?.message ||
-
+      setError(
+        err.response?.data?.message ||
         "Login failed."
-
       );
 
-    }
-
-    finally {
+    } finally {
 
       setLoading(false);
 
     }
-
   };
 
   return (
-
-    <>
-
-      <div className="login-header">
-
-        <h2>
-
-          Welcome Back
-
-        </h2>
-
-        <p>
-
-          Sign in to access your JVP Connect account.
-
-        </p>
-
-      </div>
+    <div className="login-form-container">
 
       <form
         className="login-form"
@@ -118,130 +74,91 @@ function LoginForm() {
         <div className="form-group">
 
           <label>
-
-            Email Address or Phone Number
-
+            Phone Number or Email Address
           </label>
 
-          <div className="input-group">
-
-            <FaEnvelope />
-
-            <input
-              type="text"
-              placeholder="Enter your email or phone number"
-              value={identifier}
-              onChange={(e)=>setIdentifier(e.target.value)}
-            />
-
-          </div>
+          <input
+            type="text"
+            placeholder="0794151842 or member@email.com"
+            value={identifier}
+            onChange={(e) =>
+              setIdentifier(e.target.value)
+            }
+            autoComplete="username"
+          />
 
         </div>
 
         <div className="form-group">
 
+          <label>Password</label>
+
+          <input
+            type={
+              showPassword
+                ? "text"
+                : "password"
+            }
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+            autoComplete="current-password"
+          />
+
+        </div>
+
+        <div className="checkbox-row">
+
           <label>
 
-            Password
-
-          </label>
-
-          <div className="input-group">
-
-            <FaLock />
-
             <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e)=>setPassword(e.target.value)}
+              type="checkbox"
+              checked={showPassword}
+              onChange={() =>
+                setShowPassword(!showPassword)
+              }
             />
 
-          </div>
-
-        </div>
-
-        <div className="login-options">
-
-          <label className="remember">
-
-            <input type="checkbox" />
-
-            Remember Me
+            Show Password
 
           </label>
 
-          <Link to="/forgot-password">
-
-            Forgot Password?
-
-          </Link>
-
         </div>
+
+        {error && (
+          <div className="form-error">
+            {error}
+          </div>
+        )}
 
         <button
           type="submit"
-          className="login-btn"
+          className="btn-primary"
           disabled={loading}
         >
-
-          {
-
-            loading
-
-            ?
-
-            "Logging in..."
-
-            :
-
-            "Login"
-
-          }
-
+          {loading
+            ? "Signing In..."
+            : "Login"}
         </button>
 
       </form>
 
-      <div className="auth-divider">
+      <div className="login-links">
 
-        <span>
-
-          OR
-
-        </span>
-
-      </div>
-
-      <div className="auth-links">
-
-        <Link
-          to="/activate-membership"
-          className="outline-btn"
-        >
-
-          Activate Existing Membership
-
+        <Link to="/forgot-password">
+          Forgot Password?
         </Link>
 
-        <p>
-
-          New to JVP?
-
-          <Link to="/register">
-
-            Create an Account
-
-          </Link>
-
-        </p>
+        <Link to="/activate-membership">
+          Activate Membership
+        </Link>
 
       </div>
 
-    </>
-
+    </div>
   );
-
 }
 
 export default LoginForm;

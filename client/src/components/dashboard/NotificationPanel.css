@@ -1,0 +1,143 @@
+/* ==========================================
+   NOTIFICATION PANEL
+========================================== */
+
+.notification-panel {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 8px 25px rgba(0,0,0,.08);
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  gap: 15px;
+}
+
+.widget-header h2 {
+  margin: 0;
+  color: #1d3557;
+  font-size: 1.4rem;
+}
+
+.widget-header p {
+  margin-top: 6px;
+  color: #666;
+  font-size: .95rem;
+}
+
+.view-all-link {
+  color: #008751;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.view-all-link:hover {
+  text-decoration: underline;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 16px;
+  border-radius: 14px;
+  transition: .25s;
+}
+
+.notification-item:hover {
+  transform: translateY(-2px);
+}
+
+.notification-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-content h4 {
+  margin: 0;
+  color: #1d3557;
+  font-size: 1rem;
+}
+
+.notification-content p {
+  margin: 6px 0;
+  color: #555;
+  font-size: .93rem;
+  line-height: 1.5;
+}
+
+.notification-content small {
+  color: #999;
+}
+
+.notification-item.success {
+  background: rgba(0,135,81,.08);
+}
+
+.notification-item.info {
+  background: rgba(37,99,235,.08);
+}
+
+.notification-item.warning {
+  background: rgba(245,158,11,.10);
+}
+
+.notification-item.primary {
+  background: rgba(124,58,237,.08);
+}
+
+@media (max-width:768px){
+
+.notification-panel{
+padding:22px;
+}
+
+.widget-header{
+flex-direction:column;
+align-items:flex-start;
+}
+
+}
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  border: 2px dashed #d9d9d9;
+  border-radius: 14px;
+}
+
+.empty-state h3 {
+  margin: 0;
+  color: #1d3557;
+}
+
+.empty-state p {
+  margin-top: 10px;
+  color: #777;
+}

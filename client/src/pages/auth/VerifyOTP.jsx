@@ -1,37 +1,27 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 
-import PageLayout from "../../components/common/PageLayout";
-import PageHero from "../../components/common/PageHero";
-import PageSection from "../../components/common/PageSection";
-
+import AuthLayout from "../../components/auth/AuthLayout";
 import OTPForm from "../../components/auth/OTPForm";
 
 function VerifyOTP() {
-
   const location = useLocation();
 
   const member = location.state?.member;
 
+  // Prevent direct access without first activating membership
+  if (!member) {
+    return <Navigate to="/activate-membership" replace />;
+  }
+
   return (
-    <PageLayout>
-
-      <PageHero
-        title="Verify Membership"
-        subtitle="Enter the OTP sent to your phone or email."
-      />
-
-      <PageSection
-        title="OTP Verification"
-        subtitle={
-          member
-            ? `Welcome ${member.firstName}`
-            : "Enter the verification code."
-        }
-      >
-        <OTPForm member={member} />
-      </PageSection>
-
-    </PageLayout>
+    <AuthLayout
+      title="Verify Your Membership"
+      subtitle="A One-Time Password (OTP) has been sent to your registered phone number or email address."
+      sectionTitle="OTP Verification"
+      sectionSubtitle={`Welcome ${member.firstName}. Enter the verification code to continue.`}
+    >
+      <OTPForm member={member} />
+    </AuthLayout>
   );
 }
 

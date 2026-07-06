@@ -26,13 +26,11 @@ const activateMembership = async (req, res) => {
           activationStatus: result.member.activationStatus,
           membershipStatus: result.member.membershipStatus,
         },
-
-        // DEVELOPMENT ONLY
-        // Remove this when SMS/Email OTP is implemented
-        otp: result.otp,
       },
     });
+
   } catch (error) {
+
     console.error("Activate Membership:", error.message);
 
     return res.status(400).json({
@@ -40,6 +38,7 @@ const activateMembership = async (req, res) => {
       message: error.message,
       errors: [],
     });
+
   }
 };
 
@@ -72,6 +71,32 @@ const verifyOTP = async (req, res) => {
 };
 
 /* =====================================================
+   RESEND OTP
+===================================================== */
+
+const resendOTP = async (req, res) => {
+  try {
+    const result = await authService.resendOTP(req.body);
+
+    return res.status(200).json({
+      success: result.success,
+      message: result.message,
+    });
+
+  } catch (error) {
+
+    console.error("Resend OTP:", error.message);
+
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+      errors: [],
+    });
+
+  }
+};
+
+/* =====================================================
    CREATE PASSWORD
 ===================================================== */
 
@@ -82,12 +107,14 @@ const createPassword = async (req, res) => {
     return res.status(200).json({
       success: result.success,
       message: result.message,
+
       data: {
         token: result.token,
 
         member: {
           id: result.member._id,
-          membershipNumber: result.member.membershipNumber,
+          membershipNumber:
+            result.member.membershipNumber,
           firstName: result.member.firstName,
           middleName: result.member.middleName,
           lastName: result.member.lastName,
@@ -97,9 +124,12 @@ const createPassword = async (req, res) => {
           constituency: result.member.constituency,
           ward: result.member.ward,
           role: result.member.role,
-          activationStatus: result.member.activationStatus,
-          membershipStatus: result.member.membershipStatus,
-          memberSince: result.member.memberSince,
+          activationStatus:
+            result.member.activationStatus,
+          membershipStatus:
+            result.member.membershipStatus,
+          memberSince:
+            result.member.memberSince,
         },
       },
     });
@@ -125,12 +155,14 @@ const login = async (req, res) => {
     return res.status(200).json({
       success: result.success,
       message: result.message,
+
       data: {
         token: result.token,
 
         member: {
           id: result.member._id,
-          membershipNumber: result.member.membershipNumber,
+          membershipNumber:
+            result.member.membershipNumber,
           firstName: result.member.firstName,
           middleName: result.member.middleName,
           lastName: result.member.lastName,
@@ -140,11 +172,16 @@ const login = async (req, res) => {
           constituency: result.member.constituency,
           ward: result.member.ward,
           role: result.member.role,
-          activationStatus: result.member.activationStatus,
-          membershipStatus: result.member.membershipStatus,
-          profileCompleted: result.member.profileCompleted,
-          profilePhoto: result.member.profilePhoto,
-          lastLogin: result.member.lastLogin,
+          activationStatus:
+            result.member.activationStatus,
+          membershipStatus:
+            result.member.membershipStatus,
+          profileCompleted:
+            result.member.profileCompleted,
+          profilePhoto:
+            result.member.profilePhoto,
+          lastLogin:
+            result.member.lastLogin,
         },
       },
     });
@@ -160,7 +197,7 @@ const login = async (req, res) => {
 };
 
 /* =====================================================
-   CURRENT LOGGED-IN MEMBER
+   CURRENT MEMBER
 ===================================================== */
 
 const me = async (req, res) => {
@@ -183,10 +220,75 @@ const me = async (req, res) => {
   }
 };
 
+/* =====================================================
+   FORGOT PASSWORD
+===================================================== */
+
+const forgotPassword = async (req, res) => {
+  try {
+    const result = await authService.forgotPassword(req.body);
+
+    return res.status(200).json({
+      success: result.success,
+      message: result.message,
+    });
+
+  } catch (error) {
+
+    console.error("Forgot Password:", error.message);
+
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+      errors: [],
+    });
+
+  }
+};
+
+/* =====================================================
+   RESET PASSWORD
+===================================================== */
+
+const resetPassword = async (req, res) => {
+  try {
+    const result = await authService.resetPassword(req.body);
+
+    return res.status(200).json({
+      success: result.success,
+      message: result.message,
+
+      data: {
+        token: result.token,
+
+        member: {
+          id: result.member._id,
+          membershipNumber:
+            result.member.membershipNumber,
+          firstName: result.member.firstName,
+          lastName: result.member.lastName,
+          role: result.member.role,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Reset Password:", error.message);
+
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+      errors: [],
+    });
+  }
+};
+
 module.exports = {
   activateMembership,
   verifyOTP,
+  resendOTP,
   createPassword,
   login,
   me,
+  forgotPassword,
+  resetPassword,
 };

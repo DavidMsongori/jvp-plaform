@@ -1,34 +1,55 @@
-import DashboardCard from "./DashboardCard";
+import MemberCard from "./MemberCard";
+import DashboardStats from "./DashboardStats";
+import QuickActions from "./QuickActions";
+import UpcomingEvents from "./UpcomingEvents";
+import RecentNews from "./RecentNews";
+import NotificationPanel from "./NotificationPanel";
+
+import "./DashboardOverview.css";
 
 function DashboardOverview() {
   return (
-    <section className="dashboard-overview">
+    <div className="dashboard-overview">
 
-      <DashboardCard
-        title="Membership Status"
-        value="Active"
-        icon="✅"
-      />
+      {/* Top Row */}
 
-      <DashboardCard
-        title="Profile Completion"
-        value="65%"
-        icon="👤"
-      />
+      <section className="dashboard-top">
 
-      <DashboardCard
-        title="Events"
-        value="3"
-        icon="📅"
-      />
+        <MemberCard />
 
-      <DashboardCard
-        title="Certificates"
-        value="1"
-        icon="🏆"
-      />
+        <DashboardStats />
 
-    </section>
+      </section>
+
+      {/* Quick Actions */}
+
+      <section className="dashboard-section">
+
+        <QuickActions />
+
+      </section>
+
+      {/* Bottom Widgets */}
+
+      <section className="dashboard-bottom">
+
+        <div className="dashboard-column">
+
+          <UpcomingEvents />
+
+          <RecentNews />
+
+        </div>
+
+        <div className="dashboard-column">
+
+          <NotificationPanel />
+
+        </div>
+
+      </section>
+
+    </div>
   );
 }
 

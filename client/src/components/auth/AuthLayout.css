@@ -1,72 +1,163 @@
-.auth-layout{
+/* ==========================================
+   AUTH LAYOUT
+========================================== */
 
-    min-height:100vh;
+.auth-layout {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
 
-    display:grid;
+.auth-card {
+  width: 100%;
+  max-width: 580px;
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 15px 45px rgba(0,0,0,.08);
+}
 
-    grid-template-columns:42% 58%;
+.auth-brand {
+
+  background: linear-gradient(
+      135deg,
+      #008751,
+      #006b40
+  );
+
+  color: white;
+
+  text-align: center;
+
+  padding: 45px 35px;
+}
+
+.auth-logo{
+  width:95px;
+  height:95px;
+  object-fit:contain;
+  margin-bottom:20px;
+}
+
+.portal-badge{
+
+  display:inline-block;
+
+  background:white;
+
+  color:#008751;
+
+  padding:8px 18px;
+
+  border-radius:50px;
+
+  font-size:.82rem;
+
+  font-weight:700;
+
+  letter-spacing:1px;
+
+  margin-bottom:20px;
 
 }
 
-.auth-left{
+.auth-brand h2{
 
-    position:relative;
+  margin:0;
+
+  font-size:2rem;
+
+  font-weight:700;
+
+}
+
+.portal-tagline{
+
+  margin-top:15px;
+
+  opacity:.95;
+
+  font-size:1rem;
+
+  line-height:1.6;
 
 }
 
-.auth-right{
+.auth-content{
 
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    background:#f8fafc;
-
-    padding:60px;
+  padding:40px;
 
 }
+
+.auth-footer{
+
+  border-top:1px solid #efefef;
+
+  text-align:center;
+
+  padding:22px;
+
+  background:#fafafa;
+
+}
+
+.auth-footer p{
+
+  margin:0;
+
+  color:#008751;
+
+  font-weight:700;
+
+}
+
+.auth-footer small{
+
+  display:block;
+
+  margin-top:8px;
+
+  color:#777;
+
+}
+
+@media(max-width:768px){
 
 .auth-card{
 
-    width:100%;
-
-    max-width:480px;
-
-    background:white;
-
-    border-radius:24px;
-
-    padding:50px;
-
-    box-shadow:0 20px 60px rgba(0,0,0,.08);
+border-radius:14px;
 
 }
 
-@media(max-width:992px){
+.auth-brand{
 
-.auth-layout{
-
-grid-template-columns:1fr;
+padding:35px 20px;
 
 }
 
-.auth-left{
+.auth-brand h2{
 
-display:none;
+font-size:1.55rem;
 
 }
 
-.auth-right{
+.portal-tagline{
+
+font-size:.92rem;
+
+}
+
+.auth-content{
 
 padding:25px;
 
 }
 
-.auth-card{
+.auth-logo{
 
-padding:35px 25px;
+width:75px;
+
+height:75px;
 
 }
 

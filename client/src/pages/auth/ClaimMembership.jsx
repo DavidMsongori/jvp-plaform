@@ -1,24 +1,16 @@
-import PageLayout from "../../components/common/PageLayout";
-import PageHero from "../../components/common/PageHero";
-import PageSection from "../../components/common/PageSection";
-
+import AuthLayout from "../../components/auth/AuthLayout";
 import ClaimForm from "../../components/auth/ClaimForm";
 
 function ClaimMembership() {
   return (
-    <PageLayout>
-      <PageHero
-        title="Activate Membership"
-        subtitle="Existing members can activate their JVP Connect account."
-      />
-
-      <PageSection
-        title="Membership Activation"
-        subtitle="Verify your existing membership."
-      >
-        <ClaimForm />
-      </PageSection>
-    </PageLayout>
+    <AuthLayout
+      title="Activate Your Membership"
+      subtitle="Existing Jumuiya ya Vijana wa Pwani (JVP) members can activate their JVP Connect account."
+      sectionTitle="Membership Activation"
+      sectionSubtitle="Enter the phone number or email address registered with JVP to begin the activation process."
+    >
+      <ClaimForm />
+    </AuthLayout>
   );
 }
 

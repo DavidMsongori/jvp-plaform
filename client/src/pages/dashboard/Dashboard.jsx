@@ -1,17 +1,21 @@
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-
 import DashboardOverview from "../../components/dashboard/DashboardOverview";
-import QuickActions from "../../components/dashboard/QuickActions";
+
+import {
+  DashboardProvider,
+} from "../../context/DashboardContext";
 
 function Dashboard() {
   return (
-    <DashboardLayout>
+    <DashboardProvider>
 
-      <DashboardOverview />
+      <DashboardLayout>
 
-      <QuickActions />
+        <DashboardOverview />
 
-    </DashboardLayout>
+      </DashboardLayout>
+
+    </DashboardProvider>
   );
 }
 

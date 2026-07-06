@@ -1,39 +1,27 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 
-import PageLayout from "../../components/common/PageLayout";
-import PageHero from "../../components/common/PageHero";
-import PageSection from "../../components/common/PageSection";
-
+import AuthLayout from "../../components/auth/AuthLayout";
 import CreatePasswordForm from "../../components/auth/CreatePasswordForm";
 
 function CreatePassword() {
-
   const location = useLocation();
 
   const member = location.state?.member;
 
+  // Prevent direct access without completing OTP verification
+  if (!member) {
+    return <Navigate to="/activate-membership" replace />;
+  }
+
   return (
-    <PageLayout>
-
-      <PageHero
-        title="Create Password"
-        subtitle="Secure your JVP Connect account."
-      />
-
-      <PageSection
-        title="Account Security"
-        subtitle={
-          member
-            ? `Welcome ${member.firstName}`
-            : "Create your password"
-        }
-      >
-
-        <CreatePasswordForm member={member} />
-
-      </PageSection>
-
-    </PageLayout>
+    <AuthLayout
+      title="Create Your Password"
+      subtitle="You're almost done! Create a secure password to complete your JVP Connect account activation."
+      sectionTitle="Account Security"
+      sectionSubtitle={`Welcome ${member.firstName}. Choose a strong password to secure your account.`}
+    >
+      <CreatePasswordForm member={member} />
+    </AuthLayout>
   );
 }
 

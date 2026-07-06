@@ -1,74 +1,89 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import api from "../../services/api";
+import {
+  verifyOTP,
+  resendOTP,
+} from "../../services/auth.service";
+
+import "./OTPForm.css";
 
 function OTPForm({ member }) {
-
   const navigate = useNavigate();
 
   const [otp, setOtp] = useState("");
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const [resending, setResending] = useState(false);
 
+  const [countdown, setCountdown] = useState(60);
+
+  const [error, setError] = useState("");
+
+  const [success, setSuccess] = useState("");
+
+  /* ==========================================
+     COUNTDOWN TIMER
+  ========================================== */
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+
+    const timer = setTimeout(() => {
+      setCountdown((previous) => previous - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+
+  }, [countdown]);
+
+  /* ==========================================
+     VERIFY OTP
+  ========================================== */
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    if (!otp.trim()) {
+      setError("Please enter the OTP.");
+      return;
+    }
+
+    if (otp.length !== 6) {
+      setError("OTP must contain exactly 6 digits.");
+      return;
+    }
 
     try {
 
       setLoading(true);
 
-      const payload = {
+      const response = await verifyOTP({
+        memberId: member.id,
+        otp,
+      });
 
-        otp
+      setSuccess(response.message);
 
-      };
+      setTimeout(() => {
 
-      if (member.email) {
-
-        payload.email = member.email;
-
-      } else {
-
-        payload.phone = member.phone;
-
-      }
-
-      const response = await api.post(
-
-        "/auth/verify-otp",
-
-        payload
-
-      );
-
-      alert(response.data.message);
-
-      navigate(
-
-        "/create-password",
-
-        {
-
+        navigate("/create-password", {
           state: {
+            member,
+          },
+        });
 
-            member
+      }, 1000);
 
-          }
+    } catch (err) {
 
-        }
-
-      );
-
-    } catch (error) {
-
-      alert(
-
-        error.response?.data?.message ||
-
+      setError(
+        err.response?.data?.message ||
         "OTP verification failed."
-
       );
 
     } finally {
@@ -76,59 +91,143 @@ function OTPForm({ member }) {
       setLoading(false);
 
     }
+  };
 
+  /* ==========================================
+     RESEND OTP
+  ========================================== */
+
+  const handleResendOTP = async () => {
+
+    try {
+
+      setResending(true);
+
+      setError("");
+
+      setSuccess("");
+
+      if (member.email) {
+
+        await resendOTP({
+          email: member.email,
+        });
+
+      } else {
+
+        await resendOTP({
+          phone: member.phone,
+        });
+
+      }
+
+      setSuccess("A new OTP has been sent.");
+
+      setCountdown(60);
+
+    } catch (err) {
+
+      setError(
+        err.response?.data?.message ||
+        "Unable to resend OTP."
+      );
+
+    } finally {
+
+      setResending(false);
+
+    }
   };
 
   return (
 
-    <form onSubmit={handleSubmit}>
+    <div className="otp-form-container">
 
-      <label>
-
-        Verification Code
-
-      </label>
-
-      <input
-
-        type="text"
-
-        placeholder="Enter 6-digit OTP"
-
-        value={otp}
-
-        onChange={(e)=>setOtp(e.target.value)}
-
-      />
-
-      <button
-
-        type="submit"
-
-        disabled={loading}
-
+      <form
+        className="otp-form"
+        onSubmit={handleSubmit}
       >
 
-        {
+        <div className="form-group">
 
-          loading
+          <label>
+            Verification Code
+          </label>
 
-          ?
+          <input
+            type="text"
+            maxLength={6}
+            value={otp}
+            placeholder="Enter OTP"
+            onChange={(e) =>
+              setOtp(
+                e.target.value.replace(/\D/g, "")
+              )
+            }
+          />
 
-          "Verifying..."
+        </div>
 
-          :
+        {error && (
+          <div className="form-error">
+            {error}
+          </div>
+        )}
 
-          "Verify OTP"
+        {success && (
+          <div className="form-success">
+            {success}
+          </div>
+        )}
 
-        }
+        <button
+          className="btn-primary"
+          type="submit"
+          disabled={loading}
+        >
+          {loading
+            ? "Verifying..."
+            : "Verify OTP"}
+        </button>
 
-      </button>
+      </form>
 
-    </form>
+      <div className="otp-help">
+
+        {countdown > 0 ? (
+          <p>
+
+            Didn't receive your OTP?
+
+            <br />
+
+            You can request another one in
+
+            <strong>
+              {" "}
+              {countdown}s
+            </strong>
+
+          </p>
+        ) : (
+
+          <button
+            type="button"
+            onClick={handleResendOTP}
+            disabled={resending}
+          >
+            {resending
+              ? "Sending..."
+              : "Resend OTP"}
+          </button>
+
+        )}
+
+      </div>
+
+    </div>
 
   );
-
 }
 
 export default OTPForm;
