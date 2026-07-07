@@ -1,59 +1,91 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { login } from "../../services/auth.service";
+import { useAuth } from "../../context/AuthContext";
 
 import "./LoginForm.css";
 
 function LoginForm() {
+
   const navigate = useNavigate();
 
+  const { login } = useAuth();
+
   const [identifier, setIdentifier] = useState("");
+
   const [password, setPassword] = useState("");
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] =
+    useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] =
+    useState(false);
 
-  const [error, setError] = useState("");
+  const [error, setError] =
+    useState("");
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     setError("");
 
     if (!identifier.trim()) {
-      setError("Please enter your phone number or email address.");
+
+      setError(
+        "Please enter your phone number or email address."
+      );
+
       return;
+
     }
 
     if (!password) {
-      setError("Please enter your password.");
+
+      setError(
+        "Please enter your password."
+      );
+
       return;
+
     }
 
-    const payload = {
+    const credentials = {
       password,
     };
 
     if (identifier.includes("@")) {
-      payload.email = identifier.trim().toLowerCase();
+
+      credentials.email =
+        identifier.trim().toLowerCase();
+
     } else {
-      payload.phone = identifier.trim();
+
+      credentials.phone =
+        identifier.trim();
+
     }
 
     try {
+
       setLoading(true);
 
-      await login(payload);
+      await login(credentials);
 
-      navigate("/dashboard");
+      navigate("/dashboard", {
+        replace: true,
+      });
 
     } catch (err) {
 
+      console.error(err);
+
       setError(
+
         err.response?.data?.message ||
-        "Login failed."
+
+        "Invalid email/phone or password."
+
       );
 
     } finally {
@@ -61,9 +93,11 @@ function LoginForm() {
       setLoading(false);
 
     }
+
   };
 
   return (
+
     <div className="login-form-container">
 
       <form
@@ -74,7 +108,9 @@ function LoginForm() {
         <div className="form-group">
 
           <label>
+
             Phone Number or Email Address
+
           </label>
 
           <input
@@ -117,7 +153,9 @@ function LoginForm() {
               type="checkbox"
               checked={showPassword}
               onChange={() =>
-                setShowPassword(!showPassword)
+                setShowPassword(
+                  !showPassword
+                )
               }
             />
 
@@ -128,9 +166,13 @@ function LoginForm() {
         </div>
 
         {error && (
+
           <div className="form-error">
+
             {error}
+
           </div>
+
         )}
 
         <button
@@ -138,9 +180,11 @@ function LoginForm() {
           className="btn-primary"
           disabled={loading}
         >
+
           {loading
             ? "Signing In..."
             : "Login"}
+
         </button>
 
       </form>
@@ -148,17 +192,23 @@ function LoginForm() {
       <div className="login-links">
 
         <Link to="/forgot-password">
+
           Forgot Password?
+
         </Link>
 
         <Link to="/activate-membership">
+
           Activate Membership
+
         </Link>
 
       </div>
 
     </div>
+
   );
+
 }
 
 export default LoginForm;

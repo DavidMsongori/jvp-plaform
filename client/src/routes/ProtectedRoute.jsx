@@ -2,33 +2,47 @@ import { Navigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 
-function ProtectedRoute({
+function ProtectedRoute({ children }) {
 
-    children
+  const {
 
-}){
+    loading,
 
-    const{
+    isAuthenticated,
 
-        token,
+  } = useAuth();
 
-        loading
+  if (loading) {
 
-    }=useAuth();
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          fontSize: "1.2rem",
+          color: "#1d3557",
+        }}
+      >
+        Loading...
+      </div>
+    );
 
-    if(loading){
+  }
 
-        return <h2>Loading...</h2>;
+  if (!isAuthenticated) {
 
-    }
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
 
-    if(!token){
+  }
 
-        return <Navigate to="/login"/>;
-
-    }
-
-    return children;
+  return children;
 
 }
 

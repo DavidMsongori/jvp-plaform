@@ -1,0 +1,546 @@
+/* =====================================================
+   JVP CONNECT DASHBOARD
+   ANIMATIONS
+===================================================== */
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root{
+
+    --animation-speed:.28s;
+
+    --animation-fast:.18s;
+
+    --animation-slow:.45s;
+
+}
+
+/* =====================================================
+   FADE IN
+===================================================== */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+/* =====================================================
+   FADE UP
+===================================================== */
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(18px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* =====================================================
+   FADE DOWN
+===================================================== */
+
+@keyframes fadeDown{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-18px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* =====================================================
+   SLIDE LEFT
+===================================================== */
+
+@keyframes slideLeft{
+
+    from{
+
+        transform:translateX(40px);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:translateX(0);
+
+        opacity:1;
+
+    }
+
+}
+
+/* =====================================================
+   SLIDE RIGHT
+===================================================== */
+
+@keyframes slideRight{
+
+    from{
+
+        transform:translateX(-40px);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:translateX(0);
+
+        opacity:1;
+
+    }
+
+}
+
+/* =====================================================
+   SCALE
+===================================================== */
+
+@keyframes scaleIn{
+
+    from{
+
+        transform:scale(.95);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+}
+
+/* =====================================================
+   FLOAT
+===================================================== */
+
+@keyframes floating{
+
+    0%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-5px);
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* =====================================================
+   PULSE
+===================================================== */
+
+@keyframes pulse{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.04);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+/* =====================================================
+   SHIMMER
+===================================================== */
+
+@keyframes shimmer{
+
+    0%{
+
+        background-position:-450px 0;
+
+    }
+
+    100%{
+
+        background-position:450px 0;
+
+    }
+
+}
+
+/* =====================================================
+   UTILITIES
+===================================================== */
+
+.animate-fade{
+
+    animation:
+
+        fadeIn
+
+        var(--animation-speed)
+
+        ease;
+
+}
+
+.animate-up{
+
+    animation:
+
+        fadeUp
+
+        .45s
+
+        ease;
+
+}
+
+.animate-down{
+
+    animation:
+
+        fadeDown
+
+        .45s
+
+        ease;
+
+}
+
+.animate-left{
+
+    animation:
+
+        slideLeft
+
+        .45s
+
+        ease;
+
+}
+
+.animate-right{
+
+    animation:
+
+        slideRight
+
+        .45s
+
+        ease;
+
+}
+
+.animate-scale{
+
+    animation:
+
+        scaleIn
+
+        .35s
+
+        ease;
+
+}
+
+/* =====================================================
+   STAGGER
+===================================================== */
+
+.stagger-1{
+
+    animation-delay:.08s;
+
+}
+
+.stagger-2{
+
+    animation-delay:.16s;
+
+}
+
+.stagger-3{
+
+    animation-delay:.24s;
+
+}
+
+.stagger-4{
+
+    animation-delay:.32s;
+
+}
+
+.stagger-5{
+
+    animation-delay:.40s;
+
+}
+
+/* =====================================================
+   HOVER EFFECTS
+===================================================== */
+
+.hover-lift{
+
+    transition:.25s;
+
+}
+
+.hover-lift:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.hover-grow{
+
+    transition:.25s;
+
+}
+
+.hover-grow:hover{
+
+    transform:scale(1.03);
+
+}
+
+.hover-shadow{
+
+    transition:.25s;
+
+}
+
+.hover-shadow:hover{
+
+    box-shadow:
+
+        var(--shadow-lg);
+
+}
+
+.hover-primary{
+
+    transition:.25s;
+
+}
+
+.hover-primary:hover{
+
+    border-color:
+
+        var(--secondary);
+
+}
+
+/* =====================================================
+   ICONS
+===================================================== */
+
+.icon-spin:hover{
+
+    transform:rotate(15deg);
+
+    transition:.25s;
+
+}
+
+.icon-float{
+
+    animation:
+
+        floating
+
+        3s
+
+        ease-in-out
+
+        infinite;
+
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.dashboard-btn:active{
+
+    transform:scale(.96);
+
+}
+
+/* =====================================================
+   LINKS
+===================================================== */
+
+.dashboard-link{
+
+    position:relative;
+
+}
+
+.dashboard-link::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    bottom:-4px;
+
+    width:0;
+
+    height:2px;
+
+    background:var(--secondary);
+
+    transition:.3s;
+
+}
+
+.dashboard-link:hover::after{
+
+    width:100%;
+
+}
+
+/* =====================================================
+   LOADING SKELETON
+===================================================== */
+
+.skeleton{
+
+    background:
+
+        linear-gradient(
+
+            90deg,
+
+            #ececec 25%,
+
+            #f7f7f7 50%,
+
+            #ececec 75%
+
+        );
+
+    background-size:500px 100%;
+
+    animation:
+
+        shimmer
+
+        1.4s
+
+        infinite;
+
+    border-radius:12px;
+
+}
+
+[data-theme="dark"] .skeleton{
+
+    background:
+
+        linear-gradient(
+
+            90deg,
+
+            #233043 25%,
+
+            #314156 50%,
+
+            #233043 75%
+
+        );
+
+}
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.dashboard-card,
+
+.member-card,
+
+.events-panel,
+
+.news-panel,
+
+.notification-panel,
+
+.quick-actions{
+
+    animation:
+
+        fadeUp
+
+        .45s
+
+        ease;
+
+}

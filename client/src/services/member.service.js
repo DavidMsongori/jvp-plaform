@@ -5,35 +5,71 @@ import api from "./api";
 ========================================== */
 
 export const getMyProfile = async () => {
-  const response = await api.get("/members/me");
+
+  const response = await api.get("/member/profile");
+
   return response.data;
+
 };
 
 export const updateMyProfile = async (profileData) => {
+
   const response = await api.put(
-    "/members/me",
+
+    "/member/me",
+
     profileData
+
   );
 
   return response.data;
+
 };
 
 /* ==========================================
    PROFILE PHOTO
 ========================================== */
 
-export const uploadProfilePhoto = async (formData) => {
+export const uploadProfilePhoto = async (file) => {
+
+  const formData = new FormData();
+
+  /*
+    IMPORTANT:
+    Must match upload.single("photo")
+    in upload.middleware.js
+  */
+
+  formData.append(
+
+    "photo",
+
+    file
+
+  );
+
   const response = await api.post(
-    "/members/photo",
+
+    "/member/photo",
+
     formData,
+
     {
+
       headers: {
-        "Content-Type": "multipart/form-data",
+
+        "Content-Type":
+
+          "multipart/form-data",
+
       },
+
     }
+
   );
 
   return response.data;
+
 };
 
 /* ==========================================
@@ -41,8 +77,15 @@ export const uploadProfilePhoto = async (formData) => {
 ========================================== */
 
 export const getDashboard = async () => {
-  const response = await api.get("/members/dashboard");
+
+  const response = await api.get(
+
+    "/member/dashboard"
+
+  );
+
   return response.data;
+
 };
 
 /* ==========================================
@@ -50,8 +93,15 @@ export const getDashboard = async () => {
 ========================================== */
 
 export const getMembershipCard = async () => {
-  const response = await api.get("/members/card");
+
+  const response = await api.get(
+
+    "/member/card"
+
+  );
+
   return response.data;
+
 };
 
 /* ==========================================
@@ -59,8 +109,15 @@ export const getMembershipCard = async () => {
 ========================================== */
 
 export const getMyEvents = async () => {
-  const response = await api.get("/members/events");
+
+  const response = await api.get(
+
+    "/member/events"
+
+  );
+
   return response.data;
+
 };
 
 /* ==========================================
@@ -68,8 +125,15 @@ export const getMyEvents = async () => {
 ========================================== */
 
 export const getMyPrograms = async () => {
-  const response = await api.get("/members/programs");
+
+  const response = await api.get(
+
+    "/member/programs"
+
+  );
+
   return response.data;
+
 };
 
 /* ==========================================
@@ -77,6 +141,13 @@ export const getMyPrograms = async () => {
 ========================================== */
 
 export const getMyCertificates = async () => {
-  const response = await api.get("/members/certificates");
+
+  const response = await api.get(
+
+    "/member/certificates"
+
+  );
+
   return response.data;
+
 };

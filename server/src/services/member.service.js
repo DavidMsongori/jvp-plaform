@@ -12,25 +12,29 @@ class MemberService {
   async getProfile(memberId) {
 
     const member = await Member.findById(memberId)
-      .select("-password -otp -otpExpires -refreshToken");
+      .select("-password -otp -otpExpires");
 
     if (!member) {
       throw new Error("Member not found.");
     }
 
     return {
+
       success: true,
+
       message: "Profile retrieved successfully.",
+
       member,
+
     };
 
   }
 
   /* =====================================================
-     UPDATE MEMBER PROFILE
+     UPDATE PROFILE
   ===================================================== */
 
-  async updateProfile(memberId, data) {
+  async updateProfile(memberId, profileData) {
 
     const member = await Member.findById(memberId);
 
@@ -38,67 +42,7 @@ class MemberService {
       throw new Error("Member not found.");
     }
 
-    const allowedFields = [
-
-      // Personal
-      "firstName",
-      "middleName",
-      "lastName",
-      "gender",
-      "dob",
-      "phone",
-      "email",
-
-      // Location
-      "county",
-      "constituency",
-      "ward",
-      "village",
-
-      // Education
-      "institution",
-      "course",
-      "level",
-      "graduationYear",
-      "studentRegistrationNumber",
-
-      // Employment
-      "employmentStatus",
-      "occupation",
-      "employer",
-      "businessName",
-      "yearsExperience",
-
-      // Leadership
-      "leadershipExperience",
-      "leadershipPosition",
-      "leadershipOrganization",
-
-      // Profile
-      "skills",
-      "interests",
-      "languages",
-      "bio",
-      "availability",
-
-      // Social Media
-      "facebook",
-      "instagram",
-      "linkedin",
-      "x",
-      "tiktok"
-
-    ];
-
-    allowedFields.forEach(field => {
-
-      if (data[field] !== undefined) {
-        member[field] = data[field];
-      }
-
-    });
-
-    member.lastProfileUpdate = new Date();
+    this.mapProfileData(member, profileData);
 
     member.profileCompleted =
       this.calculateProfileCompletion(member);
@@ -111,13 +55,141 @@ class MemberService {
 
       message: "Profile updated successfully.",
 
-      member
+      member,
 
     };
 
   }
 
   /* =====================================================
+     MAP PROFILE DATA
+  ===================================================== */
+
+  mapProfileData(member, data) {
+
+    /* ==========================================
+       PERSONAL
+    ========================================== */
+
+    if (data.firstName !== undefined)
+      member.firstName = data.firstName;
+
+    if (data.middleName !== undefined)
+      member.middleName = data.middleName;
+
+    if (data.lastName !== undefined)
+      member.lastName = data.lastName;
+
+    if (data.gender !== undefined)
+      member.gender = data.gender;
+
+    if (data.dateOfBirth !== undefined)
+      member.dateOfBirth = data.dateOfBirth;
+
+    if (data.phone !== undefined)
+      member.phone = data.phone;
+
+    if (data.email !== undefined)
+      member.email = data.email;
+
+    /* ==========================================
+       LOCATION
+    ========================================== */
+
+    if (data.county !== undefined)
+      member.county = data.county;
+
+    if (data.constituency !== undefined)
+      member.constituency = data.constituency;
+
+    if (data.ward !== undefined)
+      member.ward = data.ward;
+
+    if (data.village !== undefined)
+      member.village = data.village;
+
+    /* ==========================================
+       EDUCATION
+    ========================================== */
+
+    if (data.education) {
+
+      member.education = {
+
+        ...member.education,
+
+        ...data.education,
+
+      };
+
+    }
+
+    /* ==========================================
+       EMPLOYMENT
+    ========================================== */
+
+    if (data.employment) {
+
+      member.employment = {
+
+        ...member.employment,
+
+        ...data.employment,
+
+      };
+
+    }
+
+    /* ==========================================
+       LEADERSHIP
+    ========================================== */
+
+    if (data.leadership) {
+
+      member.leadership = {
+
+        ...member.leadership,
+
+        ...data.leadership,
+
+      };
+
+    }
+
+    /* ==========================================
+       PROFILE
+    ========================================== */
+
+    if (data.skills !== undefined)
+      member.skills = data.skills;
+
+    if (data.languages !== undefined)
+      member.languages = data.languages;
+
+    if (data.interests !== undefined)
+      member.interests = data.interests;
+
+    if (data.bio !== undefined)
+      member.bio = data.bio;
+
+    /* ==========================================
+       SOCIAL MEDIA
+    ========================================== */
+
+    if (data.social) {
+
+      member.social = {
+
+        ...member.social,
+
+        ...data.social,
+
+      };
+
+    }
+
+  }
+    /* =====================================================
      UPLOAD PROFILE PHOTO
   ===================================================== */
 
@@ -133,33 +205,10 @@ class MemberService {
       throw new Error("Member not found.");
     }
 
-    /*
-      Delete previous photo
-    */
-
-    if (member.profilePhoto) {
-
-      const oldPhoto = path.join(
-        __dirname,
-        "../../",
-        member.profilePhoto
-      );
-
-      if (fs.existsSync(oldPhoto)) {
-        fs.unlinkSync(oldPhoto);
-      }
-
-    }
-
-    /*
-      Save new path
-    */
+    await this.deleteOldPhoto(member.profilePhoto);
 
     member.profilePhoto =
       `/uploads/profiles/${file.filename}`;
-
-    member.lastProfileUpdate =
-      new Date();
 
     member.profileCompleted =
       this.calculateProfileCompletion(member);
@@ -173,220 +222,20 @@ class MemberService {
       message:
         "Profile photo uploaded successfully.",
 
-      member
+      member,
 
     };
 
   }
 
   /* =====================================================
-     MEMBER DASHBOARD
-  ===================================================== */
-
-  async getDashboard(memberId) {
-
-    const member = await Member.findById(memberId)
-      .select("-password -otp -otpExpires -refreshToken");
-
-    if (!member) {
-      throw new Error("Member not found.");
-    }
-
-    return {
-
-      success: true,
-
-      message: "Dashboard loaded successfully.",
-
-      dashboard: {
-
-        /* ======================================
-           MEMBER SUMMARY
-        ====================================== */
-
-        member: {
-
-          id: member._id,
-
-          membershipNumber:
-            member.membershipNumber,
-
-          firstName:
-            member.firstName,
-
-          middleName:
-            member.middleName,
-
-          lastName:
-            member.lastName,
-
-          profilePhoto:
-            member.profilePhoto,
-
-          role:
-            member.role,
-
-          county:
-            member.county,
-
-          constituency:
-            member.constituency,
-
-          ward:
-            member.ward,
-
-          membershipStatus:
-            member.membershipStatus,
-
-          activationStatus:
-            member.activationStatus,
-
-          memberSince:
-            member.memberSince,
-
-          profileCompleted:
-            member.profileCompleted,
-
-        },
-
-        /* ======================================
-           DASHBOARD STATISTICS
-        ====================================== */
-
-        stats: {
-
-          profileCompletion:
-            member.profileCompleted || 0,
-
-          events: 0,
-
-          programs: 0,
-
-          certificates: 0,
-
-          volunteerHours: 0,
-
-          loginCount:
-            member.loginCount || 0,
-
-          lastLogin:
-            member.lastLogin,
-
-        },
-
-        /* ======================================
-           UPCOMING EVENTS
-        ====================================== */
-
-        events: [
-
-          {
-            id: 1,
-            title: "Coastal Youth Summit 2026",
-            date: "2026-08-06",
-            location: "Malindi, Kilifi",
-            registered: true,
-          },
-
-          {
-            id: 2,
-            title: "Beach Cleanup Exercise",
-            date: "2026-08-16",
-            location: "Mombasa",
-            registered: false,
-          },
-
-          {
-            id: 3,
-            title: "Leadership Bootcamp",
-            date: "2026-09-05",
-            location: "Kwale",
-            registered: false,
-          },
-
-        ],
-
-        /* ======================================
-           NOTIFICATIONS
-        ====================================== */
-
-        notifications: [
-
-          {
-            id: 1,
-            title: "Membership Activated",
-            message:
-              "Your JVP Connect account is active.",
-            type: "success",
-            time: "Today",
-          },
-
-          {
-            id: 2,
-            title: "Complete Your Profile",
-            message:
-              "Finish your profile to unlock all features.",
-            type: "info",
-            time: "Today",
-          },
-
-          {
-            id: 3,
-            title: "Coastal Youth Summit",
-            message:
-              "Registration is now open.",
-            type: "warning",
-            time: "2 days ago",
-          },
-
-        ],
-
-        /* ======================================
-           LATEST NEWS
-        ====================================== */
-
-        news: [
-
-          {
-            id: 1,
-            title:
-              "Registration for Coastal Youth Summit 2026 Now Open",
-            category: "Events",
-            date: "Today",
-          },
-
-          {
-            id: 2,
-            title:
-              "JVP Signs New Youth Empowerment Partnership",
-            category: "Partnership",
-            date: "Yesterday",
-          },
-
-          {
-            id: 3,
-            title:
-              "Applications Open for County Volunteer Leaders",
-            category: "Leadership",
-            date: "3 days ago",
-          },
-
-        ],
-
-      },
-
-    };
-
-  }
-
-   /* =====================================================
      MEMBERSHIP CARD
   ===================================================== */
 
   async getMembershipCard(memberId) {
 
     const member = await Member.findById(memberId)
-      .select("-password -otp -otpExpires -refreshToken");
+      .select("-password -otp -otpExpires");
 
     if (!member) {
       throw new Error("Member not found.");
@@ -401,6 +250,8 @@ class MemberService {
 
       card: {
 
+        id: member._id,
+
         membershipNumber:
           member.membershipNumber,
 
@@ -412,6 +263,9 @@ class MemberService {
 
         lastName:
           member.lastName,
+
+        profilePhoto:
+          member.profilePhoto,
 
         county:
           member.county,
@@ -431,50 +285,62 @@ class MemberService {
         membershipStatus:
           member.membershipStatus,
 
-        profilePhoto:
-          member.profilePhoto
+        activationStatus:
+          member.activationStatus,
 
-      }
+        paymentStatus:
+          member.paymentStatus,
+
+      },
 
     };
 
   }
 
   /* =====================================================
-     ADMIN - GET ALL MEMBERS
+     ADMIN
+     GET ALL MEMBERS
   ===================================================== */
 
   async getAllMembers() {
 
     const members = await Member.find()
-      .select("-password -otp -otpExpires -refreshToken")
+
+      .select("-password -otp -otpExpires")
+
       .sort({
+
         firstName: 1,
-        lastName: 1
+
+        lastName: 1,
+
       });
 
     return {
 
       success: true,
 
-      message: "Members retrieved successfully.",
+      message:
+        "Members retrieved successfully.",
 
       total: members.length,
 
-      members
+      members,
 
     };
 
   }
 
   /* =====================================================
-     ADMIN - GET MEMBER BY ID
+     ADMIN
+     GET MEMBER BY ID
   ===================================================== */
 
   async getMemberById(memberId) {
 
     const member = await Member.findById(memberId)
-      .select("-password -otp -otpExpires -refreshToken");
+
+      .select("-password -otp -otpExpires");
 
     if (!member) {
       throw new Error("Member not found.");
@@ -484,71 +350,164 @@ class MemberService {
 
       success: true,
 
-      message: "Member retrieved successfully.",
+      message:
+        "Member retrieved successfully.",
 
-      member
+      member,
 
     };
 
   }
-
-  /* =====================================================
-     PROFILE COMPLETION CALCULATOR
+    /* =====================================================
+     PROFILE COMPLETION
   ===================================================== */
 
   calculateProfileCompletion(member) {
 
-    const fields = [
+    let completed = 0;
 
-      // Personal
+    const checks = [
+
+      /* ==========================================
+         PERSONAL
+      ========================================== */
+
       member.firstName,
-      member.lastName,
-      member.phone,
-      member.email,
-      member.gender,
-      member.dob,
 
-      // Location
+      member.lastName,
+
+      member.phone,
+
+      member.email,
+
+      member.gender,
+
+      member.dateOfBirth,
+
+      /* ==========================================
+         LOCATION
+      ========================================== */
+
       member.county,
+
       member.constituency,
+
       member.ward,
 
-      // Profile
+      member.village,
+
+      /* ==========================================
+         EDUCATION
+      ========================================== */
+
+      member.education?.level,
+
+      member.education?.institution,
+
+      member.education?.course,
+
+      member.education?.status,
+
+      /* ==========================================
+         EMPLOYMENT
+      ========================================== */
+
+      member.employment?.status,
+
+      member.employment?.occupation,
+
+      /* ==========================================
+         LEADERSHIP
+      ========================================== */
+
+      member.leadership?.organization,
+
+      member.leadership?.position,
+
+      /* ==========================================
+         PROFILE
+      ========================================== */
+
       member.profilePhoto,
+
       member.bio,
-
-      // Education
-      member.institution,
-      member.course,
-      member.level,
-
-      // Employment
-      member.employmentStatus,
-      member.occupation,
-
-      // Skills
-      member.skills?.length,
-      member.interests?.length,
-      member.languages?.length
 
     ];
 
-    const completed = fields.filter(value => {
+    completed += checks.filter(Boolean).length;
 
-      if (Array.isArray(value)) {
-        return value.length > 0;
-      }
+    if (member.skills?.length > 0) {
+      completed++;
+    }
 
-      return Boolean(value);
+    if (member.languages?.length > 0) {
+      completed++;
+    }
 
-    }).length;
+    if (member.interests?.length > 0) {
+      completed++;
+    }
+
+    if (member.social?.facebook) {
+      completed++;
+    }
+
+    if (member.social?.linkedin) {
+      completed++;
+    }
+
+    if (member.social?.instagram) {
+      completed++;
+    }
+
+    if (member.social?.twitter) {
+      completed++;
+    }
+
+    if (member.social?.tiktok) {
+      completed++;
+    }
+
+    const totalFields = 28;
 
     return Math.round(
-      (completed / fields.length) * 100
+
+      (completed / totalFields) * 100
+
     );
+
+  }
+
+  /* =====================================================
+     DELETE OLD PROFILE PHOTO
+  ===================================================== */
+
+  async deleteOldPhoto(photoPath) {
+
+    if (!photoPath) return;
+
+    const fullPath = path.join(
+
+      __dirname,
+
+      "../../",
+
+      photoPath
+
+    );
+
+    if (
+
+      fs.existsSync(fullPath)
+
+    ) {
+
+      fs.unlinkSync(fullPath);
+
+    }
 
   }
 
 }
 
-module.exports = new MemberService(); 
+module.exports = new MemberService();

@@ -1,42 +1,99 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+import * as authService from "../services/auth.service";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
 
-  const [member, setMember] = useState(() => {
+  const [member, setMember] = useState(null);
 
-    const saved = localStorage.getItem("member");
+  const [token, setToken] = useState(null);
 
-    return saved ? JSON.parse(saved) : null;
+  const [loading, setLoading] = useState(true);
 
-  });
+  /* ==========================================
+     INITIALIZE AUTH
+  ========================================== */
 
-  const [token, setToken] = useState(
+  useEffect(() => {
 
-    localStorage.getItem("token")
+    const storedToken =
+      localStorage.getItem("token");
 
-  );
+    const storedMember =
+      localStorage.getItem("member");
 
-  const [loading] = useState(false);
+    if (storedToken) {
+      setToken(storedToken);
+    }
 
-  const login = (memberData, jwt) => {
+    if (storedMember) {
 
-    localStorage.setItem("token", jwt);
+      try {
+
+        setMember(
+          JSON.parse(storedMember)
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Invalid stored member:",
+          error
+        );
+
+        localStorage.removeItem("member");
+
+      }
+
+    }
+
+    setLoading(false);
+
+  }, []);
+
+  /* ==========================================
+     LOGIN
+  ========================================== */
+
+  const login = async (credentials) => {
+
+    const response =
+      await authService.login(credentials);
+
+    const jwt =
+      response.data.token;
+
+    const memberData =
+      response.data.member;
 
     localStorage.setItem(
+      "token",
+      jwt
+    );
 
+    localStorage.setItem(
       "member",
-
       JSON.stringify(memberData)
-
     );
 
     setToken(jwt);
 
     setMember(memberData);
 
+    return response;
+
   };
+
+  /* ==========================================
+     LOGOUT
+  ========================================== */
 
   const logout = () => {
 
@@ -50,10 +107,60 @@ export function AuthProvider({ children }) {
 
   };
 
+  /* ==========================================
+     REFRESH CURRENT MEMBER
+  ========================================== */
+
+  const refreshMember = async () => {
+
+    try {
+
+      const response =
+        await authService.getCurrentMember();
+
+      const updatedMember =
+        response.data;
+
+      localStorage.setItem(
+        "member",
+        JSON.stringify(updatedMember)
+      );
+
+      setMember(updatedMember);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
+
+  /* ==========================================
+     UPDATE MEMBER
+  ========================================== */
+
+  const updateMember = (memberData) => {
+
+    localStorage.setItem(
+      "member",
+      JSON.stringify(memberData)
+    );
+
+    setMember(memberData);
+
+  };
+
+  /* ==========================================
+     AUTH STATE
+  ========================================== */
+
+  const isAuthenticated =
+    !!token;
+
   return (
 
     <AuthContext.Provider
-
       value={{
 
         member,
@@ -62,12 +169,17 @@ export function AuthProvider({ children }) {
 
         loading,
 
+        isAuthenticated,
+
         login,
 
-        logout
+        logout,
+
+        refreshMember,
+
+        updateMember,
 
       }}
-
     >
 
       {children}
@@ -78,8 +190,19 @@ export function AuthProvider({ children }) {
 
 }
 
-export function useAuth(){
+export function useAuth() {
 
-    return useContext(AuthContext);
+  const context =
+    useContext(AuthContext);
+
+  if (!context) {
+
+    throw new Error(
+      "useAuth must be used within an AuthProvider."
+    );
+
+  }
+
+  return context;
 
 }

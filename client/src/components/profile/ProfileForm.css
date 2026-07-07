@@ -1,0 +1,175 @@
+/* =====================================================
+   PROFILE FORM
+===================================================== */
+
+.profile-form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:40px;
+
+    padding:32px;
+
+}
+
+.profile-section{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:24px;
+
+}
+
+.profile-section h2{
+
+    margin:0;
+
+    font-size:1.25rem;
+
+    color:var(--primary);
+
+    border-bottom:1px solid var(--border-light);
+
+    padding-bottom:12px;
+
+}
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.profile-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,minmax(0,1fr));
+
+    gap:24px;
+
+}
+
+.full-width{
+
+    grid-column:1 / -1;
+
+}
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.form-group label{
+
+    font-weight:600;
+
+    color:var(--text-primary);
+
+}
+
+.form-group input,
+
+.form-group select,
+
+.form-group textarea{
+
+    width:100%;
+
+    padding:14px 16px;
+
+    border:1px solid var(--border-light);
+
+    border-radius:12px;
+
+    font-size:.95rem;
+
+    background:#fff;
+
+    transition:.3s;
+
+}
+
+.form-group input:focus,
+
+.form-group select:focus,
+
+.form-group textarea:focus{
+
+    outline:none;
+
+    border-color:var(--secondary);
+
+    box-shadow:0 0 0 3px rgba(0,135,81,.12);
+
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.profile-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    padding-top:10px;
+
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:900px){
+
+    .profile-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .full-width{
+
+        grid-column:auto;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .profile-form{
+
+        padding:24px;
+
+    }
+
+    .profile-actions{
+
+        justify-content:stretch;
+
+    }
+
+    .profile-actions .dashboard-btn{
+
+        width:100%;
+
+        justify-content:center;
+
+    }
+
+}

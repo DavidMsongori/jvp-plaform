@@ -1,10 +1,12 @@
 const memberService = require("../services/member.service");
+const dashboardService = require("../services/dashboard.service");
 
 /* =====================================================
    GET CURRENT MEMBER PROFILE
 ===================================================== */
 
 const getProfile = async (req, res) => {
+
   try {
 
     const result = await memberService.getProfile(
@@ -12,22 +14,34 @@ const getProfile = async (req, res) => {
     );
 
     return res.status(200).json({
+
       success: result.success,
+
       message: result.message,
+
       data: result.member,
+
     });
 
   } catch (error) {
 
-    console.error("Get Profile:", error.message);
+    console.error(
+      "Get Profile:",
+      error.message
+    );
 
     return res.status(400).json({
+
       success: false,
+
       message: error.message,
+
       errors: [],
+
     });
 
   }
+
 };
 
 /* =====================================================
@@ -35,6 +49,7 @@ const getProfile = async (req, res) => {
 ===================================================== */
 
 const updateProfile = async (req, res) => {
+
   try {
 
     const result =
@@ -44,22 +59,34 @@ const updateProfile = async (req, res) => {
       );
 
     return res.status(200).json({
+
       success: result.success,
+
       message: result.message,
+
       data: result.member,
+
     });
 
   } catch (error) {
 
-    console.error("Update Profile:", error.message);
+    console.error(
+      "Update Profile:",
+      error.message
+    );
 
     return res.status(400).json({
+
       success: false,
+
       message: error.message,
+
       errors: [],
+
     });
 
   }
+
 };
 
 /* =====================================================
@@ -67,6 +94,7 @@ const updateProfile = async (req, res) => {
 ===================================================== */
 
 const uploadProfilePhoto = async (req, res) => {
+
   try {
 
     const result =
@@ -76,25 +104,41 @@ const uploadProfilePhoto = async (req, res) => {
       );
 
     return res.status(200).json({
+
       success: result.success,
+
       message: result.message,
+
       data: {
+
         member: result.member,
-        profilePhoto: result.member.profilePhoto,
+
+        profilePhoto:
+          result.member.profilePhoto,
+
       },
+
     });
 
   } catch (error) {
 
-    console.error("Upload Photo:", error.message);
+    console.error(
+      "Upload Photo:",
+      error.message
+    );
 
     return res.status(400).json({
+
       success: false,
+
       message: error.message,
+
       errors: [],
+
     });
 
   }
+
 };
 
 /* =====================================================
@@ -102,30 +146,43 @@ const uploadProfilePhoto = async (req, res) => {
 ===================================================== */
 
 const getDashboard = async (req, res) => {
+
   try {
 
     const result =
-      await memberService.getDashboard(
+      await dashboardService.getDashboard(
         req.member._id
       );
 
     return res.status(200).json({
+
       success: result.success,
+
       message: result.message,
+
       data: result.dashboard,
+
     });
 
   } catch (error) {
 
-    console.error("Dashboard:", error.message);
+    console.error(
+      "Dashboard:",
+      error.message
+    );
 
     return res.status(400).json({
+
       success: false,
+
       message: error.message,
+
       errors: [],
+
     });
 
   }
+
 };
 
 /* =====================================================
@@ -133,6 +190,7 @@ const getDashboard = async (req, res) => {
 ===================================================== */
 
 const getMembershipCard = async (req, res) => {
+
   try {
 
     const result =
@@ -141,22 +199,34 @@ const getMembershipCard = async (req, res) => {
       );
 
     return res.status(200).json({
+
       success: result.success,
+
       message: result.message,
+
       data: result.card,
+
     });
 
   } catch (error) {
 
-    console.error("Membership Card:", error.message);
+    console.error(
+      "Membership Card:",
+      error.message
+    );
 
     return res.status(400).json({
+
       success: false,
+
       message: error.message,
+
       errors: [],
+
     });
 
   }
+
 };
 
 /* =====================================================
@@ -164,29 +234,43 @@ const getMembershipCard = async (req, res) => {
 ===================================================== */
 
 const getAllMembers = async (req, res) => {
+
   try {
 
     const result =
       await memberService.getAllMembers();
 
     return res.status(200).json({
+
       success: result.success,
+
       message: result.message,
+
       total: result.total,
+
       data: result.members,
+
     });
 
   } catch (error) {
 
-    console.error("Get Members:", error.message);
+    console.error(
+      "Get Members:",
+      error.message
+    );
 
     return res.status(400).json({
+
       success: false,
+
       message: error.message,
+
       errors: [],
+
     });
 
   }
+
 };
 
 /* =====================================================
@@ -194,6 +278,7 @@ const getAllMembers = async (req, res) => {
 ===================================================== */
 
 const getMemberById = async (req, res) => {
+
   try {
 
     const result =
@@ -202,30 +287,50 @@ const getMemberById = async (req, res) => {
       );
 
     return res.status(200).json({
+
       success: result.success,
+
       message: result.message,
+
       data: result.member,
+
     });
 
   } catch (error) {
 
-    console.error("Get Member:", error.message);
+    console.error(
+      "Get Member:",
+      error.message
+    );
 
     return res.status(400).json({
+
       success: false,
+
       message: error.message,
+
       errors: [],
+
     });
 
   }
+
 };
 
 module.exports = {
+
   getProfile,
+
   updateProfile,
+
   uploadProfilePhoto,
+
   getDashboard,
+
   getMembershipCard,
+
   getAllMembers,
+
   getMemberById,
+
 };

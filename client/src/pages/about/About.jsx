@@ -25,13 +25,13 @@ function About() {
       
       <OurJourney />
 
-      <Impact />
+       <Impact /> 
 
       <LeadershipStructure />
 
-      <Counties />
+       {/*<Counties /> */}
 
-      <Pillars />
+       <Pillars />
 
       <PartnersSection />
 

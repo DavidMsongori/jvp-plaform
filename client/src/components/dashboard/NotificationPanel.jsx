@@ -1,4 +1,10 @@
-import { Link } from "react-router-dom";
+import {
+  Bell,
+  CalendarDays,
+  CheckCircle2,
+  Info,
+  Megaphone,
+} from "lucide-react";
 
 import { useDashboard } from "../../context/DashboardContext";
 
@@ -14,41 +20,51 @@ function NotificationPanel() {
 
   if (loading) {
     return (
-      <section className="notification-panel">
-        <p>Loading notifications...</p>
+      <section className="notification-panel dashboard-card">
+        <div className="empty-state">
+          Loading notifications...
+        </div>
       </section>
     );
   }
 
   if (error) {
     return (
-      <section className="notification-panel">
-        <p>{error}</p>
+      <section className="notification-panel dashboard-card">
+        <div className="empty-state">
+          {error}
+        </div>
       </section>
     );
   }
 
-  const notifications =
-    dashboard?.notifications || [];
+  if (!dashboard?.notifications) {
+    return (
+      <section className="notification-panel dashboard-card">
+        <div className="empty-state">
+          Notifications unavailable.
+        </div>
+      </section>
+    );
+  }
+
+  const { notifications } = dashboard;
 
   const getIcon = (type) => {
 
     switch (type) {
 
       case "success":
-        return "✅";
+        return <CheckCircle2 size={18} />;
 
-      case "warning":
-        return "⚠️";
+      case "event":
+        return <CalendarDays size={18} />;
 
-      case "primary":
-        return "⭐";
-
-      case "info":
-        return "ℹ️";
+      case "announcement":
+        return <Megaphone size={18} />;
 
       default:
-        return "🔔";
+        return <Info size={18} />;
 
     }
 
@@ -56,87 +72,131 @@ function NotificationPanel() {
 
   return (
 
-    <section className="notification-panel">
+    <section className="notification-panel dashboard-card">
 
-      <div className="widget-header">
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
-        <div>
+      <div className="panel-header">
 
-          <h2>Notifications</h2>
+        <div className="panel-title">
 
-          <p>
-            Stay updated with your latest activity.
-          </p>
+          <Bell size={22} />
+
+          <div>
+
+            <h2>
+
+              Notifications
+
+            </h2>
+
+            <p>
+
+              Your latest updates and alerts.
+
+            </p>
+
+          </div>
 
         </div>
 
-        <Link
-          to="/dashboard/notifications"
-          className="view-all-link"
-        >
-          View All
-        </Link>
+        <span className="badge badge-success">
+
+          {notifications.length}
+
+        </span>
 
       </div>
 
-      {notifications.length === 0 ? (
+      {/* ==========================================
+          EMPTY STATE
+      ========================================== */}
 
-        <div className="empty-state">
+      {
 
-          <h3>No Notifications</h3>
+        notifications.length === 0 ? (
 
-          <p>
-            You're all caught up.
-          </p>
+          <div className="empty-state">
 
-        </div>
+            <h3>
 
-      ) : (
+              No Notifications
 
-        <div className="notification-list">
+            </h3>
 
-          {notifications.map((notification) => (
+            <p>
 
-            <div
-              key={notification.id}
-              className={`notification-item ${notification.type}`}
-            >
+              You're all caught up.
 
-              <div className="notification-icon">
+            </p>
 
-                {getIcon(notification.type)}
+          </div>
 
-              </div>
+        ) : (
 
-              <div className="notification-content">
+          <div className="notification-list">
 
-                <h4>
+            {
 
-                  {notification.title}
+              notifications.map((notification) => (
 
-                </h4>
+                <article
 
-                <p>
+                  key={notification.id}
 
-                  {notification.message}
+                  className="notification-item hover-lift"
 
-                </p>
+                >
 
-                <small>
+                  <div
+                    className={`notification-icon ${notification.type}`}
+                  >
 
-                  {notification.time}
+                    {
 
-                </small>
+                      getIcon(
+                        notification.type
+                      )
 
-              </div>
+                    }
 
-            </div>
+                  </div>
 
-          ))}
+                  <div className="notification-content">
 
-        </div>
+                    <h4>
 
-      )}
+                      {notification.title}
+
+                    </h4>
+
+                    <p>
+
+                      {notification.message}
+
+                    </p>
+
+                    <small>
+
+                      {notification.date}
+
+                    </small>
+
+                  </div>
+
+                </article>
+
+              ))
+
+            }
+
+          </div>
+
+        )
+
+      }
 
     </section>
 

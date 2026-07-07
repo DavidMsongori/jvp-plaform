@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
 
+import {
+  CalendarDays,
+  Clock3,
+  MapPin,
+  ArrowRight,
+} from "lucide-react";
+
 import { useDashboard } from "../../context/DashboardContext";
 
 import "./UpcomingEvents.css";
@@ -14,55 +21,99 @@ function UpcomingEvents() {
 
   if (loading) {
     return (
-      <section className="upcoming-events">
-        <p>Loading upcoming events...</p>
+      <section className="events-panel dashboard-card">
+        <div className="empty-state">
+          Loading upcoming events...
+        </div>
       </section>
     );
   }
 
   if (error) {
     return (
-      <section className="upcoming-events">
-        <p>{error}</p>
+      <section className="events-panel dashboard-card">
+        <div className="empty-state">
+          {error}
+        </div>
       </section>
     );
   }
 
-  const events = dashboard?.events || [];
+  if (!dashboard?.events) {
+    return (
+      <section className="events-panel dashboard-card">
+        <div className="empty-state">
+          No events available.
+        </div>
+      </section>
+    );
+  }
+
+  const { events } = dashboard;
 
   return (
-    <section className="upcoming-events">
 
-      <div className="widget-header">
+    <section className="events-panel dashboard-card">
 
-        <div>
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
-          <h2>Upcoming Events</h2>
+      <div className="events-header">
 
-          <p>
-            Events available for your participation.
-          </p>
+        <div className="events-title">
+
+          <CalendarDays size={22} />
+
+          <div>
+
+            <h2>
+
+              Upcoming Events
+
+            </h2>
+
+            <p>
+
+              Stay engaged with JVP activities.
+
+            </p>
+
+          </div>
 
         </div>
 
         <Link
           to="/dashboard/events"
-          className="view-all-link"
+          className="view-events-btn"
         >
+
           View All
+
+          <ArrowRight size={18} />
+
         </Link>
 
       </div>
+
+      {/* ==========================================
+          EMPTY STATE
+      ========================================== */}
 
       {events.length === 0 ? (
 
         <div className="empty-state">
 
-          <h3>No Upcoming Events</h3>
+          <h3>
+
+            No Upcoming Events
+
+          </h3>
 
           <p>
-            There are currently no upcoming events.
-            Check back again soon.
+
+            New events will appear here once they are published.
+
           </p>
 
         </div>
@@ -73,58 +124,81 @@ function UpcomingEvents() {
 
           {events.map((event) => (
 
-            <div
+            <article
               key={event.id}
-              className="event-card"
+              className="event-card hover-lift"
             >
+
+              {/* DATE */}
 
               <div className="event-date">
 
+                <CalendarDays size={18} />
+
                 <span>
-                  {new Date(event.date).getDate()}
+
+                  {event.date}
+
                 </span>
 
-                <small>
-
-                  {new Date(event.date).toLocaleString(
-                    "default",
-                    {
-                      month: "short",
-                      year: "numeric",
-                    }
-                  )}
-
-                </small>
-
               </div>
 
-              <div className="event-details">
+              {/* BODY */}
 
-                <h3>{event.title}</h3>
+              <div className="event-body">
 
-                <p>{event.location}</p>
+                <h3>
 
-              </div>
+                  {event.title}
 
-              <div className="event-status">
+                </h3>
 
-                {event.registered ? (
+                <div className="event-meta">
 
-                  <span className="status registered">
-                    Registered
+                  <span>
+
+                    <Clock3 size={15} />
+
+                    {event.time}
+
                   </span>
 
-                ) : (
+                  <span>
 
-                  <span className="status open">
-                    Open
+                    <MapPin size={15} />
+
+                    {event.location}
+
                   </span>
 
-                )}
+                </div>
 
               </div>
 
-            </div>
+              {/* FOOTER */}
+
+              <div className="event-footer">
+
+                <span
+                  className={`status-badge ${event.statusClass}`}
+                >
+
+                  {event.status}
+
+                </span>
+
+                <Link
+                  to="/dashboard/events"
+                  className="event-link"
+                >
+
+                  View Details
+
+                </Link>
+
+              </div>
+
+            </article>
 
           ))}
 
@@ -133,6 +207,7 @@ function UpcomingEvents() {
       )}
 
     </section>
+
   );
 
 }

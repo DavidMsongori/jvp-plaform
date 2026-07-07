@@ -1,0 +1,256 @@
+/* =====================================================
+   JVP CONNECT
+   RESPONSIVE FRAMEWORK
+===================================================== */
+
+/* =====================================================
+   LARGE DESKTOP
+===================================================== */
+
+@media (min-width:1600px){
+
+    .dashboard-main{
+
+        max-width:1600px;
+
+        margin:auto;
+
+        width:100%;
+
+        padding:40px;
+
+    }
+
+}
+
+/* =====================================================
+   DESKTOP
+===================================================== */
+
+@media (max-width:1400px){
+
+    .dashboard-top-grid{
+
+        grid-template-columns:340px 1fr;
+
+    }
+
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width:1200px){
+
+    .dashboard-content{
+
+        margin-left:0;
+
+    }
+
+    .dashboard-sidebar{
+
+        transform:translateX(-100%);
+
+        transition:.3s;
+
+    }
+
+    .dashboard-sidebar.open{
+
+        transform:translateX(0);
+
+    }
+
+    .dashboard-top-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .dashboard-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .dashboard-stats{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .quick-actions-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width:768px){
+
+    .dashboard-header{
+
+        padding:16px;
+
+        flex-wrap:wrap;
+
+        height:auto;
+
+    }
+
+    .dashboard-main{
+
+        padding:18px;
+
+    }
+
+    .dashboard-sidebar{
+
+        width:290px;
+
+        z-index:2000;
+
+    }
+
+    .dashboard-welcome{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:25px;
+
+    }
+
+    .profile-progress{
+
+        width:100%;
+
+    }
+
+    .dashboard-stats{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .quick-actions-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .member-details{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .events-header,
+
+    .news-header,
+
+    .panel-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
+
+    }
+
+    .event-footer,
+
+    .news-footer{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:12px;
+
+    }
+
+}
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width:576px){
+
+    .dashboard-header{
+
+        gap:15px;
+
+    }
+
+    .dashboard-welcome{
+
+        padding:25px;
+
+    }
+
+    .dashboard-welcome h1{
+
+        font-size:1.45rem;
+
+    }
+
+    .dashboard-card,
+
+    .member-card,
+
+    .events-panel,
+
+    .notification-panel,
+
+    .news-panel,
+
+    .quick-actions{
+
+        padding:20px;
+
+    }
+
+    .header-profile{
+
+        display:none;
+
+    }
+
+}
+
+/* =====================================================
+   EXTRA SMALL
+===================================================== */
+
+@media (max-width:400px){
+
+    .dashboard-main{
+
+        padding:12px;
+
+    }
+
+    .dashboard-welcome{
+
+        padding:18px;
+
+    }
+
+    .dashboard-welcome h1{
+
+        font-size:1.25rem;
+
+    }
+
+}

@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Counties.css";
 
 import kenyaMap from "../../assets/images/kenya-counties.png";
-import counties from "./countiesData";
+import counties from "./Counties";
 
 function Counties() {
 

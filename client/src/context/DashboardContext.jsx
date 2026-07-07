@@ -9,12 +9,17 @@ import {
   getDashboard,
 } from "../services/member.service";
 
-const DashboardContext =
-  createContext();
+const DashboardContext = createContext();
 
 export function DashboardProvider({
+
   children,
+
 }) {
+
+  /* ==========================================
+     STATE
+  ========================================== */
 
   const [dashboard, setDashboard] =
     useState(null);
@@ -25,17 +30,17 @@ export function DashboardProvider({
   const [error, setError] =
     useState("");
 
-  useEffect(() => {
-
-    loadDashboard();
-
-  }, []);
+  /* ==========================================
+     LOAD DASHBOARD
+  ========================================== */
 
   const loadDashboard = async () => {
 
     try {
 
       setLoading(true);
+
+      setError("");
 
       const response =
         await getDashboard();
@@ -62,17 +67,85 @@ export function DashboardProvider({
 
   };
 
+  /* ==========================================
+     INITIAL LOAD
+  ========================================== */
+
+  useEffect(() => {
+
+    loadDashboard();
+
+  }, []);
+
+  /* ==========================================
+     DERIVED DATA
+  ========================================== */
+
+  const member =
+    dashboard?.member || null;
+
+  const summary =
+    dashboard?.summary || {};
+
+  const statistics =
+    dashboard?.statistics || {};
+
+  const completion =
+    dashboard?.completion || {};
+
+  const events =
+    dashboard?.events || [];
+
+  const notifications =
+    dashboard?.notifications || [];
+
+  const news =
+    dashboard?.news || [];
+
+  const recentActivity =
+    dashboard?.recentActivity || [];
+
+  /* ==========================================
+     CONTEXT
+  ========================================== */
+
   return (
 
     <DashboardContext.Provider
 
       value={{
 
+        /* Raw */
+
         dashboard,
+
+        /* Member */
+
+        member,
+
+        /* Dashboard */
+
+        summary,
+
+        statistics,
+
+        completion,
+
+        events,
+
+        notifications,
+
+        news,
+
+        recentActivity,
+
+        /* Status */
 
         loading,
 
         error,
+
+        /* Actions */
 
         reloadDashboard:
           loadDashboard,

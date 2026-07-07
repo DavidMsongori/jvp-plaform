@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
 
+import {
+  Newspaper,
+  Calendar,
+  ArrowRight,
+} from "lucide-react";
+
 import { useDashboard } from "../../context/DashboardContext";
 
 import "./RecentNews.css";
@@ -14,99 +20,176 @@ function RecentNews() {
 
   if (loading) {
     return (
-      <section className="recent-news">
-        <p>Loading latest news...</p>
+      <section className="news-panel dashboard-card">
+        <div className="empty-state">
+          Loading latest news...
+        </div>
       </section>
     );
   }
 
   if (error) {
     return (
-      <section className="recent-news">
-        <p>{error}</p>
+      <section className="news-panel dashboard-card">
+        <div className="empty-state">
+          {error}
+        </div>
       </section>
     );
   }
 
-  const news = dashboard?.news || [];
+  if (!dashboard?.news) {
+    return (
+      <section className="news-panel dashboard-card">
+        <div className="empty-state">
+          News unavailable.
+        </div>
+      </section>
+    );
+  }
+
+  const { news } = dashboard;
 
   return (
 
-    <section className="recent-news">
+    <section className="news-panel dashboard-card">
 
-      <div className="widget-header">
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
-        <div>
+      <div className="news-header">
 
-          <h2>Latest News</h2>
+        <div className="news-title">
 
-          <p>
-            Stay informed with the latest updates from JVP.
-          </p>
+          <Newspaper size={22} />
+
+          <div>
+
+            <h2>
+
+              Latest News
+
+            </h2>
+
+            <p>
+
+              Stay updated with JVP announcements and stories.
+
+            </p>
+
+          </div>
 
         </div>
 
         <Link
           to="/news"
-          className="view-all-link"
+          className="view-news-btn"
         >
+
           View All
+
+          <ArrowRight size={18} />
+
         </Link>
 
       </div>
 
-      {news.length === 0 ? (
+      {/* ==========================================
+          EMPTY STATE
+      ========================================== */}
 
-        <div className="empty-state">
+      {
 
-          <h3>No News Available</h3>
+        news.length === 0 ? (
 
-          <p>
-            Check back later for the latest updates.
-          </p>
+          <div className="empty-state">
 
-        </div>
+            <h3>
 
-      ) : (
+              No News Available
 
-        <div className="news-list">
+            </h3>
 
-          {news.map((item) => (
+            <p>
 
-            <article
-              key={item.id}
-              className="news-card"
-            >
+              Check back later for the latest updates.
 
-              <div className="news-badge">
+            </p>
 
-                {item.category}
+          </div>
 
-              </div>
+        ) : (
 
-              <div className="news-content">
+          <div className="news-list">
 
-                <h3>
+            {
 
-                  {item.title}
+              news.map((article) => (
 
-                </h3>
+                <article
 
-                <span>
+                  key={article.id}
 
-                  {item.date}
+                  className="news-card hover-lift"
 
-                </span>
+                >
 
-              </div>
+                  <span className="news-category">
 
-            </article>
+                    {article.category}
 
-          ))}
+                  </span>
 
-        </div>
+                  <h3>
 
-      )}
+                    {article.title}
+
+                  </h3>
+
+                  <p>
+
+                    {article.excerpt}
+
+                  </p>
+
+                  <div className="news-footer">
+
+                    <span>
+
+                      <Calendar size={15} />
+
+                      {article.date}
+
+                    </span>
+
+                    <Link
+
+                      to="/news"
+
+                      className="read-more"
+
+                    >
+
+                      Read More
+
+                      <ArrowRight size={16} />
+
+                    </Link>
+
+                  </div>
+
+                </article>
+
+              ))
+
+            }
+
+          </div>
+
+        )
+
+      }
 
     </section>
 

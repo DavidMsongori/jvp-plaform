@@ -1,82 +1,93 @@
+import {
+  Activity,
+  CalendarDays,
+  BookOpen,
+  Award,
+  Clock3,
+  Percent,
+} from "lucide-react";
+
 import { useDashboard } from "../../context/DashboardContext";
 
 import "./DashboardStats.css";
 
 function DashboardStats() {
 
-  const {
-    dashboard,
-    loading,
-    error,
-  } = useDashboard();
+  const { dashboard, loading, error } = useDashboard();
 
   if (loading) {
     return (
-      <div className="dashboard-stats">
-        <p>Loading statistics...</p>
-      </div>
+      <section className="dashboard-stats">
+        <div className="empty-state">
+          Loading statistics...
+        </div>
+      </section>
     );
   }
 
   if (error) {
     return (
-      <div className="dashboard-stats">
-        <p>{error}</p>
-      </div>
+      <section className="dashboard-stats">
+        <div className="empty-state">
+          {error}
+        </div>
+      </section>
     );
   }
 
-  const stats = dashboard?.stats;
-
-  if (!stats) {
+  if (!dashboard?.statistics) {
     return (
-      <div className="dashboard-stats">
-        <p>No statistics available.</p>
-      </div>
+      <section className="dashboard-stats">
+        <div className="empty-state">
+          Statistics unavailable.
+        </div>
+      </section>
     );
   }
 
-  const statCards = [
+  const stats = dashboard.statistics;
+
+  const cards = [
 
     {
       title: "Profile Completion",
-      value: `${stats.profileCompletion || 0}%`,
-      icon: "👤",
+      value: `${stats.profileCompletion}%`,
+      icon: Percent,
       color: "green",
     },
 
     {
-      title: "Events",
-      value: stats.events || 0,
-      icon: "📅",
+      title: "Registered Events",
+      value: stats.events,
+      icon: CalendarDays,
       color: "blue",
     },
 
     {
-      title: "Programs",
-      value: stats.programs || 0,
-      icon: "🎓",
-      color: "purple",
-    },
-
-    {
-      title: "Certificates",
-      value: stats.certificates || 0,
-      icon: "📜",
+      title: "Active Programs",
+      value: stats.programs,
+      icon: BookOpen,
       color: "orange",
     },
 
     {
+      title: "Certificates",
+      value: stats.certificates,
+      icon: Award,
+      color: "purple",
+    },
+
+    {
       title: "Volunteer Hours",
-      value: stats.volunteerHours || 0,
-      icon: "🤝",
+      value: stats.volunteerHours,
+      icon: Activity,
       color: "teal",
     },
 
     {
       title: "Login Count",
-      value: stats.loginCount || 0,
-      icon: "🔐",
+      value: stats.loginCount,
+      icon: Clock3,
       color: "indigo",
     },
 
@@ -84,46 +95,54 @@ function DashboardStats() {
 
   return (
 
-    <div className="dashboard-stats">
+    <section className="dashboard-stats">
 
-      <div className="dashboard-section-title">
+      {
 
-        <h2>Your Statistics</h2>
+        cards.map((card) => {
 
-        <p>
-          A summary of your participation and activity within JVP Connect.
-        </p>
+          const Icon = card.icon;
 
-      </div>
+          return (
 
-      <div className="stats-grid">
+            <div
+              key={card.title}
+              className="stat-card dashboard-card hover-lift"
+            >
 
-        {statCards.map((stat) => (
+              <div
+                className={`stat-icon ${card.color}`}
+              >
 
-          <div
-            key={stat.title}
-            className={`stat-card ${stat.color}`}
-          >
+                <Icon size={24} />
 
-            <div className="stat-icon">
-              {stat.icon}
+              </div>
+
+              <div className="stat-content">
+
+                <span>
+
+                  {card.title}
+
+                </span>
+
+                <h3>
+
+                  {card.value}
+
+                </h3>
+
+              </div>
+
             </div>
 
-            <div className="stat-number">
-              {stat.value}
-            </div>
+          );
 
-            <div className="stat-title">
-              {stat.title}
-            </div>
+        })
 
-          </div>
+      }
 
-        ))}
-
-      </div>
-
-    </div>
+    </section>
 
   );
 

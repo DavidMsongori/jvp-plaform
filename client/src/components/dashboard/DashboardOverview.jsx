@@ -2,18 +2,84 @@ import MemberCard from "./MemberCard";
 import DashboardStats from "./DashboardStats";
 import QuickActions from "./QuickActions";
 import UpcomingEvents from "./UpcomingEvents";
-import RecentNews from "./RecentNews";
 import NotificationPanel from "./NotificationPanel";
+import RecentNews from "./RecentNews";
+
+import { useAuth } from "../../context/AuthContext";
 
 import "./DashboardOverview.css";
 
 function DashboardOverview() {
+
+  const { member } = useAuth();
+
+  const completion =
+    member?.profileCompleted || 0;
+
   return (
+
     <div className="dashboard-overview">
 
-      {/* Top Row */}
+      {/* ==========================================
+          WELCOME BANNER
+      ========================================== */}
 
-      <section className="dashboard-top">
+      <section className="dashboard-welcome">
+
+        <div>
+
+          <h1>
+
+            Welcome back,
+            {" "}
+            {member?.firstName || "Member"} 👋
+
+          </h1>
+
+          <p>
+
+            Manage your membership,
+            events, programs and opportunities
+            from one place.
+
+          </p>
+
+        </div>
+
+        <div className="profile-progress">
+
+          <span>
+
+            Profile Completion
+
+          </span>
+
+          <div className="progress-bar">
+
+            <div
+              className="progress-fill"
+              style={{
+                width: `${completion}%`,
+              }}
+            />
+
+          </div>
+
+          <strong>
+
+            {completion}%
+
+          </strong>
+
+        </div>
+
+      </section>
+
+      {/* ==========================================
+          TOP GRID
+      ========================================== */}
+
+      <section className="dashboard-top-grid">
 
         <MemberCard />
 
@@ -21,19 +87,19 @@ function DashboardOverview() {
 
       </section>
 
-      {/* Quick Actions */}
+      {/* ==========================================
+          QUICK ACTIONS
+      ========================================== */}
 
-      <section className="dashboard-section">
+      <QuickActions />
 
-        <QuickActions />
+      {/* ==========================================
+          CONTENT GRID
+      ========================================== */}
 
-      </section>
+      <section className="dashboard-grid">
 
-      {/* Bottom Widgets */}
-
-      <section className="dashboard-bottom">
-
-        <div className="dashboard-column">
+        <div className="dashboard-left">
 
           <UpcomingEvents />
 
@@ -41,7 +107,7 @@ function DashboardOverview() {
 
         </div>
 
-        <div className="dashboard-column">
+        <div className="dashboard-right">
 
           <NotificationPanel />
 
@@ -50,7 +116,9 @@ function DashboardOverview() {
       </section>
 
     </div>
+
   );
+
 }
 
 export default DashboardOverview;

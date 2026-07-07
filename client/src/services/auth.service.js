@@ -5,8 +5,14 @@ import api from "./api";
 ========================================== */
 
 export const activateMembership = async (payload) => {
-  const { data } = await api.post("/auth/activate", payload);
-  return data;
+
+  const response = await api.post(
+    "/auth/activate",
+    payload
+  );
+
+  return response.data;
+
 };
 
 /* ==========================================
@@ -14,17 +20,14 @@ export const activateMembership = async (payload) => {
 ========================================== */
 
 export const verifyOTP = async (payload) => {
-  const { data } = await api.post("/auth/verify-otp", payload);
-  return data;
-};
 
-/* ==========================================
-   RESEND OTP
-========================================== */
+  const response = await api.post(
+    "/auth/verify-otp",
+    payload
+  );
 
-export const resendOTP = async (payload) => {
-  const { data } = await api.post("/auth/resend-otp", payload);
-  return data;
+  return response.data;
+
 };
 
 /* ==========================================
@@ -32,20 +35,14 @@ export const resendOTP = async (payload) => {
 ========================================== */
 
 export const createPassword = async (payload) => {
-  const { data } = await api.post("/auth/create-password", payload);
 
-  if (data?.data?.token) {
-    localStorage.setItem("token", data.data.token);
-  }
+  const response = await api.post(
+    "/auth/create-password",
+    payload
+  );
 
-  if (data?.data?.member) {
-    localStorage.setItem(
-      "member",
-      JSON.stringify(data.data.member)
-    );
-  }
+  return response.data;
 
-  return data;
 };
 
 /* ==========================================
@@ -53,20 +50,14 @@ export const createPassword = async (payload) => {
 ========================================== */
 
 export const login = async (payload) => {
-  const { data } = await api.post("/auth/login", payload);
 
-  if (data?.data?.token) {
-    localStorage.setItem("token", data.data.token);
-  }
+  const response = await api.post(
+    "/auth/login",
+    payload
+  );
 
-  if (data?.data?.member) {
-    localStorage.setItem(
-      "member",
-      JSON.stringify(data.data.member)
-    );
-  }
+  return response.data;
 
-  return data;
 };
 
 /* ==========================================
@@ -74,8 +65,13 @@ export const login = async (payload) => {
 ========================================== */
 
 export const getCurrentMember = async () => {
-  const { data } = await api.get("/auth/me");
-  return data;
+
+  const response = await api.get(
+    "/auth/me"
+  );
+
+  return response.data;
+
 };
 
 /* ==========================================
@@ -83,8 +79,14 @@ export const getCurrentMember = async () => {
 ========================================== */
 
 export const forgotPassword = async (payload) => {
-  const { data } = await api.post("/auth/forgot-password", payload);
-  return data;
+
+  const response = await api.post(
+    "/auth/forgot-password",
+    payload
+  );
+
+  return response.data;
+
 };
 
 /* ==========================================
@@ -92,45 +94,47 @@ export const forgotPassword = async (payload) => {
 ========================================== */
 
 export const resetPassword = async (payload) => {
-  const { data } = await api.post("/auth/reset-password", payload);
-  return data;
+
+  const response = await api.post(
+    "/auth/reset-password",
+    payload
+  );
+
+  return response.data;
+
 };
 
 /* ==========================================
-   LOGOUT
+   RESEND OTP
 ========================================== */
 
-export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("member");
-};
+export const resendOTP = async (payload) => {
 
-/* ==========================================
-   HELPERS
-========================================== */
+  const response = await api.post(
+    "/auth/resend-otp",
+    payload
+  );
 
-export const isAuthenticated = () => {
-  return Boolean(localStorage.getItem("token"));
-};
+  return response.data;
 
-export const getStoredMember = () => {
-  try {
-    return JSON.parse(localStorage.getItem("member"));
-  } catch {
-    return null;
-  }
 };
 
 export default {
+
   activateMembership,
+
   verifyOTP,
-  resendOTP,
+
   createPassword,
+
   login,
+
   getCurrentMember,
+
   forgotPassword,
+
   resetPassword,
-  logout,
-  isAuthenticated,
-  getStoredMember,
+
+  resendOTP,
+
 };

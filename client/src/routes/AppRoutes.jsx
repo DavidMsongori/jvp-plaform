@@ -27,6 +27,12 @@ import VerifyOTP from "../pages/auth/VerifyOTP";
 import CreatePassword from "../pages/auth/CreatePassword";
 
 /* ==========================
+   Dashboard Shell
+========================== */
+
+import DashboardShell from "../pages/dashboard/DashboardShell";
+
+/* ==========================
    Dashboard Pages
 ========================== */
 
@@ -46,118 +52,160 @@ import Settings from "../pages/dashboard/Settings";
 import NotFound from "../pages/NotFound";
 
 function AppRoutes() {
+
   return (
+
     <BrowserRouter>
+
       <Routes>
 
-        {/* ==========================
-            Public Pages
-        =========================== */}
+        {/* =====================================
+            PUBLIC PAGES
+        ====================================== */}
 
         <Route path="/" element={<Home />} />
+
         <Route path="/about" element={<About />} />
+
         <Route path="/programs" element={<Programs />} />
+
         <Route path="/events" element={<Events />} />
+
         <Route path="/news" element={<News />} />
+
         <Route path="/membership" element={<Membership />} />
+
         <Route path="/summit" element={<Summit />} />
+
         <Route path="/contact" element={<Contact />} />
 
-        {/* ==========================
-            Authentication
-        =========================== */}
+        {/* =====================================
+            AUTHENTICATION
+        ====================================== */}
 
         <Route path="/login" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
-        <Route path="/activate-membership" element={<ClaimMembership />} />
-        <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/create-password" element={<CreatePassword />} />
-
-        {/* ==========================
-            Protected Dashboard
-        =========================== */}
 
         <Route
+          path="/activate-membership"
+          element={<ClaimMembership />}
+        />
+
+        <Route
+          path="/verify-otp"
+          element={<VerifyOTP />}
+        />
+
+        <Route
+          path="/create-password"
+          element={<CreatePassword />}
+        />
+
+        {/* =====================================
+            DASHBOARD
+        ====================================== */}
+
+        <Route
+
           path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
 
-        <Route
-          path="/dashboard/profile"
           element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
 
-        <Route
-          path="/dashboard/membership-card"
-          element={
             <ProtectedRoute>
-              <MembershipCard />
-            </ProtectedRoute>
-          }
-        />
 
-        <Route
-          path="/dashboard/events"
-          element={
-            <ProtectedRoute>
-              <EventsDashboard />
-            </ProtectedRoute>
-          }
-        />
+              <DashboardShell />
 
-        <Route
-          path="/dashboard/programs"
-          element={
-            <ProtectedRoute>
-              <ProgramsDashboard />
             </ProtectedRoute>
-          }
-        />
 
-        <Route
-          path="/dashboard/certificates"
-          element={
-            <ProtectedRoute>
-              <Certificates />
-            </ProtectedRoute>
           }
-        />
 
-        <Route
-          path="/dashboard/notifications"
-          element={
-            <ProtectedRoute>
-              <Notifications />
-            </ProtectedRoute>
-          }
-        />
+        >
 
-        <Route
-          path="/dashboard/settings"
-          element={
-            <ProtectedRoute>
-              <Settings />
-            </ProtectedRoute>
-          }
-        />
+          <Route
 
-        {/* ==========================
+            index
+
+            element={<Dashboard />}
+
+          />
+
+          <Route
+
+            path="profile"
+
+            element={<Profile />}
+
+          />
+
+          <Route
+
+            path="membership-card"
+
+            element={<MembershipCard />}
+
+          />
+
+          <Route
+
+            path="events"
+
+            element={<EventsDashboard />}
+
+          />
+
+          <Route
+
+            path="programs"
+
+            element={<ProgramsDashboard />}
+
+          />
+
+          <Route
+
+            path="certificates"
+
+            element={<Certificates />}
+
+          />
+
+          <Route
+
+            path="notifications"
+
+            element={<Notifications />}
+
+          />
+
+          <Route
+
+            path="settings"
+
+            element={<Settings />}
+
+          />
+
+        </Route>
+
+        {/* =====================================
             404
-        =========================== */}
+        ====================================== */}
 
-        <Route path="*" element={<NotFound />} />
+        <Route
+
+          path="*"
+
+          element={<NotFound />}
+
+        />
 
       </Routes>
+
     </BrowserRouter>
+
   );
+
 }
 
 export default AppRoutes;

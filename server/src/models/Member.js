@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const memberSchema = new mongoose.Schema(
   {
-    // Account
+    /* =====================================================
+       ACCOUNT
+    ===================================================== */
+
     role: {
       type: String,
       enum: [
@@ -22,6 +25,7 @@ const memberSchema = new mongoose.Schema(
       type: String,
       unique: true,
       sparse: true,
+      trim: true,
     },
 
     legacyMember: {
@@ -80,7 +84,10 @@ const memberSchema = new mongoose.Schema(
       default: null,
     },
 
-    // Personal Information
+    /* =====================================================
+       PERSONAL INFORMATION
+    ===================================================== */
+
     firstName: {
       type: String,
       required: true,
@@ -99,13 +106,19 @@ const memberSchema = new mongoose.Schema(
       trim: true,
     },
 
-    gender: String,
+    gender: {
+      type: String,
+      default: "",
+    },
 
-    dob: Date,
+    dateOfBirth: {
+      type: Date,
+    },
 
     nationalId: {
       type: String,
       sparse: true,
+      trim: true,
     },
 
     phone: {
@@ -127,30 +140,220 @@ const memberSchema = new mongoose.Schema(
       default: "",
     },
 
-    // Location
-    county: String,
+    /* =====================================================
+       LOCATION
+    ===================================================== */
 
-    constituency: String,
-
-    ward: String,
-
-    village: String,
-
-    // Profile
-    skills: {
-      type: [String],
-      default: [],
+    county: {
+      type: String,
+      default: "",
     },
 
-    interests: {
-      type: [String],
-      default: [],
+    constituency: {
+      type: String,
+      default: "",
     },
+
+    ward: {
+      type: String,
+      default: "",
+    },
+
+    village: {
+      type: String,
+      default: "",
+    },
+
+    /* =====================================================
+       EDUCATION
+    ===================================================== */
+
+    education: {
+
+      level: {
+        type: String,
+        default: "",
+      },
+
+      institution: {
+        type: String,
+        default: "",
+      },
+
+      course: {
+        type: String,
+        default: "",
+      },
+
+      registrationNumber: {
+        type: String,
+        default: "",
+      },
+
+      graduationYear: {
+        type: Number,
+      },
+
+      status: {
+        type: String,
+        default: "",
+      },
+
+    },
+
+    /* =====================================================
+       EMPLOYMENT
+    ===================================================== */
+
+    employment: {
+
+      status: {
+        type: String,
+        default: "",
+      },
+
+      occupation: {
+        type: String,
+        default: "",
+      },
+
+      employer: {
+        type: String,
+        default: "",
+      },
+
+      businessName: {
+        type: String,
+        default: "",
+      },
+
+      industry: {
+        type: String,
+        default: "",
+      },
+
+      experienceYears: {
+        type: Number,
+        default: 0,
+      },
+
+    },
+
+    /* =====================================================
+       LEADERSHIP
+    ===================================================== */
+
+    leadership: {
+
+      hasExperience: {
+        type: Boolean,
+        default: false,
+      },
+
+      organization: {
+        type: String,
+        default: "",
+      },
+
+      position: {
+        type: String,
+        default: "",
+      },
+
+      startYear: {
+        type: Number,
+      },
+
+      endYear: {
+        type: Number,
+      },
+
+      achievements: {
+        type: String,
+        default: "",
+      },
+
+    },
+
+    /* =====================================================
+       SKILLS
+    ===================================================== */
+
+    skills: [{
+      type: String,
+    }],
+
+    languages: [{
+      type: String,
+    }],
+
+    interests: [{
+      type: String,
+    }],
 
     bio: {
       type: String,
       default: "",
     },
+
+    /* =====================================================
+       SOCIAL MEDIA
+    ===================================================== */
+
+    social: {
+
+      facebook: {
+        type: String,
+        default: "",
+      },
+
+      instagram: {
+        type: String,
+        default: "",
+      },
+
+      linkedin: {
+        type: String,
+        default: "",
+      },
+
+      twitter: {
+        type: String,
+        default: "",
+      },
+
+      tiktok: {
+        type: String,
+        default: "",
+      },
+
+    },
+
+    /* =====================================================
+       MEMBER STATISTICS
+    ===================================================== */
+
+    profileCompleted: {
+      type: Number,
+      default: 20,
+      min: 0,
+      max: 100,
+    },
+
+    memberSince: {
+      type: Date,
+      default: Date.now,
+    },
+
+    lastLogin: {
+      type: Date,
+    },
+
+    loginCount: {
+      type: Number,
+      default: 0,
+    },
+
   },
   {
     timestamps: true,

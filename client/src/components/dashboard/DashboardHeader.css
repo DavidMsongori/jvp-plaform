@@ -1,15 +1,405 @@
+/* =====================================================
+   DASHBOARD HEADER
+===================================================== */
+
 .dashboard-header{
 
-    background:white;
+    position:sticky;
 
-    padding:20px 30px;
+    top:0;
+
+    z-index:100;
+
+    height:88px;
+
+    background:#ffffff;
+
+    border-bottom:1px solid #e8edf5;
 
     display:flex;
 
+    align-items:center;
+
     justify-content:space-between;
+
+    gap:30px;
+
+    padding:0 35px;
+
+    box-shadow:0 4px 18px rgba(0,0,0,.04);
+
+}
+
+/* =====================================================
+   LEFT
+===================================================== */
+
+.header-left{
+
+    display:flex;
 
     align-items:center;
 
-    border-bottom:1px solid #eee;
+    gap:18px;
+
+    flex-shrink:0;
+
+}
+
+.menu-toggle{
+
+    width:48px;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#f5f8fc;
+
+    color:#143d73;
+
+    cursor:pointer;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    transition:.25s;
+
+}
+
+.menu-toggle:hover{
+
+    background:#008751;
+
+    color:#ffffff;
+
+}
+
+.header-title h2{
+
+    margin:0;
+
+    font-size:1.55rem;
+
+    color:#143d73;
+
+    font-weight:700;
+
+}
+
+.header-title h2 span{
+
+    color:#008751;
+
+}
+
+.header-title p{
+
+    margin-top:6px;
+
+    color:#7b8794;
+
+    font-size:.92rem;
+
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.header-search{
+
+    flex:1;
+
+    max-width:520px;
+
+    position:relative;
+
+}
+
+.header-search input{
+
+    width:100%;
+
+    padding:15px 18px 15px 48px;
+
+    border-radius:50px;
+
+    border:1px solid #dce5ef;
+
+    background:#f7f9fc;
+
+    font-size:.95rem;
+
+    outline:none;
+
+    transition:.3s;
+
+}
+
+.header-search input:focus{
+
+    border-color:#008751;
+
+    background:#ffffff;
+
+    box-shadow:0 0 0 4px rgba(0,135,81,.10);
+
+}
+
+.search-icon{
+
+    position:absolute;
+
+    top:50%;
+
+    left:18px;
+
+    transform:translateY(-50%);
+
+    color:#7b8794;
+
+}
+
+/* =====================================================
+   RIGHT
+===================================================== */
+
+.header-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+/* =====================================================
+   ICON BUTTONS
+===================================================== */
+
+.header-icon-btn{
+
+    position:relative;
+
+    width:48px;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#f5f8fc;
+
+    color:#143d73;
+
+    cursor:pointer;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    transition:.25s;
+
+}
+
+.header-icon-btn:hover{
+
+    background:#008751;
+
+    color:#ffffff;
+
+    transform:translateY(-2px);
+
+}
+
+/* =====================================================
+   NOTIFICATION BADGE
+===================================================== */
+
+.notification-badge{
+
+    position:absolute;
+
+    top:8px;
+
+    right:8px;
+
+    width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+
+    background:#e53935;
+
+    color:#ffffff;
+
+    font-size:.70rem;
+
+    font-weight:700;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border:2px solid #ffffff;
+
+}
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+.header-profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding-left:10px;
+
+}
+
+.profile-avatar{
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    background:#eaf8f2;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#008751;
+
+    flex-shrink:0;
+
+}
+
+.profile-avatar img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+.profile-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.profile-info strong{
+
+    color:#143d73;
+
+    font-size:.95rem;
+
+    font-weight:700;
+
+}
+
+.profile-info span{
+
+    margin-top:4px;
+
+    color:#7b8794;
+
+    font-size:.82rem;
+
+    text-transform:capitalize;
+
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width:1100px){
+
+    .header-search{
+
+        display:none;
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .dashboard-header{
+
+        padding:0 18px;
+
+        gap:12px;
+
+        height:80px;
+
+    }
+
+    .header-title h2{
+
+        font-size:1.2rem;
+
+    }
+
+    .header-title p{
+
+        display:none;
+
+    }
+
+    .profile-info{
+
+        display:none;
+
+    }
+
+}
+
+@media (max-width:576px){
+
+    .header-icon-btn{
+
+        width:42px;
+
+        height:42px;
+
+    }
+
+    .menu-toggle{
+
+        width:42px;
+
+        height:42px;
+
+    }
 
 }

@@ -1,54 +1,75 @@
 /* =====================================================
-   DASHBOARD LAYOUT
+   PROFILE PAGE
 ===================================================== */
 
-.dashboard-layout{
+.profile-page{
+
     display:flex;
-    min-height:100vh;
-    background:#f4f7fb;
+
+    flex-direction:column;
+
+    gap:30px;
+
 }
 
 /* =====================================================
    CONTENT
 ===================================================== */
 
-.dashboard-content{
-    flex:1;
-    margin-left:290px;
-    display:flex;
-    flex-direction:column;
-    min-height:100vh;
+.profile-content{
+
+    display:grid;
+
+    grid-template-columns:2fr 380px;
+
+    gap:30px;
+
+    align-items:start;
+
 }
 
 /* =====================================================
-   MAIN CONTENT
+   LEFT
 ===================================================== */
 
-.dashboard-main{
-    flex:1;
-    padding:32px;
+.profile-main{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:30px;
+
+}
+
+/* =====================================================
+   RIGHT
+===================================================== */
+
+.profile-side{
+
+    position:sticky;
+
+    top:95px;
+
 }
 
 /* =====================================================
    RESPONSIVE
 ===================================================== */
 
-@media (max-width:1100px){
+@media(max-width:1200px){
 
-    .dashboard-content{
-        margin-left:0;
+    .profile-content{
+
+        grid-template-columns:1fr;
+
     }
 
-    .dashboard-main{
-        padding:22px;
-    }
+    .profile-side{
 
-}
+        position:static;
 
-@media (max-width:768px){
-
-    .dashboard-main{
-        padding:18px;
     }
 
 }

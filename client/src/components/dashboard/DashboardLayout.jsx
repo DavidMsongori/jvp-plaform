@@ -1,17 +1,22 @@
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardHeader from "./DashboardHeader";
 
+import "./dashboard-theme.css";
+import "./dashboard-responsive.css";
+import "./dashboard-animations.css";
+import "./DashboardLayout.css";
+
 function DashboardLayout({ children }) {
   return (
-    <div className="dashboard">
+    <div className="dashboard-layout">
 
       <DashboardSidebar />
 
-      <div className="dashboard-main">
+      <div className="dashboard-content">
 
         <DashboardHeader />
 
-        <main>
+        <main className="dashboard-main">
 
           {children}
 
