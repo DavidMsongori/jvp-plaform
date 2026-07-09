@@ -1,0 +1,173 @@
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.edit-member-sidebar {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1.5rem;
+
+}
+
+/* ==========================================
+   CARD
+========================================== */
+
+.edit-sidebar-card {
+
+  background: var(--admin-card-bg);
+
+  border: 1px solid var(--admin-border);
+
+  border-radius: 18px;
+
+  padding: 1.5rem;
+
+  box-shadow: var(--admin-shadow-md);
+
+}
+
+.edit-sidebar-card h3 {
+
+  margin: 0 0 1.25rem;
+
+  color: var(--admin-text);
+
+}
+
+/* ==========================================
+   PROFILE COMPLETION
+========================================== */
+
+.completion-circle {
+
+  width: 110px;
+
+  height: 110px;
+
+  margin: 0 auto 1rem;
+
+  border-radius: 50%;
+
+  border: 8px solid var(--admin-primary);
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+}
+
+.completion-circle strong {
+
+  color: var(--admin-primary);
+
+  font-size: 1.4rem;
+
+}
+
+.completion-bar {
+
+  height: 10px;
+
+  background: #e5e7eb;
+
+  border-radius: 999px;
+
+  overflow: hidden;
+
+}
+
+.completion-fill {
+
+  height: 100%;
+
+  background: var(--admin-primary);
+
+  border-radius: 999px;
+
+}
+
+/* ==========================================
+   ROW
+========================================== */
+
+.sidebar-row {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: .85rem;
+
+  padding: .9rem 0;
+
+  border-bottom: 1px solid var(--admin-border);
+
+}
+
+.sidebar-row:last-child {
+
+  border-bottom: none;
+
+}
+
+.sidebar-row svg {
+
+  color: var(--admin-primary);
+
+  margin-top: .15rem;
+
+  flex-shrink: 0;
+
+}
+
+.sidebar-row small {
+
+  display: block;
+
+  margin-bottom: .3rem;
+
+  color: var(--admin-text-light);
+
+}
+
+.sidebar-row strong {
+
+  color: var(--admin-text);
+
+  word-break: break-word;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:1200px){
+
+  .edit-member-sidebar{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:1.5rem;
+
+  }
+
+}
+
+@media (max-width:768px){
+
+  .edit-member-sidebar{
+
+    grid-template-columns:1fr;
+
+  }
+
+}

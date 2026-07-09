@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import "./Hero.css";
 
-import hero1 from "../../assets/hero/hero1.jpg";
-import hero2 from "../../assets/hero/hero2.jpg";
-import hero3 from "../../assets/hero/hero3.jpg";
-import hero4 from "../../assets/hero/hero4.jpg";
-import hero5 from "../../assets/hero/hero5.jpg";
-import hero6 from "../../assets/hero/hero6.jpg";
+
+import hero1 from "../../assets/hero/hero3.jpg";
+import hero2 from "../../assets/images/coastal-hero.jpg";
+import hero3 from "../../assets/hero/hero6.jpg";
 
 import {
   FaFacebookF,
@@ -25,9 +23,6 @@ const slides = [
   hero1,
   hero2,
   hero3,
-  hero4,
-  hero5,
-  hero6,
 ];
 
 function Hero() {
@@ -150,15 +145,15 @@ function Hero() {
               FOLLOW US
             </span>
 
-            <a href="#">
+            <a href="https://www.facebook.com/profile.php?id=61582648195839&sk">
               <FaFacebookF />
             </a>
 
-            <a href="#">
+            <a href="https://www.instagram.com/jumuiya_ya_vijana_wa_pwani?igsh=MTB5enkzcnJuYXZObw==/">
               <FaInstagram />
             </a>
 
-            <a href="#">
+            <a href="https://x.com/vijanapwani001">
               <FaXTwitter />
             </a>
 
@@ -170,7 +165,7 @@ function Hero() {
               <FaYoutube />
             </a>
 
-            <a href="#">
+            <a href="https://wa.me/254740504969">
               <FaWhatsapp />
             </a>
 

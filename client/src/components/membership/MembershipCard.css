@@ -1,0 +1,1322 @@
+/* =====================================================
+   JVP CONNECT
+   MEMBERSHIP CARD
+===================================================== */
+
+/* ==========================================
+   PAGE
+========================================== */
+
+.membership-page{
+
+    width:100%;
+
+    min-height:100vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:flex-start;
+
+    gap:30px;
+
+    padding:35px;
+
+    background:#f4f7fc;
+
+}
+
+/* ==========================================
+   CARD STAGE
+========================================== */
+
+.membership-card-stage{
+
+    width:420px;
+
+    height:270px;
+
+    perspective:1800px;
+
+}
+
+/* ==========================================
+   FLIP CONTAINER
+========================================== */
+
+.membership-card-flip{
+
+    position:relative;
+
+    width:100%;
+
+    height:100%;
+
+    transform-style:preserve-3d;
+
+    transition:transform .9s cubic-bezier(.4,.2,.2,1);
+
+}
+
+.membership-card-flip.flipped{
+
+    transform:rotateY(180deg);
+
+}
+
+/* ==========================================
+   CARD FACES
+========================================== */
+
+.membership-face{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    backface-visibility:hidden;
+
+    -webkit-backface-visibility:hidden;
+
+}
+
+.membership-front{
+
+    z-index:2;
+
+}
+
+.membership-back{
+
+    transform:rotateY(180deg);
+
+}
+
+/* ==========================================
+   CARD
+========================================== */
+
+.membership-card{
+
+    position:relative;
+
+    width:100%;
+
+    height:100%;
+
+    overflow:hidden;
+
+    border-radius:22px;
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            #0057B8,
+
+            #0D6EFD,
+
+            #2FA7FF
+
+        );
+
+    color:#ffffff;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    box-shadow:
+
+        0 22px 55px rgba(0,87,184,.30);
+
+}
+
+/* ==========================================
+   SHINE EFFECT
+========================================== */
+
+.card-shine{
+
+    position:absolute;
+
+    top:-120px;
+
+    left:-160px;
+
+    width:240px;
+
+    height:520px;
+
+    transform:rotate(25deg);
+
+    background:
+
+        linear-gradient(
+
+            rgba(255,255,255,0),
+
+            rgba(255,255,255,.22),
+
+            rgba(255,255,255,0)
+
+        );
+
+    animation:cardShine 7s linear infinite;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================
+   WATERMARK
+========================================== */
+
+.membership-watermark{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    pointer-events:none;
+
+}
+
+.membership-watermark img{
+
+    width:220px;
+
+    opacity:.06;
+
+}
+
+/* ==========================================
+   FLIP BUTTON
+========================================== */
+
+.membership-flip-controls{
+
+    display:flex;
+
+    justify-content:center;
+
+    width:100%;
+
+}
+
+.flip-card-btn{
+
+    border:none;
+
+    outline:none;
+
+    cursor:pointer;
+
+    padding:14px 28px;
+
+    border-radius:50px;
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            #0057B8,
+
+            #0B7DD8
+
+        );
+
+    color:#ffffff;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    letter-spacing:.3px;
+
+    transition:.30s;
+
+    box-shadow:
+
+        0 12px 28px rgba(0,87,184,.28);
+
+}
+
+.flip-card-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.flip-card-btn:active{
+
+    transform:scale(.97);
+
+}
+
+/* ==========================================
+   LOADING / ERROR
+========================================== */
+
+.membership-loading,
+
+.membership-error{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    gap:16px;
+
+    min-height:60vh;
+
+}
+
+/* ==========================================
+   ANIMATION
+========================================== */
+
+@keyframes cardShine{
+
+    from{
+
+        transform:
+
+            translateX(-220px)
+
+            rotate(25deg);
+
+    }
+
+    to{
+
+        transform:
+
+            translateX(620px)
+
+            rotate(25deg);
+
+    }
+
+}
+
+/* =====================================================
+   FRONT CARD
+===================================================== */
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.card-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px 22px 0;
+
+    z-index:2;
+
+}
+
+/* ==========================================
+   VERIFIED
+========================================== */
+
+.verified-badge{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(10px);
+
+    border:1px solid rgba(255,255,255,.20);
+
+    color:#ffffff;
+
+    font-size:.68rem;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+}
+
+/* ==========================================
+   MEMBER
+========================================== */
+
+.card-profile{
+
+    position:relative;
+
+    display:grid;
+
+    grid-template-columns:80px 1fr 52px;
+
+    align-items:center;
+
+    gap:18px;
+
+    padding:10px 22px 0;
+
+    z-index:2;
+
+}
+
+/* ==========================================
+   PHOTO
+========================================== */
+
+.profile-photo{
+
+    width:80px;
+
+    height:80px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    border:3px solid rgba(255,255,255,.92);
+
+    box-shadow:
+
+        0 10px 24px rgba(0,0,0,.25);
+
+    background:#ffffff;
+
+}
+
+.profile-photo img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+/* ==========================================
+   PLACEHOLDER
+========================================== */
+
+.profile-placeholder{
+
+    width:100%;
+
+    height:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#ffffff;
+
+    color:#0057B8;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   DETAILS
+========================================== */
+
+.profile-details{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    gap:8px;
+
+}
+
+.profile-details h3{
+
+    margin:0;
+
+    font-size:1.28rem;
+
+    font-weight:700;
+
+    line-height:1.15;
+
+    color:#ffffff;
+
+}
+
+.role-badge{
+
+    width:max-content;
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    background:#FFD54F;
+
+    color:#16325B;
+
+    font-size:.68rem;
+
+    font-weight:700;
+
+    letter-spacing:.8px;
+
+    text-transform:uppercase;
+
+}
+
+/* ==========================================
+   SMART CHIP
+========================================== */
+
+.card-chip{
+
+    width:48px;
+
+    height:38px;
+
+    border-radius:10px;
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            #FFD54F,
+
+            #F6C343
+
+        );
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:4px;
+
+    padding:6px;
+
+}
+
+.card-chip span{
+
+    border-radius:3px;
+
+    background:rgba(255,255,255,.45);
+
+}
+
+/* ==========================================
+   INFORMATION
+========================================== */
+
+.card-information{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:12px;
+
+    padding:18px 22px;
+
+    z-index:2;
+
+}
+
+/* ==========================================
+   INFO CARD
+========================================== */
+
+.info-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:10px 12px;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.12);
+
+    backdrop-filter:blur(8px);
+
+    border:1px solid rgba(255,255,255,.14);
+
+}
+
+.info-item svg{
+
+    flex-shrink:0;
+
+    color:#FFD54F;
+
+}
+
+.info-item div{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.info-item small{
+
+    margin-bottom:2px;
+
+    font-size:.60rem;
+
+    color:rgba(255,255,255,.78);
+
+    text-transform:uppercase;
+
+    letter-spacing:.7px;
+
+}
+
+.info-item strong{
+
+    font-size:.76rem;
+
+    font-weight:700;
+
+    color:#ffffff;
+
+    line-height:1.2;
+
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.card-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 22px 18px;
+
+    z-index:2;
+
+}
+
+.card-footer small{
+
+    color:rgba(255,255,255,.82);
+
+    font-size:.68rem;
+
+}
+
+.footer-status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    color:#ffffff;
+
+    font-size:.72rem;
+
+    font-weight:600;
+
+}
+
+/* =====================================================
+   BACK CARD
+===================================================== */
+
+.membership-card-back{
+
+    position:relative;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    padding:22px;
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            #16325B,
+
+            #0057B8,
+
+            #0B7DD8
+
+        );
+
+    color:#ffffff;
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.card-back-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    z-index:2;
+
+}
+
+.card-back-header h2{
+
+    margin:0;
+
+    font-size:1rem;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+}
+
+.card-back-header svg{
+
+    color:#FFD54F;
+
+}
+
+/* ==========================================
+   QR SECTION
+========================================== */
+
+.card-back-qr{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin:14px 0;
+
+    z-index:2;
+
+}
+
+.membership-qr{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:14px;
+
+    border-radius:16px;
+
+    background:rgba(255,255,255,.95);
+
+    box-shadow:
+
+        0 12px 28px rgba(0,0,0,.18);
+
+}
+
+.membership-qr svg{
+
+    display:block;
+
+}
+
+.membership-qr small{
+
+    font-size:.72rem;
+
+    color:#16325B;
+
+    font-weight:600;
+
+    text-align:center;
+
+}
+
+/* ==========================================
+   MEMBER
+========================================== */
+
+.card-back-member{
+
+    text-align:center;
+
+    z-index:2;
+
+}
+
+.card-back-member h3{
+
+    margin:0;
+
+    font-size:1.1rem;
+
+    font-weight:700;
+
+    color:#ffffff;
+
+}
+
+.card-back-member p{
+
+    margin-top:6px;
+
+    font-size:.78rem;
+
+    color:rgba(255,255,255,.85);
+
+}
+
+.card-back-member strong{
+
+    display:block;
+
+    margin-top:4px;
+
+    color:#FFD54F;
+
+    font-size:.92rem;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   ORGANIZATION DETAILS
+========================================== */
+
+.card-back-info{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:10px 18px;
+
+    margin-top:12px;
+
+    z-index:2;
+
+}
+
+.card-back-info div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.card-back-info svg{
+
+    flex-shrink:0;
+
+    color:#FFD54F;
+
+}
+
+.card-back-info span{
+
+    font-size:.68rem;
+
+    line-height:1.4;
+
+    color:#ffffff;
+
+    word-break:break-word;
+
+}
+
+/* ==========================================
+   DISCLAIMER
+========================================== */
+
+.card-back-footer{
+
+    margin-top:14px;
+
+    padding-top:12px;
+
+    border-top:
+
+        1px solid rgba(255,255,255,.18);
+
+    text-align:center;
+
+    z-index:2;
+
+}
+
+.card-back-footer p{
+
+    margin:0;
+
+    font-size:.62rem;
+
+    line-height:1.5;
+
+    color:rgba(255,255,255,.78);
+
+}
+
+/* =====================================================
+   MEMBERSHIP ACTIONS
+===================================================== */
+
+.membership-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:16px;
+
+    margin-top:10px;
+
+}
+
+.membership-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    min-width:170px;
+
+    padding:14px 22px;
+
+    border:none;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    background:#ffffff;
+
+    color:#16325B;
+
+    font-size:.92rem;
+
+    font-weight:600;
+
+    transition:all .30s ease;
+
+    box-shadow:
+
+        0 10px 24px rgba(15,23,42,.08);
+
+}
+
+.membership-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+        0 18px 36px rgba(15,23,42,.12);
+
+}
+
+.membership-btn:active{
+
+    transform:scale(.98);
+
+}
+
+.membership-btn svg{
+
+    flex-shrink:0;
+
+}
+
+.membership-btn.primary{
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            #0057B8,
+
+            #0B7DD8
+
+        );
+
+    color:#ffffff;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:768px){
+
+.membership-page{
+
+    padding:20px;
+
+}
+
+.membership-card-stage{
+
+    width:100%;
+
+    max-width:380px;
+
+    height:245px;
+
+}
+
+.membership-actions{
+
+    flex-direction:column;
+
+    width:100%;
+
+}
+
+.membership-btn{
+
+    width:100%;
+
+}
+
+.card-profile{
+
+    grid-template-columns:70px 1fr;
+
+}
+
+.card-chip{
+
+    display:none;
+
+}
+
+.card-information{
+
+    grid-template-columns:1fr;
+
+}
+
+.card-back-info{
+
+    grid-template-columns:1fr;
+
+}
+
+.profile-photo{
+
+    width:70px;
+
+    height:70px;
+
+}
+
+.profile-details h3{
+
+    font-size:1.05rem;
+
+}
+
+}
+
+/* ==========================================
+   SMALL PHONES
+========================================== */
+
+@media (max-width:480px){
+
+.membership-card-stage{
+
+    max-width:340px;
+
+    height:220px;
+
+}
+
+.card-header{
+
+    padding:14px 16px 0;
+
+}
+
+.card-profile{
+
+    padding:6px 16px 0;
+
+    gap:12px;
+
+}
+
+.card-information{
+
+    padding:14px 16px;
+
+    gap:8px;
+
+}
+
+.card-footer{
+
+    padding:0 16px 14px;
+
+}
+
+.profile-photo{
+
+    width:60px;
+
+    height:60px;
+
+}
+
+.profile-details h3{
+
+    font-size:.95rem;
+
+}
+
+.role-badge{
+
+    font-size:.60rem;
+
+}
+
+.info-item{
+
+    padding:8px;
+
+}
+
+.info-item small{
+
+    font-size:.56rem;
+
+}
+
+.info-item strong{
+
+    font-size:.70rem;
+
+}
+
+.membership-watermark img{
+
+    width:170px;
+
+}
+
+.membership-qr{
+
+    padding:10px;
+
+}
+
+.membership-qr svg{
+
+    width:85px !important;
+
+    height:85px !important;
+
+}
+
+.card-back-member h3{
+
+    font-size:.90rem;
+
+}
+
+.card-back-info span{
+
+    font-size:.60rem;
+
+}
+
+.card-back-footer p{
+
+    font-size:.55rem;
+
+}
+
+}
+
+/* ==========================================
+   PRINT
+========================================== */
+
+@media print{
+
+body{
+
+    background:#ffffff;
+
+}
+
+.membership-actions,
+
+.membership-flip-controls{
+
+    display:none !important;
+
+}
+
+.membership-page{
+
+    padding:0;
+
+}
+
+.membership-card-stage{
+
+    perspective:none;
+
+}
+
+.membership-card-flip{
+
+    transform:none !important;
+
+}
+
+.membership-back{
+
+    display:none;
+
+}
+
+.membership-card{
+
+    box-shadow:none;
+
+    page-break-inside:avoid;
+
+}
+
+}
+
+/* ==========================================
+   ACCESSIBILITY
+========================================== */
+
+.flip-card-btn:focus,
+
+.membership-btn:focus{
+
+    outline:3px solid rgba(11,125,216,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion:reduce){
+
+.membership-card-flip,
+
+.membership-btn,
+
+.flip-card-btn,
+
+.card-shine{
+
+    animation:none !important;
+
+    transition:none !important;
+
+}
+
+}

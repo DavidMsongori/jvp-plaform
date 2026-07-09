@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+
 import {
   Camera,
   LoaderCircle,
@@ -10,56 +11,78 @@ import {
 } from "../../services/member.service";
 
 import {
-  useDashboard,
-} from "../../context/DashboardContext";
+  useProfile,
+} from "../../context/ProfileContext";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "";
+import "./Profile.css";
 
-function ProfilePhotoUpload({
+/* =====================================================
+   API
+===================================================== */
 
-  size = 140,
+const API_URL =
+  (import.meta.env.VITE_API_URL || "")
+    .replace("/api", "");
 
-  editable = true,
+/* =====================================================
+   PROFILE PHOTO UPLOAD
+===================================================== */
 
-}) {
+function ProfilePhotoUpload() {
 
   const {
 
-    member,
+    profile,
 
-    reloadDashboard,
+    fullName,
 
-  } = useDashboard();
+    profilePhoto,
 
-  const inputRef = useRef(null);
+    reloadProfile,
+
+  } = useProfile();
+
+  const inputRef =
+    useRef(null);
 
   const [uploading, setUploading] =
     useState(false);
 
-  const fullName = [
+  /* ==========================================
+     IMAGE
+  ========================================== */
 
-    member?.firstName,
+  const image =
 
-    member?.middleName,
+    profilePhoto
 
-    member?.lastName,
+      ? profilePhoto.startsWith("http")
 
-  ]
+        ? profilePhoto
 
-    .filter(Boolean)
+        : `${API_URL}${profilePhoto}`
 
-    .join(" ");
+      : "/images/default-avatar.png";
 
-  const openPicker = () => {
+  /* ==========================================
+     OPEN FILE PICKER
+  ========================================== */
 
-    if (!editable) return;
+  const selectPhoto = () => {
 
     inputRef.current?.click();
 
   };
 
-  const handleUpload = async (event) => {
+  /* ==========================================
+     UPLOAD PHOTO
+  ========================================== */
+
+  const handleUpload = async (
+
+    event
+
+  ) => {
 
     const file =
       event.target.files?.[0];
@@ -72,9 +95,11 @@ function ProfilePhotoUpload({
 
       await uploadProfilePhoto(file);
 
-      await reloadDashboard();
+      await reloadProfile();
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.error(error);
 
@@ -86,7 +111,9 @@ function ProfilePhotoUpload({
 
       );
 
-    } finally {
+    }
+
+    finally {
 
       setUploading(false);
 
@@ -98,101 +125,114 @@ function ProfilePhotoUpload({
 
   return (
 
-    <>
+    <section className="profile-photo-card">
+
+      {/* ======================================
+          PHOTO
+      ====================================== */}
 
       <div
 
-        className="profile-avatar"
+        className="profile-photo-wrapper"
 
-        style={{
-
-          width: size,
-
-          height: size,
-
-        }}
-
-        onClick={openPicker}
+        onClick={selectPhoto}
 
       >
 
-        {
+        <img
 
-          member?.profilePhoto ? (
+          src={image}
 
-            <img
+          alt={
 
-              src={`${API_BASE_URL}${member.profilePhoto}`}
+            fullName ||
 
-              alt={fullName}
+            "Profile Photo"
 
-            />
+          }
 
-          ) : (
+          onError={(event) => {
 
-            <User size={size * 0.45} />
+            event.target.src =
+              "/images/default-avatar.png";
 
-          )
+          }}
 
-        }
+        />
 
-        {
+        <div className="photo-overlay">
 
-          editable && (
+          {
 
-            <div className="camera-overlay">
+            uploading ? (
 
-              {
+              <LoaderCircle
 
-                uploading ? (
+                className="spin"
 
-                  <LoaderCircle
+                size={24}
 
-                    size={20}
+              />
 
-                    className="spin"
+            ) : (
 
-                  />
+              <Camera
 
-                ) : (
+                size={24}
 
-                  <Camera size={20} />
+              />
 
-                )
+            )
 
-              }
+          }
 
-            </div>
-
-          )
-
-        }
+        </div>
 
       </div>
 
-      {
+      {/* ======================================
+          DETAILS
+      ====================================== */}
 
-        editable && (
+      <div className="profile-photo-details">
 
-          <input
+        <h3>
 
-            ref={inputRef}
+          {fullName ||
 
-            type="file"
+            "JVP Member"}
 
-            accept="image/png,image/jpeg,image/jpg,image/webp"
+        </h3>
 
-            hidden
+        <p>
 
-            onChange={handleUpload}
+          Click your profile photo to upload
 
-          />
+          a new picture.
 
-        )
+        </p>
 
-      }
+      </div>
 
-    </>
+      {/* ======================================
+          INPUT
+      ====================================== */}
+
+      <input
+
+        ref={inputRef}
+
+        type="file"
+
+        hidden
+
+        accept="image/png,image/jpeg,image/jpg,image/webp"
+
+        onChange={handleUpload}
+
+      />
+
+    </section>
 
   );
 

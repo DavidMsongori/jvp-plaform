@@ -1,0 +1,81 @@
+/* ==========================================
+   PROFILE PHOTO
+========================================== */
+
+.profile-avatar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  margin: 0 auto 1rem;
+
+  border-radius: 50%;
+  background: #f5f7fb;
+  border: 4px solid #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  cursor: pointer;
+
+  transition: transform 0.25s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.03);
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar svg {
+  color: #94a3b8;
+}
+
+/* ==========================================
+   CAMERA OVERLAY
+========================================== */
+
+.camera-overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.45);
+
+  color: #ffffff;
+
+  opacity: 0;
+
+  transition: opacity 0.25s ease;
+}
+
+.profile-avatar:hover .camera-overlay {
+  opacity: 1;
+}
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}

@@ -1,379 +1,88 @@
-import { useEffect, useState } from "react";
-import { Save } from "lucide-react";
+import {
+  useEffect,
+  useState,
+} from "react";
 
-import { useDashboard } from "../../context/DashboardContext";
-// import { updateProfile } from "../../services/member.service";
+import {
+  Save,
+  LoaderCircle,
+} from "lucide-react";
 
-import PersonalSection from "./sections/PersonalSection";
-import LocationSection from "./sections/LocationSection";
-import EducationSection from "./sections/EducationSection";
-import EmploymentSection from "./sections/EmploymentSection";
-import LeadershipSection from "./sections/LeadershipSection";
-import SkillsSection from "./sections/SkillsSection";
-import SocialSection from "./sections/SocialSection";
+import {
+  updateMyProfile,
+} from "../../services/member.service";
 
-import "./ProfileForm.css";
+import {
+  useProfile,
+} from "../../context/ProfileContext";
+
+/* ==========================================
+   FORM SECTIONS
+========================================== */
+
+import PersonalInformation from "./PersonalInformation";
+import LocationInformation from "./LocationInformation";
+import EducationInformation from "./EducationInformation";
+import EmploymentInformation from "./EmploymentInformation";
+import LeadershipInformation from "./LeadershipInformation";
+import SkillsInformation from "./SkillsInformation";
+import SocialInformation from "./SocialInformation";
+
+import "./Profile.css";
+
+/* =====================================================
+   PROFILE FORM
+===================================================== */
 
 function ProfileForm() {
 
   const {
 
-    dashboard,
+    profile,
 
-    loading,
+    reloadProfile,
 
-    error,
+  } = useProfile();
 
-  } = useDashboard();
+  const [formData, setFormData] =
+    useState({});
 
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] =
+    useState(false);
 
-  /* =====================================================
-     FORM DATA
-  ===================================================== */
-
-  const [formData, setFormData] = useState({
-
-    /* ==========================
-       PERSONAL
-    ========================== */
-
-    firstName: "",
-
-    middleName: "",
-
-    lastName: "",
-
-    gender: "",
-
-    dateOfBirth: "",
-
-    phone: "",
-
-    email: "",
-
-    /* ==========================
-       LOCATION
-    ========================== */
-
-    county: "",
-
-    constituency: "",
-
-    ward: "",
-
-    village: "",
-
-    /* ==========================
-       EDUCATION
-    ========================== */
-
-    education: {
-
-      level: "",
-
-      institution: "",
-
-      course: "",
-
-      registrationNumber: "",
-
-      graduationYear: "",
-
-      status: "",
-
-    },
-
-    /* ==========================
-       EMPLOYMENT
-    ========================== */
-
-    employment: {
-
-      status: "",
-
-      occupation: "",
-
-      employer: "",
-
-      businessName: "",
-
-      industry: "",
-
-      experienceYears: "",
-
-    },
-
-    /* ==========================
-       LEADERSHIP
-    ========================== */
-
-    leadership: {
-
-      hasExperience: false,
-
-      organization: "",
-
-      position: "",
-
-      startYear: "",
-
-      endYear: "",
-
-      achievements: "",
-
-    },
-
-    /* ==========================
-       PROFILE
-    ========================== */
-
-    skills: [],
-
-    languages: [],
-
-    interests: [],
-
-    bio: "",
-
-    /* ==========================
-       SOCIAL
-    ========================== */
-
-    social: {
-
-      facebook: "",
-
-      instagram: "",
-
-      linkedin: "",
-
-      twitter: "",
-
-      tiktok: "",
-
-    },
-
-  });
-
-  /* =====================================================
-     LOAD MEMBER
-  ===================================================== */
+  /* ==========================================
+     LOAD PROFILE
+  ========================================== */
 
   useEffect(() => {
 
-    if (!dashboard?.member) return;
+    if (profile) {
 
-    const member = dashboard.member;
+      setFormData({
 
-    setFormData({
+        ...profile,
 
-      firstName: member.firstName || "",
-
-      middleName: member.middleName || "",
-
-      lastName: member.lastName || "",
-
-      gender: member.gender || "",
-
-      dateOfBirth: member.dateOfBirth
-        ? member.dateOfBirth.substring(0, 10)
-        : "",
-
-      phone: member.phone || "",
-
-      email: member.email || "",
-
-      county: member.county || "",
-
-      constituency: member.constituency || "",
-
-      ward: member.ward || "",
-
-      village: member.village || "",
-
-      education: {
-
-        level:
-          member.education?.level || "",
-
-        institution:
-          member.education?.institution || "",
-
-        course:
-          member.education?.course || "",
-
-        registrationNumber:
-          member.education?.registrationNumber || "",
-
-        graduationYear:
-          member.education?.graduationYear || "",
-
-        status:
-          member.education?.status || "",
-
-      },
-
-      employment: {
-
-        status:
-          member.employment?.status || "",
-
-        occupation:
-          member.employment?.occupation || "",
-
-        employer:
-          member.employment?.employer || "",
-
-        businessName:
-          member.employment?.businessName || "",
-
-        industry:
-          member.employment?.industry || "",
-
-        experienceYears:
-          member.employment?.experienceYears || "",
-
-      },
-
-      leadership: {
-
-        hasExperience:
-          member.leadership?.hasExperience || false,
-
-        organization:
-          member.leadership?.organization || "",
-
-        position:
-          member.leadership?.position || "",
-
-        startYear:
-          member.leadership?.startYear || "",
-
-        endYear:
-          member.leadership?.endYear || "",
-
-        achievements:
-          member.leadership?.achievements || "",
-
-      },
-
-      skills: member.skills || [],
-
-      languages: member.languages || [],
-
-      interests: member.interests || [],
-
-      bio: member.bio || "",
-
-      social: {
-
-        facebook:
-          member.social?.facebook || "",
-
-        instagram:
-          member.social?.instagram || "",
-
-        linkedin:
-          member.social?.linkedin || "",
-
-        twitter:
-          member.social?.twitter || "",
-
-        tiktok:
-          member.social?.tiktok || "",
-
-      },
-
-    });
-
-  }, [dashboard]);
-
-  /* =====================================================
-     HANDLE CHANGE
-  ===================================================== */
-
-  const handleChange = (e) => {
-
-    const {
-
-      name,
-
-      value,
-
-    } = e.target;
-
-    /* ==========================
-       NESTED OBJECTS
-    ========================== */
-
-    if (name.includes(".")) {
-
-      const [
-
-        parent,
-
-        child,
-
-      ] = name.split(".");
-
-      setFormData((prev) => ({
-
-        ...prev,
-
-        [parent]: {
-
-          ...prev[parent],
-
-          [child]: value,
-
-        },
-
-      }));
-
-      return;
+      });
 
     }
 
-    /* ==========================
-       ARRAYS
-    ========================== */
+  }, [profile]);
 
-    if (
+  /* ==========================================
+     UPDATE FIELD
+  ========================================== */
 
-      name === "skills" ||
+  const updateField = (
 
-      name === "languages" ||
+    name,
 
-      name === "interests"
+    value
 
-    ) {
+  ) => {
 
-      setFormData((prev) => ({
+    setFormData((previous) => ({
 
-        ...prev,
-
-        [name]: value
-
-          .split(",")
-
-          .map((item) => item.trim())
-
-          .filter(Boolean),
-
-      }));
-
-      return;
-
-    }
-
-    /* ==========================
-       NORMAL FIELD
-    ========================== */
-
-    setFormData((prev) => ({
-
-      ...prev,
+      ...previous,
 
       [name]: value,
 
@@ -381,29 +90,83 @@ function ProfileForm() {
 
   };
 
-  /* =====================================================
+  /* ==========================================
+     UPDATE NESTED OBJECT
+  ========================================== */
+
+  const updateNestedField = (
+
+    section,
+
+    name,
+
+    value
+
+  ) => {
+
+    setFormData((previous) => ({
+
+      ...previous,
+
+      [section]: {
+
+        ...previous[section],
+
+        [name]: value,
+
+      },
+
+    }));
+
+  };
+
+  /* ==========================================
      SAVE PROFILE
-  ===================================================== */
+  ========================================== */
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (
 
-    e.preventDefault();
+    event
+
+  ) => {
+
+    event.preventDefault();
 
     try {
 
       setSaving(true);
 
-      console.log(formData);
+      await updateMyProfile(
 
-      /*
-      await updateProfile(formData);
-      */
+        formData
 
-    } catch (error) {
+      );
+
+      await reloadProfile();
+
+      alert(
+
+        "Profile updated successfully."
+
+      );
+
+    }
+
+    catch (error) {
 
       console.error(error);
 
-    } finally {
+      alert(
+
+        error.response?.data?.message ||
+
+        "Unable to update profile."
+
+      );
+
+    }
+
+    finally {
 
       setSaving(false);
 
@@ -411,125 +174,123 @@ function ProfileForm() {
 
   };
 
-    /* =====================================================
-     LOADING
-  ===================================================== */
-
-  if (loading) {
-
-    return (
-
-      <div className="dashboard-card">
-
-        Loading profile...
-
-      </div>
-
-    );
-
-  }
-
-  /* =====================================================
-     ERROR
-  ===================================================== */
-
-  if (error) {
-
-    return (
-
-      <div className="dashboard-card">
-
-        <h3>
-
-          Unable to load profile
-
-        </h3>
-
-        <p>
-
-          {error}
-
-        </p>
-
-      </div>
-
-    );
-
-  }
-
-  /* =====================================================
-     PAGE
-  ===================================================== */
-
   return (
 
     <form
 
-      className="profile-form dashboard-card"
+      className="profile-form"
 
       onSubmit={handleSubmit}
 
     >
 
-      <PersonalSection
+      {/* ======================================
+          PERSONAL
+      ====================================== */}
+
+      <PersonalInformation
 
         formData={formData}
 
-        handleChange={handleChange}
+        updateField={updateField}
 
       />
 
-      <LocationSection
+      {/* ======================================
+          LOCATION
+      ====================================== */}
+
+      <LocationInformation
 
         formData={formData}
 
-        handleChange={handleChange}
+        updateNestedField={
+
+          updateNestedField
+
+        }
 
       />
 
-      <EducationSection
+      {/* ======================================
+          EDUCATION
+      ====================================== */}
+
+      <EducationInformation
 
         formData={formData}
 
-        handleChange={handleChange}
+        updateNestedField={
+
+          updateNestedField
+
+        }
 
       />
 
-      <EmploymentSection
+      {/* ======================================
+          EMPLOYMENT
+      ====================================== */}
+
+      <EmploymentInformation
 
         formData={formData}
 
-        handleChange={handleChange}
+        updateNestedField={
+
+          updateNestedField
+
+        }
 
       />
 
-      <LeadershipSection
+      {/* ======================================
+          LEADERSHIP
+      ====================================== */}
+
+      <LeadershipInformation
 
         formData={formData}
 
-        handleChange={handleChange}
+        updateNestedField={
+
+          updateNestedField
+
+        }
 
       />
 
-      <SkillsSection
+      {/* ======================================
+          SKILLS
+      ====================================== */}
+
+      <SkillsInformation
 
         formData={formData}
 
-        handleChange={handleChange}
+        updateField={updateField}
 
       />
 
-      <SocialSection
+      {/* ======================================
+          SOCIAL
+      ====================================== */}
+
+      <SocialInformation
 
         formData={formData}
 
-        handleChange={handleChange}
+        updateNestedField={
+
+          updateNestedField
+
+        }
 
       />
 
-      {/* ==========================================
-          SAVE ACTIONS
-      ========================================== */}
+      {/* ======================================
+          ACTIONS
+      ====================================== */}
 
       <div className="profile-actions">
 
@@ -537,21 +298,41 @@ function ProfileForm() {
 
           type="submit"
 
-          disabled={saving}
+          className="profile-save-btn"
 
-          className="dashboard-btn dashboard-btn-primary"
+          disabled={saving}
 
         >
 
-          <Save size={18} />
-
           {
 
-            saving
+            saving ? (
 
-              ? "Saving Changes..."
+              <>
 
-              : "Save Changes"
+                <LoaderCircle
+
+                  size={18}
+
+                  className="spin"
+
+                />
+
+                Saving...
+
+              </>
+
+            ) : (
+
+              <>
+
+                <Save size={18} />
+
+                Save Profile
+
+              </>
+
+            )
 
           }
 

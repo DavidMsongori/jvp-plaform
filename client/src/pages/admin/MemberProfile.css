@@ -1,0 +1,89 @@
+/* ==========================================
+   PAGE
+========================================== */
+
+.admin-member-profile{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:2rem;
+
+}
+
+/* ==========================================
+   GRID
+========================================== */
+
+.admin-member-grid{
+
+  display:grid;
+
+  grid-template-columns:
+
+    2fr
+
+    380px;
+
+  gap:2rem;
+
+  align-items:start;
+
+}
+
+/* ==========================================
+   MAIN
+========================================== */
+
+.admin-member-main{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:2rem;
+
+}
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.admin-member-side{
+
+  position:sticky;
+
+  top:100px;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:1200px){
+
+  .admin-member-grid{
+
+    grid-template-columns:1fr;
+
+  }
+
+  .admin-member-side{
+
+    position:static;
+
+  }
+
+}
+
+@media(max-width:768px){
+
+  .admin-member-profile{
+
+    gap:1.5rem;
+
+  }
+
+}

@@ -1,0 +1,269 @@
+/* ==========================================
+   OVERLAY
+========================================== */
+
+.delete-member-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(15,23,42,.65);
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 1rem;
+
+  z-index: 5000;
+
+  backdrop-filter: blur(4px);
+
+}
+
+/* ==========================================
+   MODAL
+========================================== */
+
+.delete-member-modal {
+
+  position: relative;
+
+  width: 100%;
+
+  max-width: 500px;
+
+  background: var(--admin-card-bg);
+
+  border-radius: 22px;
+
+  padding: 2rem;
+
+  text-align: center;
+
+  box-shadow: var(--admin-shadow-lg);
+
+  animation: adminScaleIn .25s ease;
+
+}
+
+/* ==========================================
+   CLOSE
+========================================== */
+
+.modal-close {
+
+  position: absolute;
+
+  top: 18px;
+
+  right: 18px;
+
+  width: 40px;
+
+  height: 40px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #f1f5f9;
+
+  cursor: pointer;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+}
+
+.modal-close:hover {
+
+  background: #e2e8f0;
+
+}
+
+/* ==========================================
+   ICON
+========================================== */
+
+.delete-icon {
+
+  width: 80px;
+
+  height: 80px;
+
+  margin: 0 auto 1.5rem;
+
+  border-radius: 50%;
+
+  background: rgba(220,38,38,.12);
+
+  color: #dc2626;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+}
+
+/* ==========================================
+   CONTENT
+========================================== */
+
+.delete-member-modal h2 {
+
+  margin: 0;
+
+  color: var(--admin-text);
+
+}
+
+.delete-member-modal h3 {
+
+  margin: 1rem 0;
+
+  color: #dc2626;
+
+  font-size: 1.25rem;
+
+}
+
+.delete-member-modal p {
+
+  color: var(--admin-text-light);
+
+  line-height: 1.6;
+
+}
+
+.warning-text {
+
+  margin-top: 1rem;
+
+  padding: 1rem;
+
+  background: rgba(245,158,11,.08);
+
+  border: 1px solid rgba(245,158,11,.2);
+
+  border-radius: 12px;
+
+}
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.delete-actions {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 1rem;
+
+  margin-top: 2rem;
+
+}
+
+.cancel-btn,
+
+.delete-btn {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: .5rem;
+
+  border: none;
+
+  border-radius: 12px;
+
+  padding: .95rem 1.5rem;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  min-width: 150px;
+
+}
+
+.cancel-btn {
+
+  background: #e2e8f0;
+
+  color: #334155;
+
+}
+
+.cancel-btn:hover {
+
+  background: #cbd5e1;
+
+}
+
+.delete-btn {
+
+  background: #dc2626;
+
+  color: #ffffff;
+
+}
+
+.delete-btn:hover {
+
+  background: #b91c1c;
+
+}
+
+.cancel-btn:disabled,
+
+.delete-btn:disabled,
+
+.modal-close:disabled {
+
+  opacity: .6;
+
+  cursor: not-allowed;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 576px) {
+
+  .delete-member-modal {
+
+    padding: 1.5rem;
+
+  }
+
+  .delete-actions {
+
+    flex-direction: column;
+
+  }
+
+  .cancel-btn,
+
+  .delete-btn {
+
+    width: 100%;
+
+  }
+
+}

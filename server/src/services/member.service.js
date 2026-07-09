@@ -12,10 +12,13 @@ class MemberService {
   async getProfile(memberId) {
 
     const member = await Member.findById(memberId)
+
       .select("-password -otp -otpExpires");
 
     if (!member) {
+
       throw new Error("Member not found.");
+
     }
 
     return {
@@ -39,13 +42,14 @@ class MemberService {
     const member = await Member.findById(memberId);
 
     if (!member) {
+
       throw new Error("Member not found.");
+
     }
 
     this.mapProfileData(member, profileData);
 
-    member.profileCompleted =
-      this.calculateProfileCompletion(member);
+    member.calculateProfileCompletion();
 
     await member.save();
 
@@ -68,7 +72,7 @@ class MemberService {
   mapProfileData(member, data) {
 
     /* ==========================================
-       PERSONAL
+       PERSONAL INFORMATION
     ========================================== */
 
     if (data.firstName !== undefined)
@@ -86,6 +90,9 @@ class MemberService {
     if (data.dateOfBirth !== undefined)
       member.dateOfBirth = data.dateOfBirth;
 
+    if (data.nationalId !== undefined)
+      member.nationalId = data.nationalId;
+
     if (data.phone !== undefined)
       member.phone = data.phone;
 
@@ -96,68 +103,52 @@ class MemberService {
        LOCATION
     ========================================== */
 
-    if (data.county !== undefined)
-      member.county = data.county;
+    member.location = {
 
-    if (data.constituency !== undefined)
-      member.constituency = data.constituency;
+      ...member.location,
 
-    if (data.ward !== undefined)
-      member.ward = data.ward;
+      ...(data.location || {}),
 
-    if (data.village !== undefined)
-      member.village = data.village;
+    };
 
     /* ==========================================
        EDUCATION
     ========================================== */
 
-    if (data.education) {
+    member.education = {
 
-      member.education = {
+      ...member.education,
 
-        ...member.education,
+      ...(data.education || {}),
 
-        ...data.education,
-
-      };
-
-    }
+    };
 
     /* ==========================================
        EMPLOYMENT
     ========================================== */
 
-    if (data.employment) {
+    member.employment = {
 
-      member.employment = {
+      ...member.employment,
 
-        ...member.employment,
+      ...(data.employment || {}),
 
-        ...data.employment,
-
-      };
-
-    }
+    };
 
     /* ==========================================
        LEADERSHIP
     ========================================== */
 
-    if (data.leadership) {
+    member.leadership = {
 
-      member.leadership = {
+      ...member.leadership,
 
-        ...member.leadership,
+      ...(data.leadership || {}),
 
-        ...data.leadership,
-
-      };
-
-    }
+    };
 
     /* ==========================================
-       PROFILE
+       SKILLS
     ========================================== */
 
     if (data.skills !== undefined)
@@ -169,6 +160,12 @@ class MemberService {
     if (data.interests !== undefined)
       member.interests = data.interests;
 
+    if (data.availability !== undefined)
+      member.availability = data.availability;
+
+    if (data.volunteerPreference !== undefined)
+      member.volunteerPreference = data.volunteerPreference;
+
     if (data.bio !== undefined)
       member.bio = data.bio;
 
@@ -176,42 +173,90 @@ class MemberService {
        SOCIAL MEDIA
     ========================================== */
 
-    if (data.social) {
+    member.social = {
 
-      member.social = {
+      ...member.social,
 
-        ...member.social,
+      ...(data.social || {}),
 
-        ...data.social,
+    };
 
-      };
+    /* ==========================================
+       MEMBERSHIP
+    ========================================== */
 
-    }
+    if (data.membershipNumber !== undefined)
+      member.membershipNumber = data.membershipNumber;
+
+    if (data.membershipStatus !== undefined)
+      member.membershipStatus = data.membershipStatus;
+
+    if (data.activationStatus !== undefined)
+      member.activationStatus = data.activationStatus;
+
+    if (data.paymentStatus !== undefined)
+      member.paymentStatus = data.paymentStatus;
+
+    if (data.memberSince !== undefined)
+      member.memberSince = data.memberSince;
+
+    if (data.membershipExpiry !== undefined)
+      member.membershipExpiry = data.membershipExpiry;
+
+    if (data.role !== undefined)
+      member.role = data.role;
+
+    if (data.legacyMember !== undefined)
+      member.legacyMember = data.legacyMember;
+
+    if (data.migrationCompleted !== undefined)
+      member.migrationCompleted = data.migrationCompleted;
+
+    /* ==========================================
+       SECURITY
+    ========================================== */
+
+    if (data.accountLocked !== undefined)
+      member.accountLocked = data.accountLocked;
+
+    if (data.accountSuspended !== undefined)
+      member.accountSuspended = data.accountSuspended;
+
+    if (data.forcePasswordReset !== undefined)
+      member.forcePasswordReset = data.forcePasswordReset;
+
+    if (data.twoFactorEnabled !== undefined)
+      member.twoFactorEnabled = data.twoFactorEnabled;
 
   }
-    /* =====================================================
+
+  /* =====================================================
      UPLOAD PROFILE PHOTO
   ===================================================== */
 
   async uploadProfilePhoto(memberId, file) {
 
     if (!file) {
+
       throw new Error("No photo uploaded.");
+
     }
 
     const member = await Member.findById(memberId);
 
     if (!member) {
+
       throw new Error("Member not found.");
+
     }
 
     await this.deleteOldPhoto(member.profilePhoto);
 
     member.profilePhoto =
+
       `/uploads/profiles/${file.filename}`;
 
-    member.profileCompleted =
-      this.calculateProfileCompletion(member);
+    member.calculateProfileCompletion();
 
     await member.save();
 
@@ -220,6 +265,7 @@ class MemberService {
       success: true,
 
       message:
+
         "Profile photo uploaded successfully.",
 
       member,
@@ -227,7 +273,6 @@ class MemberService {
     };
 
   }
-
   /* =====================================================
      MEMBERSHIP CARD
   ===================================================== */
@@ -235,10 +280,13 @@ class MemberService {
   async getMembershipCard(memberId) {
 
     const member = await Member.findById(memberId)
+
       .select("-password -otp -otpExpires");
 
     if (!member) {
+
       throw new Error("Member not found.");
+
     }
 
     return {
@@ -255,6 +303,9 @@ class MemberService {
         membershipNumber:
           member.membershipNumber,
 
+        fullName:
+          member.fullName,
+
         firstName:
           member.firstName,
 
@@ -268,13 +319,13 @@ class MemberService {
           member.profilePhoto,
 
         county:
-          member.county,
+          member.location?.county,
 
         constituency:
-          member.constituency,
+          member.location?.constituency,
 
         ward:
-          member.ward,
+          member.location?.ward,
 
         role:
           member.role,
@@ -343,7 +394,9 @@ class MemberService {
       .select("-password -otp -otpExpires");
 
     if (!member) {
+
       throw new Error("Member not found.");
+
     }
 
     return {
@@ -358,125 +411,6 @@ class MemberService {
     };
 
   }
-    /* =====================================================
-     PROFILE COMPLETION
-  ===================================================== */
-
-  calculateProfileCompletion(member) {
-
-    let completed = 0;
-
-    const checks = [
-
-      /* ==========================================
-         PERSONAL
-      ========================================== */
-
-      member.firstName,
-
-      member.lastName,
-
-      member.phone,
-
-      member.email,
-
-      member.gender,
-
-      member.dateOfBirth,
-
-      /* ==========================================
-         LOCATION
-      ========================================== */
-
-      member.county,
-
-      member.constituency,
-
-      member.ward,
-
-      member.village,
-
-      /* ==========================================
-         EDUCATION
-      ========================================== */
-
-      member.education?.level,
-
-      member.education?.institution,
-
-      member.education?.course,
-
-      member.education?.status,
-
-      /* ==========================================
-         EMPLOYMENT
-      ========================================== */
-
-      member.employment?.status,
-
-      member.employment?.occupation,
-
-      /* ==========================================
-         LEADERSHIP
-      ========================================== */
-
-      member.leadership?.organization,
-
-      member.leadership?.position,
-
-      /* ==========================================
-         PROFILE
-      ========================================== */
-
-      member.profilePhoto,
-
-      member.bio,
-
-    ];
-
-    completed += checks.filter(Boolean).length;
-
-    if (member.skills?.length > 0) {
-      completed++;
-    }
-
-    if (member.languages?.length > 0) {
-      completed++;
-    }
-
-    if (member.interests?.length > 0) {
-      completed++;
-    }
-
-    if (member.social?.facebook) {
-      completed++;
-    }
-
-    if (member.social?.linkedin) {
-      completed++;
-    }
-
-    if (member.social?.instagram) {
-      completed++;
-    }
-
-    if (member.social?.twitter) {
-      completed++;
-    }
-
-    if (member.social?.tiktok) {
-      completed++;
-    }
-
-    const totalFields = 28;
-
-    return Math.round(
-
-      (completed / totalFields) * 100
-
-    );
-
-  }
 
   /* =====================================================
      DELETE OLD PROFILE PHOTO
@@ -484,25 +418,43 @@ class MemberService {
 
   async deleteOldPhoto(photoPath) {
 
-    if (!photoPath) return;
+    if (!photoPath) {
 
-    const fullPath = path.join(
+      return;
 
-      __dirname,
+    }
 
-      "../../",
+    try {
 
-      photoPath
+      const relativePath = photoPath.startsWith("/")
 
-    );
+        ? photoPath.substring(1)
 
-    if (
+        : photoPath;
 
-      fs.existsSync(fullPath)
+      const fullPath = path.join(
 
-    ) {
+        process.cwd(),
 
-      fs.unlinkSync(fullPath);
+        relativePath
+
+      );
+
+      if (fs.existsSync(fullPath)) {
+
+        fs.unlinkSync(fullPath);
+
+      }
+
+    } catch (error) {
+
+      console.error(
+
+        "Delete Profile Photo:",
+
+        error.message
+
+      );
 
     }
 

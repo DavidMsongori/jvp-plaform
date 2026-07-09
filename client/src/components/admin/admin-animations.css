@@ -1,0 +1,446 @@
+/* ==========================================
+   JVP CONNECT ADMIN
+   ANIMATION LIBRARY
+========================================== */
+
+/* ==========================================
+   FADE IN
+========================================== */
+
+@keyframes adminFadeIn {
+
+  from {
+
+    opacity: 0;
+
+  }
+
+  to {
+
+    opacity: 1;
+
+  }
+
+}
+
+/* ==========================================
+   SLIDE UP
+========================================== */
+
+@keyframes adminSlideUp {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateY(30px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+  }
+
+}
+
+/* ==========================================
+   SLIDE DOWN
+========================================== */
+
+@keyframes adminSlideDown {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateY(-20px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+  }
+
+}
+
+/* ==========================================
+   SLIDE LEFT
+========================================== */
+
+@keyframes adminSlideLeft {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateX(40px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+  }
+
+}
+
+/* ==========================================
+   SLIDE RIGHT
+========================================== */
+
+@keyframes adminSlideRight {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateX(-40px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+  }
+
+}
+
+/* ==========================================
+   SCALE IN
+========================================== */
+
+@keyframes adminScaleIn {
+
+  from {
+
+    opacity: 0;
+
+    transform: scale(.92);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: scale(1);
+
+  }
+
+}
+
+/* ==========================================
+   SPIN
+========================================== */
+
+@keyframes adminSpin {
+
+  from {
+
+    transform: rotate(0deg);
+
+  }
+
+  to {
+
+    transform: rotate(360deg);
+
+  }
+
+}
+
+/* ==========================================
+   PULSE
+========================================== */
+
+@keyframes adminPulse {
+
+  0% {
+
+    transform: scale(1);
+
+  }
+
+  50% {
+
+    transform: scale(1.05);
+
+  }
+
+  100% {
+
+    transform: scale(1);
+
+  }
+
+}
+
+/* ==========================================
+   FLOAT
+========================================== */
+
+@keyframes adminFloat {
+
+  0% {
+
+    transform: translateY(0);
+
+  }
+
+  50% {
+
+    transform: translateY(-6px);
+
+  }
+
+  100% {
+
+    transform: translateY(0);
+
+  }
+
+}
+
+/* ==========================================
+   SHIMMER
+========================================== */
+
+@keyframes adminShimmer {
+
+  0% {
+
+    background-position: -300px 0;
+
+  }
+
+  100% {
+
+    background-position: 300px 0;
+
+  }
+
+}
+
+/* ==========================================
+   DASHBOARD ENTRY
+========================================== */
+
+.admin-dashboard {
+
+  animation:
+
+    adminFadeIn .5s ease,
+
+    adminSlideUp .5s ease;
+
+}
+
+/* ==========================================
+   CARDS
+========================================== */
+
+.stat-card,
+
+.quick-actions,
+
+.recent-members,
+
+.activity-feed,
+
+.county-overview {
+
+  animation:
+
+    adminSlideUp .45s ease;
+
+}
+
+/* ==========================================
+   CARD HOVER
+========================================== */
+
+.stat-card:hover,
+
+.quick-action-card:hover,
+
+.member-row:hover,
+
+.activity-item:hover,
+
+.county-row:hover {
+
+  transform: translateY(-4px);
+
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+button {
+
+  transition:
+
+    transform .25s ease,
+
+    box-shadow .25s ease,
+
+    background .25s ease;
+
+}
+
+button:hover {
+
+  transform: translateY(-2px);
+
+}
+
+button:active {
+
+  transform: scale(.97);
+
+}
+
+/* ==========================================
+   LINKS
+========================================== */
+
+.admin-link {
+
+  transition:
+
+    background .25s ease,
+
+    color .25s ease,
+
+    transform .25s ease;
+
+}
+
+.admin-link:hover {
+
+  transform: translateX(4px);
+
+}
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.admin-sidebar {
+
+  transition:
+
+    width .3s ease,
+
+    transform .3s ease;
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.admin-header {
+
+  animation:
+
+    adminSlideDown .4s ease;
+
+}
+
+/* ==========================================
+   ICON BUTTONS
+========================================== */
+
+.header-icon-btn:hover,
+
+.sidebar-toggle:hover {
+
+  animation:
+
+    adminPulse .35s ease;
+
+}
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.spin {
+
+  animation:
+
+    adminSpin 1s linear infinite;
+
+}
+
+/* ==========================================
+   SKELETON
+========================================== */
+
+.admin-skeleton {
+
+  background:
+
+    linear-gradient(
+
+      90deg,
+
+      #f1f5f9 25%,
+
+      #e2e8f0 37%,
+
+      #f1f5f9 63%
+
+    );
+
+  background-size: 400% 100%;
+
+  animation:
+
+    adminShimmer 1.4s infinite;
+
+}
+
+/* ==========================================
+   FLOATING WIDGETS
+========================================== */
+
+.floating-widget {
+
+  animation:
+
+    adminFloat 4s ease-in-out infinite;
+
+}
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  * {
+
+    animation: none !important;
+
+    transition: none !important;
+
+  }
+
+}

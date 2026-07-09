@@ -1,227 +1,229 @@
-import { useRef, useState } from "react";
 import {
-  Camera,
-  User,
-  LoaderCircle,
+  BadgeCheck,
+  CalendarDays,
+  CreditCard,
+  MapPin,
+  ShieldCheck,
 } from "lucide-react";
 
-import {
-  uploadProfilePhoto,
-} from "../../services/member.service";
+import { useProfile } from "../../context/ProfileContext";
 
-import {
-  useDashboard,
-} from "../../context/DashboardContext";
+import "./Profile.css";
 
-import "./ProfileHeader.css";
+/* =====================================================
+   API URL
+===================================================== */
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "";
+const API_URL =
+  (import.meta.env.VITE_API_URL || "")
+    .replace("/api", "");
+
+/* =====================================================
+   PROFILE HEADER
+===================================================== */
 
 function ProfileHeader() {
 
   const {
 
-    member,
+    profile,
 
-    reloadDashboard,
+    fullName,
 
-  } = useDashboard();
+    profilePhoto,
 
-  const inputRef = useRef(null);
+    membershipNumber,
 
-  const [uploading, setUploading] =
-    useState(false);
+    membershipStatus,
 
-  const fullName = [
+    county,
 
-    member?.firstName,
+    role,
 
-    member?.middleName,
+  } = useProfile();
 
-    member?.lastName,
+  const memberSince =
 
-  ]
+    profile?.memberSince
 
-    .filter(Boolean)
+      ? new Date(
 
-    .join(" ");
+          profile.memberSince
 
-  const openFilePicker = () => {
+        ).getFullYear()
 
-    inputRef.current?.click();
+      : "-";
 
-  };
+  const photo =
 
-  const handlePhotoUpload = async (e) => {
+    profilePhoto
 
-    const file = e.target.files[0];
+      ? `${API_URL}${profilePhoto}`
 
-    if (!file) return;
-
-    try {
-
-      setUploading(true);
-
-      await uploadProfilePhoto(file);
-
-      await reloadDashboard();
-
-    } catch (error) {
-
-      console.error(
-
-        "Upload failed",
-
-        error
-
-      );
-
-      alert(
-
-        error.response?.data?.message ||
-
-        "Unable to upload profile photo."
-
-      );
-
-    } finally {
-
-      setUploading(false);
-
-      e.target.value = "";
-
-    }
-
-  };
+      : "/images/default-avatar.png";
 
   return (
 
-    <section className="profile-header dashboard-card">
+    <section className="profile-header">
+
+      {/* ======================================
+          LEFT
+      ====================================== */}
 
       <div className="profile-header-left">
 
-        <div
-          className="profile-avatar"
-          onClick={openFilePicker}
-        >
+        <div className="profile-header-photo">
 
-          {
+          <img
 
-            member?.profilePhoto ? (
+            src={photo}
 
-              <img
+            alt={fullName}
 
-                src={`${API_BASE_URL}${member.profilePhoto}`}
+            onError={(event) => {
 
-                alt={fullName}
+              event.target.src =
+                "/images/default-avatar.png";
 
-              />
+            }}
 
-            ) : (
-
-              <User size={55} />
-
-            )
-
-          }
-
-          <div className="camera-overlay">
-
-            {
-
-              uploading ? (
-
-                <LoaderCircle
-                  size={20}
-                  className="spin"
-                />
-
-              ) : (
-
-                <Camera size={20} />
-
-              )
-
-            }
-
-          </div>
+          />
 
         </div>
 
-        <input
-
-          ref={inputRef}
-
-          type="file"
-
-          accept="image/*"
-
-          hidden
-
-          onChange={handlePhotoUpload}
-
-        />
-
-        <div className="profile-details">
+        <div className="profile-header-details">
 
           <h1>
 
-            {fullName}
+            {fullName || "JVP Member"}
 
           </h1>
 
-          <p>
+          <span className="profile-role">
 
-            {member?.membershipNumber}
-
-          </p>
-
-          <span>
-
-            {member?.role
-              ?.replace(/_/g, " ")
-              .replace(/\b\w/g, c => c.toUpperCase())}
+            {role || "Member"}
 
           </span>
+
+          <p>
+
+            Welcome to your JVP Connect profile.
+
+            Keep your information updated to enjoy all
+
+            membership services.
+
+          </p>
 
         </div>
 
       </div>
 
-      <div className="profile-status">
+      {/* ======================================
+          RIGHT
+      ====================================== */}
 
-        <div>
+      <div className="profile-header-summary">
 
-          <small>
+        <div className="summary-card">
 
-            Membership Status
+          <CreditCard size={18} />
 
-          </small>
+          <div>
 
-          <strong>
+            <small>
 
-            {member?.membershipStatus}
+              Membership Number
 
-          </strong>
+            </small>
+
+            <strong>
+
+              {membershipNumber || "-"}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div className="summary-card">
+
+          <ShieldCheck size={18} />
+
+          <div>
+
+            <small>
+
+              Status
+
+            </small>
+
+            <strong>
+
+              {membershipStatus || "-"}
+
+            </strong>
+
+          </div>
 
         </div>
 
-        <div>
+        <div className="summary-card">
 
-          <small>
+          <MapPin size={18} />
 
-            Profile Completion
+          <div>
 
-          </small>
+            <small>
 
-          <strong>
+              County
 
-            {member?.profileCompleted}%
+            </small>
 
-          </strong>
+            <strong>
+
+              {county || "-"}
+
+            </strong>
+
+          </div>
 
         </div>
+
+        <div className="summary-card">
+
+          <CalendarDays size={18} />
+
+          <div>
+
+            <small>
+
+              Member Since
+
+            </small>
+
+            <strong>
+
+              {memberSince}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* ======================================
+          VERIFIED BADGE
+      ====================================== */}
+
+      <div className="profile-verified">
+
+        <BadgeCheck size={18} />
+
+        Verified Member
 
       </div>
 

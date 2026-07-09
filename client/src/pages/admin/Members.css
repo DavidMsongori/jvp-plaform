@@ -1,0 +1,91 @@
+/* ==========================================
+   MEMBERS PAGE
+========================================== */
+
+.members-page {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2rem;
+
+}
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.members-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 2rem;
+
+}
+
+.members-header h1 {
+
+  margin: 0;
+
+  color: var(--admin-text);
+
+  font-size: 2rem;
+
+  font-weight: 700;
+
+}
+
+.members-header p {
+
+  margin-top: .5rem;
+
+  color: var(--admin-text-light);
+
+  max-width: 760px;
+
+  line-height: 1.6;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+
+  .members-header {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+  }
+
+  .members-header h1 {
+
+    font-size: 1.7rem;
+
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .members-header h1 {
+
+    font-size: 1.45rem;
+
+  }
+
+  .members-header p {
+
+    font-size: .92rem;
+
+  }
+
+}

@@ -5,17 +5,19 @@ const dashboardService = require("../services/dashboard.service");
    GET CURRENT MEMBER PROFILE
 ===================================================== */
 
-const getProfile = async (req, res) => {
+exports.getProfile = async (req, res) => {
 
   try {
 
     const result = await memberService.getProfile(
+
       req.member._id
+
     );
 
     return res.status(200).json({
 
-      success: result.success,
+      success: true,
 
       message: result.message,
 
@@ -26,8 +28,11 @@ const getProfile = async (req, res) => {
   } catch (error) {
 
     console.error(
+
       "Get Profile:",
+
       error.message
+
     );
 
     return res.status(400).json({
@@ -45,22 +50,24 @@ const getProfile = async (req, res) => {
 };
 
 /* =====================================================
-   UPDATE MEMBER PROFILE
+   UPDATE CURRENT MEMBER PROFILE
 ===================================================== */
 
-const updateProfile = async (req, res) => {
+exports.updateProfile = async (req, res) => {
 
   try {
 
-    const result =
-      await memberService.updateProfile(
-        req.member._id,
-        req.body
-      );
+    const result = await memberService.updateProfile(
+
+      req.member._id,
+
+      req.body
+
+    );
 
     return res.status(200).json({
 
-      success: result.success,
+      success: true,
 
       message: result.message,
 
@@ -71,8 +78,11 @@ const updateProfile = async (req, res) => {
   } catch (error) {
 
     console.error(
+
       "Update Profile:",
+
       error.message
+
     );
 
     return res.status(400).json({
@@ -93,19 +103,21 @@ const updateProfile = async (req, res) => {
    UPLOAD PROFILE PHOTO
 ===================================================== */
 
-const uploadProfilePhoto = async (req, res) => {
+exports.uploadProfilePhoto = async (req, res) => {
 
   try {
 
-    const result =
-      await memberService.uploadProfilePhoto(
-        req.member._id,
-        req.file
-      );
+    const result = await memberService.uploadProfilePhoto(
+
+      req.member._id,
+
+      req.file
+
+    );
 
     return res.status(200).json({
 
-      success: result.success,
+      success: true,
 
       message: result.message,
 
@@ -113,8 +125,7 @@ const uploadProfilePhoto = async (req, res) => {
 
         member: result.member,
 
-        profilePhoto:
-          result.member.profilePhoto,
+        profilePhoto: result.member.profilePhoto,
 
       },
 
@@ -123,8 +134,11 @@ const uploadProfilePhoto = async (req, res) => {
   } catch (error) {
 
     console.error(
-      "Upload Photo:",
+
+      "Upload Profile Photo:",
+
       error.message
+
     );
 
     return res.status(400).json({
@@ -145,18 +159,19 @@ const uploadProfilePhoto = async (req, res) => {
    MEMBER DASHBOARD
 ===================================================== */
 
-const getDashboard = async (req, res) => {
+exports.getDashboard = async (req, res) => {
 
   try {
 
-    const result =
-      await dashboardService.getDashboard(
-        req.member._id
-      );
+    const result = await dashboardService.getDashboard(
+
+      req.member._id
+
+    );
 
     return res.status(200).json({
 
-      success: result.success,
+      success: true,
 
       message: result.message,
 
@@ -167,8 +182,11 @@ const getDashboard = async (req, res) => {
   } catch (error) {
 
     console.error(
+
       "Dashboard:",
+
       error.message
+
     );
 
     return res.status(400).json({
@@ -189,18 +207,19 @@ const getDashboard = async (req, res) => {
    MEMBERSHIP CARD
 ===================================================== */
 
-const getMembershipCard = async (req, res) => {
+exports.getMembershipCard = async (req, res) => {
 
   try {
 
-    const result =
-      await memberService.getMembershipCard(
-        req.member._id
-      );
+    const result = await memberService.getMembershipCard(
+
+      req.member._id
+
+    );
 
     return res.status(200).json({
 
-      success: result.success,
+      success: true,
 
       message: result.message,
 
@@ -211,8 +230,11 @@ const getMembershipCard = async (req, res) => {
   } catch (error) {
 
     console.error(
+
       "Membership Card:",
+
       error.message
+
     );
 
     return res.status(400).json({
@@ -230,19 +252,19 @@ const getMembershipCard = async (req, res) => {
 };
 
 /* =====================================================
-   ADMIN - GET ALL MEMBERS
+   ADMIN
+   GET ALL MEMBERS
 ===================================================== */
 
-const getAllMembers = async (req, res) => {
+exports.getAllMembers = async (req, res) => {
 
   try {
 
-    const result =
-      await memberService.getAllMembers();
+    const result = await memberService.getAllMembers();
 
     return res.status(200).json({
 
-      success: result.success,
+      success: true,
 
       message: result.message,
 
@@ -255,8 +277,11 @@ const getAllMembers = async (req, res) => {
   } catch (error) {
 
     console.error(
+
       "Get Members:",
+
       error.message
+
     );
 
     return res.status(400).json({
@@ -274,21 +299,23 @@ const getAllMembers = async (req, res) => {
 };
 
 /* =====================================================
-   ADMIN - GET MEMBER BY ID
+   ADMIN
+   GET MEMBER BY ID
 ===================================================== */
 
-const getMemberById = async (req, res) => {
+exports.getMemberById = async (req, res) => {
 
   try {
 
-    const result =
-      await memberService.getMemberById(
-        req.params.id
-      );
+    const result = await memberService.getMemberById(
+
+      req.params.id
+
+    );
 
     return res.status(200).json({
 
-      success: result.success,
+      success: true,
 
       message: result.message,
 
@@ -299,8 +326,11 @@ const getMemberById = async (req, res) => {
   } catch (error) {
 
     console.error(
+
       "Get Member:",
+
       error.message
+
     );
 
     return res.status(400).json({
@@ -317,20 +347,24 @@ const getMemberById = async (req, res) => {
 
 };
 
+/* =====================================================
+   EXPORTS
+===================================================== */
+
 module.exports = {
 
-  getProfile,
+  getProfile: exports.getProfile,
 
-  updateProfile,
+  updateProfile: exports.updateProfile,
 
-  uploadProfilePhoto,
+  uploadProfilePhoto: exports.uploadProfilePhoto,
 
-  getDashboard,
+  getDashboard: exports.getDashboard,
 
-  getMembershipCard,
+  getMembershipCard: exports.getMembershipCard,
 
-  getAllMembers,
+  getAllMembers: exports.getAllMembers,
 
-  getMemberById,
+  getMemberById: exports.getMemberById,
 
 };

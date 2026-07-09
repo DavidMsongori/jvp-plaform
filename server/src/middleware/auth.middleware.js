@@ -1,90 +1,255 @@
 const jwt = require("jsonwebtoken");
+
 const Member = require("../models/Member");
 
-/* ==========================================
+/* =====================================================
    PROTECT ROUTES
-========================================== */
+===================================================== */
 
-const protect = async (req, res, next) => {
+const protect = async (
+
+  req,
+
+  res,
+
+  next
+
+) => {
+
   try {
+
     let token = null;
 
-    // Check Authorization Header
+    /* ==========================================
+       AUTHORIZATION HEADER
+    ========================================== */
+
     if (
+
       req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer ")
+
+      req.headers.authorization.startsWith(
+
+        "Bearer "
+
+      )
+
     ) {
-      token = req.headers.authorization.split(" ")[1];
+
+      token =
+
+        req.headers.authorization.split(
+
+          " "
+
+        )[1];
+
     }
 
-    // No Token
     if (!token) {
+
       return res.status(401).json({
+
         success: false,
-        message: "Access denied. No token provided.",
+
+        message:
+
+          "Access denied. No token provided.",
+
       });
+
     }
 
-    // Verify Token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    /* ==========================================
+       VERIFY TOKEN
+    ========================================== */
 
-    // Find Member
-    const member = await Member.findById(decoded.id).select("-password");
+    const decoded = jwt.verify(
+
+      token,
+
+      process.env.JWT_SECRET
+
+    );
+
+    const member = await Member.findById(
+
+      decoded.id
+
+    ).select("-password");
 
     if (!member) {
+
       return res.status(401).json({
+
         success: false,
-        message: "Member not found.",
+
+        message:
+
+          "Member not found.",
+
       });
+
     }
 
-    // Account must be activated
-    if (member.activationStatus !== "Activated") {
+    /* ==========================================
+       ACCOUNT STATUS
+    ========================================== */
+
+    if (
+
+      member.activationStatus !==
+
+      "Activated"
+
+    ) {
+
       return res.status(401).json({
+
         success: false,
-        message: "Account is not activated.",
+
+        message:
+
+          "Account is not activated.",
+
       });
+
     }
 
-    // Attach member to request
+    if (member.accountLocked) {
+
+      return res.status(403).json({
+
+        success: false,
+
+        message:
+
+          "Your account has been locked.",
+
+      });
+
+    }
+
+    if (member.accountSuspended) {
+
+      return res.status(403).json({
+
+        success: false,
+
+        message:
+
+          "Your account has been suspended.",
+
+      });
+
+    }
+
+    if (
+
+      member.membershipStatus ===
+
+      "Suspended"
+
+    ) {
+
+      return res.status(403).json({
+
+        success: false,
+
+        message:
+
+          "Membership suspended.",
+
+      });
+
+    }
+
     req.member = member;
 
     next();
 
   } catch (error) {
+
     return res.status(401).json({
+
       success: false,
-      message: "Invalid or expired token.",
+
+      message:
+
+        "Invalid or expired token.",
+
     });
+
   }
+
 };
 
-/* ==========================================
+/* =====================================================
    AUTHORIZE ROLES
-========================================== */
+===================================================== */
 
-const authorize = (...roles) => {
-  return (req, res, next) => {
+const authorize = (
+
+  ...roles
+
+) => {
+
+  return (
+
+    req,
+
+    res,
+
+    next
+
+  ) => {
 
     if (!req.member) {
+
       return res.status(401).json({
+
         success: false,
-        message: "Unauthorized.",
+
+        message:
+
+          "Unauthorized.",
+
       });
+
     }
 
-    if (!roles.includes(req.member.role)) {
+    if (
+
+      !roles.includes(
+
+        req.member.role
+
+      )
+
+    ) {
+
       return res.status(403).json({
+
         success: false,
-        message: "You do not have permission to perform this action.",
+
+        message:
+
+          "You do not have permission to perform this action.",
+
       });
+
     }
 
     next();
+
   };
+
 };
 
 module.exports = {
+
   protect,
+
   authorize,
+
 };

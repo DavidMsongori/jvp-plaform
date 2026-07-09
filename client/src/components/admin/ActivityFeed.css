@@ -1,0 +1,155 @@
+/* ==========================================
+   ACTIVITY FEED
+========================================== */
+
+.activity-feed {
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  padding: 1.75rem;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+
+}
+
+/* ==========================================
+   LIST
+========================================== */
+
+.activity-list {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1.25rem;
+
+}
+
+/* ==========================================
+   ITEM
+========================================== */
+
+.activity-item {
+
+  display: grid;
+
+  grid-template-columns: 50px 1fr auto;
+
+  gap: 1rem;
+
+  align-items: center;
+
+  padding-bottom: 1rem;
+
+  border-bottom: 1px solid #edf2f7;
+
+}
+
+.activity-item:last-child {
+
+  border-bottom: none;
+
+  padding-bottom: 0;
+
+}
+
+/* ==========================================
+   ICON
+========================================== */
+
+.activity-icon {
+
+  width: 46px;
+
+  height: 46px;
+
+  border-radius: 50%;
+
+  background: rgba(0,135,81,.1);
+
+  color: #008751;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+}
+
+/* ==========================================
+   CONTENT
+========================================== */
+
+.activity-content h4 {
+
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 1rem;
+
+}
+
+.activity-content p {
+
+  margin-top: .3rem;
+
+  color: #64748b;
+
+  font-size: .88rem;
+
+}
+
+/* ==========================================
+   TIME
+========================================== */
+
+.activity-time {
+
+  color: #94a3b8;
+
+  font-size: .85rem;
+
+  white-space: nowrap;
+
+}
+
+/* ==========================================
+   EMPTY
+========================================== */
+
+.activity-empty {
+
+  padding: 3rem 1rem;
+
+  text-align: center;
+
+  color: #94a3b8;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:768px){
+
+  .activity-item{
+
+    grid-template-columns:46px 1fr;
+
+  }
+
+  .activity-time{
+
+    grid-column:2;
+
+    margin-top:.35rem;
+
+  }
+
+}

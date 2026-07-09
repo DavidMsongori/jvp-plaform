@@ -1,0 +1,237 @@
+/* ==========================================
+   MEMBERS TOOLBAR
+========================================== */
+
+.members-toolbar {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 1rem;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  background: var(--admin-card-bg);
+
+  border: 1px solid var(--admin-border);
+
+  border-radius: 18px;
+
+  padding: 1.5rem;
+
+  box-shadow: var(--admin-shadow-md);
+
+}
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+.toolbar-search {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: .75rem;
+
+  min-width: 280px;
+
+  flex: 1;
+
+  background: #f8fafc;
+
+  border: 1px solid var(--admin-border);
+
+  border-radius: 12px;
+
+  padding: .85rem 1rem;
+
+}
+
+.toolbar-search input {
+
+  width: 100%;
+
+  border: none;
+
+  background: transparent;
+
+  outline: none;
+
+  font-size: .95rem;
+
+}
+
+.toolbar-search svg {
+
+  color: var(--admin-text-light);
+
+}
+
+/* ==========================================
+   FILTERS
+========================================== */
+
+.toolbar-filters {
+
+  display: flex;
+
+  gap: .75rem;
+
+  flex-wrap: wrap;
+
+}
+
+.toolbar-filters select {
+
+  min-width: 170px;
+
+  padding: .8rem 1rem;
+
+  border-radius: 12px;
+
+  border: 1px solid var(--admin-border);
+
+  background: var(--admin-card-bg);
+
+  color: var(--admin-text);
+
+}
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.toolbar-actions {
+
+  display: flex;
+
+  gap: .75rem;
+
+  flex-wrap: wrap;
+
+}
+
+.toolbar-btn {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: .5rem;
+
+  border: none;
+
+  border-radius: 12px;
+
+  padding: .85rem 1rem;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: .3s;
+
+}
+
+.toolbar-btn.primary {
+
+  background: var(--admin-primary);
+
+  color: #ffffff;
+
+}
+
+.toolbar-btn.primary:hover {
+
+  background: var(--admin-primary-dark);
+
+}
+
+.toolbar-btn.secondary {
+
+  background: #f1f5f9;
+
+  color: var(--admin-text);
+
+}
+
+.toolbar-btn.secondary:hover {
+
+  background: #e2e8f0;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1200px) {
+
+  .members-toolbar {
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+  }
+
+  .toolbar-search {
+
+    width: 100%;
+
+  }
+
+  .toolbar-filters {
+
+    width: 100%;
+
+  }
+
+  .toolbar-filters select {
+
+    flex: 1;
+
+  }
+
+  .toolbar-actions {
+
+    width: 100%;
+
+    justify-content: flex-end;
+
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .toolbar-actions {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+  }
+
+  .toolbar-btn {
+
+    justify-content: center;
+
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .toolbar-actions {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}

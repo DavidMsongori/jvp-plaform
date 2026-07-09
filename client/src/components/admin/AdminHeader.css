@@ -1,0 +1,299 @@
+/* ==========================================
+   HEADER
+========================================== */
+
+.admin-header {
+
+  height: 78px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 0 2rem;
+
+  background: var(--admin-card-bg, #ffffff);
+
+  border-bottom: 1px solid rgba(0,0,0,.06);
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 900;
+
+}
+
+/* ==========================================
+   LEFT
+========================================== */
+
+.admin-header-left{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:1rem;
+
+}
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+.admin-search{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:.75rem;
+
+  width:420px;
+
+  background:#f5f7fa;
+
+  padding:.85rem 1rem;
+
+  border-radius:12px;
+
+}
+
+.admin-search input{
+
+  width:100%;
+
+  border:none;
+
+  background:transparent;
+
+  outline:none;
+
+  font-size:.95rem;
+
+}
+
+.admin-search svg{
+
+  color:#6b7280;
+
+}
+
+/* ==========================================
+   RIGHT
+========================================== */
+
+.admin-header-right{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:1rem;
+
+}
+
+/* ==========================================
+   ICON BUTTON
+========================================== */
+
+.header-icon-btn{
+
+  width:46px;
+
+  height:46px;
+
+  border:none;
+
+  border-radius:12px;
+
+  background:#f5f7fa;
+
+  cursor:pointer;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  transition:.25s;
+
+  position:relative;
+
+}
+
+.header-icon-btn:hover{
+
+  background:#008751;
+
+  color:#ffffff;
+
+}
+
+/* ==========================================
+   NOTIFICATION
+========================================== */
+
+.notification-dot{
+
+  position:absolute;
+
+  top:11px;
+
+  right:12px;
+
+  width:8px;
+
+  height:8px;
+
+  border-radius:50%;
+
+  background:#ef4444;
+
+}
+
+/* ==========================================
+   QUICK CREATE
+========================================== */
+
+.quick-create-btn{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:.5rem;
+
+  padding:.85rem 1.2rem;
+
+  border:none;
+
+  border-radius:12px;
+
+  background:#008751;
+
+  color:#ffffff;
+
+  cursor:pointer;
+
+  font-weight:600;
+
+  transition:.25s;
+
+}
+
+.quick-create-btn:hover{
+
+  background:#006f43;
+
+}
+
+/* ==========================================
+   USER
+========================================== */
+
+.admin-user{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:.75rem;
+
+}
+
+.admin-avatar{
+
+  width:46px;
+
+  height:46px;
+
+  border-radius:50%;
+
+  background:#008751;
+
+  color:#ffffff;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+}
+
+.admin-user strong{
+
+  display:block;
+
+  color:#1e293b;
+
+}
+
+.admin-user small{
+
+  color:#64748b;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:992px){
+
+  .admin-header{
+
+    padding:0 1rem;
+
+  }
+
+  .admin-search{
+
+    width:260px;
+
+  }
+
+}
+
+@media (max-width:768px){
+
+  .admin-search{
+
+    display:none;
+
+  }
+
+  .quick-create-btn span{
+
+    display:none;
+
+  }
+
+  .quick-create-btn{
+
+    padding:.85rem;
+
+  }
+
+}
+
+@media (max-width:480px){
+
+  .admin-header{
+
+    height:70px;
+
+  }
+
+  .admin-user div:last-child{
+
+    display:none;
+
+  }
+
+}

@@ -10,21 +10,29 @@ import {
   DashboardUIProvider,
 } from "../../context/DashboardUIContext";
 
+import {
+  ProfileProvider,
+} from "../../context/ProfileContext";
+
 function DashboardShell() {
 
   return (
 
     <DashboardProvider>
 
-      <DashboardUIProvider>
+      <ProfileProvider>
 
-        <DashboardLayout>
+        <DashboardUIProvider>
 
-          <Outlet />
+          <DashboardLayout>
 
-        </DashboardLayout>
+            <Outlet />
 
-      </DashboardUIProvider>
+          </DashboardLayout>
+
+        </DashboardUIProvider>
+
+      </ProfileProvider>
 
     </DashboardProvider>
 

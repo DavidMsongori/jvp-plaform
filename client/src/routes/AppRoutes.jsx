@@ -1,11 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-/* Protected Route */
-import ProtectedRoute from "./ProtectedRoute";
+/* ==========================================
+   ROUTE GUARDS
+========================================== */
 
-/* ==========================
-   Public Pages
-========================== */
+import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
+
+/* ==========================================
+   PUBLIC PAGES
+========================================== */
 
 import Home from "../pages/Home";
 import About from "../pages/about/About";
@@ -16,9 +20,9 @@ import Membership from "../pages/membership/Membership";
 import Summit from "../pages/summit/Summit";
 import Contact from "../pages/contact/Contact";
 
-/* ==========================
-   Authentication
-========================== */
+/* ==========================================
+   AUTHENTICATION
+========================================== */
 
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
@@ -26,15 +30,11 @@ import ClaimMembership from "../pages/auth/ClaimMembership";
 import VerifyOTP from "../pages/auth/VerifyOTP";
 import CreatePassword from "../pages/auth/CreatePassword";
 
-/* ==========================
-   Dashboard Shell
-========================== */
+/* ==========================================
+   MEMBER DASHBOARD
+========================================== */
 
 import DashboardShell from "../pages/dashboard/DashboardShell";
-
-/* ==========================
-   Dashboard Pages
-========================== */
 
 import Dashboard from "../pages/dashboard/Dashboard";
 import Profile from "../pages/dashboard/Profile";
@@ -45,9 +45,20 @@ import Certificates from "../pages/dashboard/Certificates";
 import Notifications from "../pages/dashboard/Notifications";
 import Settings from "../pages/dashboard/Settings";
 
-/* ==========================
-   Other
-========================== */
+/* ==========================================
+   ADMIN
+========================================== */
+
+import AdminShell from "../pages/admin/AdminShell";
+
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import Members from "../pages/admin/Members";
+import MemberProfile from "../pages/admin/MemberProfile";
+import EditMember from "../pages/admin/EditMember";
+
+/* ==========================================
+   OTHER
+========================================== */
 
 import NotFound from "../pages/NotFound";
 
@@ -60,50 +71,119 @@ function AppRoutes() {
       <Routes>
 
         {/* =====================================
-            PUBLIC PAGES
+            PUBLIC WEBSITE
         ====================================== */}
 
-        <Route path="/" element={<Home />} />
+        <Route
 
-        <Route path="/about" element={<About />} />
+          path="/"
 
-        <Route path="/programs" element={<Programs />} />
+          element={<Home />}
 
-        <Route path="/events" element={<Events />} />
+        />
 
-        <Route path="/news" element={<News />} />
+        <Route
 
-        <Route path="/membership" element={<Membership />} />
+          path="/about"
 
-        <Route path="/summit" element={<Summit />} />
+          element={<About />}
 
-        <Route path="/contact" element={<Contact />} />
+        />
+
+        <Route
+
+          path="/programs"
+
+          element={<Programs />}
+
+        />
+
+        <Route
+
+          path="/events"
+
+          element={<Events />}
+
+        />
+
+        <Route
+
+          path="/news"
+
+          element={<News />}
+
+        />
+
+        <Route
+
+          path="/membership"
+
+          element={<Membership />}
+
+        />
+
+        <Route
+
+          path="/summit"
+
+          element={<Summit />}
+
+        />
+
+        <Route
+
+          path="/contact"
+
+          element={<Contact />}
+
+        />
 
         {/* =====================================
             AUTHENTICATION
         ====================================== */}
 
-        <Route path="/login" element={<Login />} />
+        <Route
 
-        <Route path="/register" element={<Register />} />
+          path="/login"
+
+          element={<Login />}
+
+        />
 
         <Route
+
+          path="/register"
+
+          element={<Register />}
+
+        />
+
+        <Route
+
           path="/activate-membership"
+
           element={<ClaimMembership />}
+
         />
 
         <Route
+
           path="/verify-otp"
+
           element={<VerifyOTP />}
+
         />
 
         <Route
+
           path="/create-password"
+
           element={<CreatePassword />}
+
         />
 
         {/* =====================================
-            DASHBOARD
+            MEMBER DASHBOARD
         ====================================== */}
 
         <Route
@@ -183,6 +263,60 @@ function AppRoutes() {
             path="settings"
 
             element={<Settings />}
+
+          />
+
+        </Route>
+
+        {/* =====================================
+            ADMIN PORTAL
+        ====================================== */}
+
+        <Route
+
+          path="/admin"
+
+          element={
+
+            <AdminRoute>
+
+              <AdminShell />
+
+            </AdminRoute>
+
+          }
+
+        >
+
+          <Route
+
+            index
+
+            element={<AdminDashboard />}
+
+          />
+
+          <Route
+
+            path="members"
+
+            element={<Members />}
+
+          />
+
+          <Route
+
+            path="members/:id"
+
+            element={<MemberProfile />}
+
+          />
+
+          <Route
+
+            path="members/:id/edit"
+
+            element={<EditMember />}
 
           />
 
