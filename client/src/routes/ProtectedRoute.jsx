@@ -1,14 +1,12 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 
-function ProtectedRoute({
+/* ==========================================================
+   PROTECTED ROUTE
+========================================================== */
 
-  children,
-
-  allowedRoles = [],
-
-}) {
+function ProtectedRoute({ children }) {
 
   const {
 
@@ -16,9 +14,17 @@ function ProtectedRoute({
 
     isAuthenticated,
 
-    member,
+    isAdmin,
+
+    needsPayment,
+
+    membershipExpired,
+
+    membershipInactive,
 
   } = useAuth();
+
+  const location = useLocation();
 
   /* ==========================================
      LOADING
@@ -29,25 +35,15 @@ function ProtectedRoute({
     return (
 
       <div
-
         style={{
-
           display: "flex",
-
           justifyContent: "center",
-
           alignItems: "center",
-
           minHeight: "100vh",
-
-          fontSize: "1.2rem",
-
-          color: "#1d3557",
-
+          fontSize: "1.1rem",
           fontWeight: 600,
-
+          color: "#1d3557",
         }}
-
       >
 
         Loading...
@@ -79,14 +75,24 @@ function ProtectedRoute({
   }
 
   /* ==========================================
-     ROLE AUTHORIZATION
+     ADMINS BYPASS MEMBER CHECKS
+  ========================================== */
+
+  if (isAdmin) {
+
+    return children;
+
+  }
+
+  /* ==========================================
+     PAYMENT REQUIRED
   ========================================== */
 
   if (
 
-    allowedRoles.length > 0 &&
+    needsPayment &&
 
-    !allowedRoles.includes(member?.role)
+    location.pathname !== "/payment"
 
   ) {
 
@@ -94,7 +100,59 @@ function ProtectedRoute({
 
       <Navigate
 
-        to="/dashboard"
+        to="/payment"
+
+        replace
+
+      />
+
+    );
+
+  }
+
+  /* ==========================================
+     MEMBERSHIP EXPIRED
+  ========================================== */
+
+  if (
+
+    membershipExpired &&
+
+    location.pathname !== "/membership/renew"
+
+  ) {
+
+    return (
+
+      <Navigate
+
+        to="/membership/renew"
+
+        replace
+
+      />
+
+    );
+
+  }
+
+  /* ==========================================
+     MEMBERSHIP INACTIVE
+  ========================================== */
+
+  if (
+
+    membershipInactive &&
+
+    location.pathname !== "/membership/inactive"
+
+  ) {
+
+    return (
+
+      <Navigate
+
+        to="/membership/inactive"
 
         replace
 

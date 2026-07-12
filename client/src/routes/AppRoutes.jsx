@@ -5,10 +5,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 ========================================== */
 
 import ProtectedRoute from "./ProtectedRoute";
-import AdminRoute from "./AdminRoute";
+import PermissionRoute from "./PermissionRoute";
+
+import { PERMISSIONS } from "../utils/permissions";
 
 /* ==========================================
-   PUBLIC PAGES
+   PUBLIC WEBSITE
 ========================================== */
 
 import Home from "../pages/Home";
@@ -17,7 +19,7 @@ import Programs from "../pages/programs/Programs";
 import Events from "../pages/events/Events";
 import News from "../pages/news/News";
 import Membership from "../pages/membership/Membership";
-import Summit from "../pages/summit/Summit";
+import Summit from "../pages/summit/SummitPage";
 import Contact from "../pages/contact/Contact";
 
 /* ==========================================
@@ -26,18 +28,32 @@ import Contact from "../pages/contact/Contact";
 
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
-import ClaimMembership from "../pages/auth/ClaimMembership";
+import ActivateMembership from "../pages/auth/ActivateMembership";
 import VerifyOTP from "../pages/auth/VerifyOTP";
 import CreatePassword from "../pages/auth/CreatePassword";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import ResetPassword from "../pages/auth/ResetPassword";
 
 /* ==========================================
-   MEMBER DASHBOARD
+   PAYMENT
 ========================================== */
 
-import DashboardShell from "../pages/dashboard/DashboardShell";
+import Payment from "../pages/payment/Payment";
+import PaymentSuccess from "../pages/payment/PaymentSuccess";
+import PaymentFailed from "../pages/payment/PaymentFailed";
+
+/* ==========================================
+   MEMBER LAYOUT
+========================================== */
+
+import DashboardLayout from "../layouts/DashboardLayout";
+
+/* ==========================================
+   MEMBER PAGES
+========================================== */
 
 import Dashboard from "../pages/dashboard/Dashboard";
-import Profile from "../pages/dashboard/Profile";
+import Profile from "../pages/profile/Profile";
 import MembershipCard from "../pages/dashboard/MembershipCard";
 import EventsDashboard from "../pages/dashboard/Events";
 import ProgramsDashboard from "../pages/dashboard/Programs";
@@ -46,15 +62,21 @@ import Notifications from "../pages/dashboard/Notifications";
 import Settings from "../pages/dashboard/Settings";
 
 /* ==========================================
-   ADMIN
+   ADMIN LAYOUT
 ========================================== */
 
-import AdminShell from "../pages/admin/AdminShell";
+import AdminLayout from "../layouts/AdminLayout";
+
+/* ==========================================
+   ADMIN PAGES
+========================================== */
 
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import Members from "../pages/admin/Members";
-import MemberProfile from "../pages/admin/MemberProfile";
-import EditMember from "../pages/admin/EditMember";
+import MemberDetails from "../pages/admin/MemberDetails";
+import Payments from "../pages/admin/Payments";
+import AdminEvents from "../pages/admin/Events";
+import EventForm from "../pages/admin/EventForm";
 
 /* ==========================================
    OTHER
@@ -74,112 +96,76 @@ function AppRoutes() {
             PUBLIC WEBSITE
         ====================================== */}
 
-        <Route
-
-          path="/"
-
-          element={<Home />}
-
-        />
-
-        <Route
-
-          path="/about"
-
-          element={<About />}
-
-        />
-
-        <Route
-
-          path="/programs"
-
-          element={<Programs />}
-
-        />
-
-        <Route
-
-          path="/events"
-
-          element={<Events />}
-
-        />
-
-        <Route
-
-          path="/news"
-
-          element={<News />}
-
-        />
-
-        <Route
-
-          path="/membership"
-
-          element={<Membership />}
-
-        />
-
-        <Route
-
-          path="/summit"
-
-          element={<Summit />}
-
-        />
-
-        <Route
-
-          path="/contact"
-
-          element={<Contact />}
-
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/programs" element={<Programs />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/membership" element={<Membership />} />
+        <Route path="/summit" element={<Summit />} />
+        <Route path="/contact" element={<Contact />} />
 
         {/* =====================================
             AUTHENTICATION
         ====================================== */}
 
-        <Route
-
-          path="/login"
-
-          element={<Login />}
-
-        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route
-
-          path="/register"
-
-          element={<Register />}
-
-        />
-
-        <Route
-
           path="/activate-membership"
-
-          element={<ClaimMembership />}
-
+          element={<ActivateMembership />}
         />
 
         <Route
-
           path="/verify-otp"
-
           element={<VerifyOTP />}
-
         />
 
         <Route
-
           path="/create-password"
-
           element={<CreatePassword />}
+        />
 
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route
+          path="/reset-password"
+          element={<ResetPassword />}
+        />
+
+        {/* =====================================
+            PAYMENT
+        ====================================== */}
+
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payment/success"
+          element={
+            <ProtectedRoute>
+              <PaymentSuccess />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payment/failed"
+          element={
+            <ProtectedRoute>
+              <PaymentFailed />
+            </ProtectedRoute>
+          }
         />
 
         {/* =====================================
@@ -187,137 +173,146 @@ function AppRoutes() {
         ====================================== */}
 
         <Route
-
           path="/dashboard"
-
           element={
-
             <ProtectedRoute>
-
-              <DashboardShell />
-
+              <DashboardLayout />
             </ProtectedRoute>
-
           }
-
         >
 
           <Route
-
             index
-
             element={<Dashboard />}
-
           />
 
           <Route
-
             path="profile"
-
             element={<Profile />}
-
           />
 
           <Route
-
             path="membership-card"
-
             element={<MembershipCard />}
-
           />
 
           <Route
-
             path="events"
-
             element={<EventsDashboard />}
-
           />
 
           <Route
-
             path="programs"
-
             element={<ProgramsDashboard />}
-
           />
 
           <Route
-
             path="certificates"
-
             element={<Certificates />}
-
           />
 
           <Route
-
             path="notifications"
-
             element={<Notifications />}
-
           />
 
           <Route
-
             path="settings"
-
             element={<Settings />}
-
           />
 
         </Route>
 
         {/* =====================================
-            ADMIN PORTAL
+            ADMIN DASHBOARD
         ====================================== */}
 
         <Route
-
           path="/admin"
-
           element={
-
-            <AdminRoute>
-
-              <AdminShell />
-
-            </AdminRoute>
-
+            <PermissionRoute
+              permission={PERMISSIONS.VIEW_MEMBERS}
+            >
+              <AdminLayout />
+            </PermissionRoute>
           }
-
         >
 
           <Route
-
             index
-
-            element={<AdminDashboard />}
-
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.VIEW_REPORTS}
+              >
+                <AdminDashboard />
+              </PermissionRoute>
+            }
           />
 
           <Route
-
             path="members"
-
-            element={<Members />}
-
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.VIEW_MEMBERS}
+              >
+                <Members />
+              </PermissionRoute>
+            }
           />
 
           <Route
-
             path="members/:id"
-
-            element={<MemberProfile />}
-
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.VIEW_MEMBERS}
+              >
+                <MemberDetails />
+              </PermissionRoute>
+            }
           />
 
           <Route
+            path="payments"
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.VIEW_PAYMENTS}
+              >
+                <Payments />
+              </PermissionRoute>
+            }
+          />
 
-            path="members/:id/edit"
+          <Route
+            path="events"
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.VIEW_EVENTS}
+              >
+                <AdminEvents />
+              </PermissionRoute>
+            }
+          />
 
-            element={<EditMember />}
+          <Route
+            path="events/new"
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.CREATE_EVENT}
+              >
+                <EventForm />
+              </PermissionRoute>
+            }
+          />
 
+          <Route
+            path="events/:id/edit"
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.EDIT_EVENT}
+              >
+                <EventForm />
+              </PermissionRoute>
+            }
           />
 
         </Route>
@@ -327,11 +322,8 @@ function AppRoutes() {
         ====================================== */}
 
         <Route
-
           path="*"
-
           element={<NotFound />}
-
         />
 
       </Routes>

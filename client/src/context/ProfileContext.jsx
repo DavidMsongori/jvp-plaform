@@ -3,22 +3,25 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 
 import {
   getMyProfile,
 } from "../services/member.service";
 
-const ProfileContext = createContext();
+/* ==========================================
+   CONTEXT
+========================================== */
 
-const API_BASE_URL =
-  (import.meta.env.VITE_API_URL || "")
-    .replace("/api", "");
+const ProfileContext = createContext(null);
+
+/* ==========================================
+   PROVIDER
+========================================== */
 
 export function ProfileProvider({
-
   children,
-
 }) {
 
   const [profile, setProfile] =
@@ -34,7 +37,7 @@ export function ProfileProvider({
      LOAD PROFILE
   ========================================== */
 
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
 
     try {
 
@@ -45,22 +48,9 @@ export function ProfileProvider({
       const response =
         await getMyProfile();
 
-      const member =
-        response.data;
+      setProfile(response.data);
 
-      member.profilePhotoUrl =
-
-        member.profilePhoto
-
-          ? `${API_BASE_URL}${member.profilePhoto}`
-
-          : null;
-
-      setProfile(member);
-
-    }
-
-    catch (err) {
+    } catch (err) {
 
       console.error(err);
 
@@ -72,39 +62,62 @@ export function ProfileProvider({
 
       );
 
-    }
-
-    finally {
+    } finally {
 
       setLoading(false);
 
     }
 
-  };
+  }, []);
+
+  /* ==========================================
+     INITIAL LOAD
+  ========================================== */
 
   useEffect(() => {
 
     loadProfile();
 
-  }, []);
+  }, [loadProfile]);
+
+  /* ==========================================
+     COMPUTED VALUES
+  ========================================== */
+
+  const fullName = profile
+    ? [
+        profile.firstName,
+        profile.middleName,
+        profile.lastName,
+      ]
+        .filter(Boolean)
+        .join(" ")
+    : "";
+
+  const value = {
+
+    profile,
+
+    loading,
+
+    error,
+
+    reloadProfile: loadProfile,
+
+    fullName,
+
+    profilePhoto:
+      profile?.profilePhoto || null,
+
+    membershipStatus:
+      profile?.membershipStatus || "",
+
+  };
 
   return (
 
     <ProfileContext.Provider
-
-      value={{
-
-        profile,
-
-        loading,
-
-        error,
-
-        reloadProfile:
-          loadProfile,
-
-      }}
-
+      value={value}
     >
 
       {children}
@@ -115,6 +128,10 @@ export function ProfileProvider({
 
 }
 
+/* ==========================================
+   HOOK
+========================================== */
+
 export function useProfile() {
 
   const context =
@@ -123,9 +140,7 @@ export function useProfile() {
   if (!context) {
 
     throw new Error(
-
-      "useProfile must be used inside ProfileProvider"
-
+      "useProfile must be used inside ProfileProvider."
     );
 
   }

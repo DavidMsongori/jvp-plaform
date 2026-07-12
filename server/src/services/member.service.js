@@ -1,465 +1,397 @@
-const fs = require("fs");
-const path = require("path");
+import Member from "../models/Member.js";
+import Payment from "../models/Payment.js";
+import Registration from "../models/Registration.js";
+import ActivityLog from "../models/ActivityLog.js";
+import AppError from "../utils/AppError.js";
 
-const Member = require("../models/Member");
+/* ==========================================================
+   GET MY PROFILE
+========================================================== */
 
-class MemberService {
+export const getMyProfile = async (memberId) => {
 
-  /* =====================================================
-     GET CURRENT MEMBER PROFILE
-  ===================================================== */
+  const member = await Member.findById(memberId)
 
-  async getProfile(memberId) {
+    .populate(
 
-    const member = await Member.findById(memberId)
+      "user",
 
-      .select("-password -otp -otpExpires");
+      "email role isActive createdAt"
 
-    if (!member) {
+    );
 
-      throw new Error("Member not found.");
+  if (!member) {
 
-    }
+    throw new AppError(
 
-    return {
+      "Member profile not found.",
 
-      success: true,
+      404
 
-      message: "Profile retrieved successfully.",
-
-      member,
-
-    };
-
-  }
-
-  /* =====================================================
-     UPDATE PROFILE
-  ===================================================== */
-
-  async updateProfile(memberId, profileData) {
-
-    const member = await Member.findById(memberId);
-
-    if (!member) {
-
-      throw new Error("Member not found.");
-
-    }
-
-    this.mapProfileData(member, profileData);
-
-    member.calculateProfileCompletion();
-
-    await member.save();
-
-    return {
-
-      success: true,
-
-      message: "Profile updated successfully.",
-
-      member,
-
-    };
+    );
 
   }
 
-  /* =====================================================
-     MAP PROFILE DATA
-  ===================================================== */
+  return member;
 
-  mapProfileData(member, data) {
+};
 
-    /* ==========================================
-       PERSONAL INFORMATION
-    ========================================== */
+/* ==========================================================
+   UPDATE MY PROFILE
+========================================================== */
 
-    if (data.firstName !== undefined)
-      member.firstName = data.firstName;
+export const updateMyProfile = async (
 
-    if (data.middleName !== undefined)
-      member.middleName = data.middleName;
+  memberId,
 
-    if (data.lastName !== undefined)
-      member.lastName = data.lastName;
+  data
 
-    if (data.gender !== undefined)
-      member.gender = data.gender;
+) => {
 
-    if (data.dateOfBirth !== undefined)
-      member.dateOfBirth = data.dateOfBirth;
+  const member = await Member.findById(memberId);
 
-    if (data.nationalId !== undefined)
-      member.nationalId = data.nationalId;
+  if (!member) {
 
-    if (data.phone !== undefined)
-      member.phone = data.phone;
+    throw new AppError(
 
-    if (data.email !== undefined)
-      member.email = data.email;
+      "Member profile not found.",
 
-    /* ==========================================
-       LOCATION
-    ========================================== */
+      404
 
-    member.location = {
-
-      ...member.location,
-
-      ...(data.location || {}),
-
-    };
-
-    /* ==========================================
-       EDUCATION
-    ========================================== */
-
-    member.education = {
-
-      ...member.education,
-
-      ...(data.education || {}),
-
-    };
-
-    /* ==========================================
-       EMPLOYMENT
-    ========================================== */
-
-    member.employment = {
-
-      ...member.employment,
-
-      ...(data.employment || {}),
-
-    };
-
-    /* ==========================================
-       LEADERSHIP
-    ========================================== */
-
-    member.leadership = {
-
-      ...member.leadership,
-
-      ...(data.leadership || {}),
-
-    };
-
-    /* ==========================================
-       SKILLS
-    ========================================== */
-
-    if (data.skills !== undefined)
-      member.skills = data.skills;
-
-    if (data.languages !== undefined)
-      member.languages = data.languages;
-
-    if (data.interests !== undefined)
-      member.interests = data.interests;
-
-    if (data.availability !== undefined)
-      member.availability = data.availability;
-
-    if (data.volunteerPreference !== undefined)
-      member.volunteerPreference = data.volunteerPreference;
-
-    if (data.bio !== undefined)
-      member.bio = data.bio;
-
-    /* ==========================================
-       SOCIAL MEDIA
-    ========================================== */
-
-    member.social = {
-
-      ...member.social,
-
-      ...(data.social || {}),
-
-    };
-
-    /* ==========================================
-       MEMBERSHIP
-    ========================================== */
-
-    if (data.membershipNumber !== undefined)
-      member.membershipNumber = data.membershipNumber;
-
-    if (data.membershipStatus !== undefined)
-      member.membershipStatus = data.membershipStatus;
-
-    if (data.activationStatus !== undefined)
-      member.activationStatus = data.activationStatus;
-
-    if (data.paymentStatus !== undefined)
-      member.paymentStatus = data.paymentStatus;
-
-    if (data.memberSince !== undefined)
-      member.memberSince = data.memberSince;
-
-    if (data.membershipExpiry !== undefined)
-      member.membershipExpiry = data.membershipExpiry;
-
-    if (data.role !== undefined)
-      member.role = data.role;
-
-    if (data.legacyMember !== undefined)
-      member.legacyMember = data.legacyMember;
-
-    if (data.migrationCompleted !== undefined)
-      member.migrationCompleted = data.migrationCompleted;
-
-    /* ==========================================
-       SECURITY
-    ========================================== */
-
-    if (data.accountLocked !== undefined)
-      member.accountLocked = data.accountLocked;
-
-    if (data.accountSuspended !== undefined)
-      member.accountSuspended = data.accountSuspended;
-
-    if (data.forcePasswordReset !== undefined)
-      member.forcePasswordReset = data.forcePasswordReset;
-
-    if (data.twoFactorEnabled !== undefined)
-      member.twoFactorEnabled = data.twoFactorEnabled;
+    );
 
   }
 
-  /* =====================================================
-     UPLOAD PROFILE PHOTO
-  ===================================================== */
+  const {
 
-  async uploadProfilePhoto(memberId, file) {
+    firstName,
 
-    if (!file) {
+    middleName,
 
-      throw new Error("No photo uploaded.");
+    lastName,
 
-    }
+    phone,
 
-    const member = await Member.findById(memberId);
+    county,
 
-    if (!member) {
+    occupation,
 
-      throw new Error("Member not found.");
+  } = data;
 
-    }
+  /* ==========================================
+     CHECK PHONE NUMBER
+  ========================================== */
 
-    await this.deleteOldPhoto(member.profilePhoto);
+  if (
 
-    member.profilePhoto =
+    phone &&
 
-      `/uploads/profiles/${file.filename}`;
+    phone !== member.phone
 
-    member.calculateProfileCompletion();
+  ) {
 
-    await member.save();
+    const existingPhone = await Member.findOne({
 
-    return {
+      phone,
 
-      success: true,
+      _id: {
 
-      message:
-
-        "Profile photo uploaded successfully.",
-
-      member,
-
-    };
-
-  }
-  /* =====================================================
-     MEMBERSHIP CARD
-  ===================================================== */
-
-  async getMembershipCard(memberId) {
-
-    const member = await Member.findById(memberId)
-
-      .select("-password -otp -otpExpires");
-
-    if (!member) {
-
-      throw new Error("Member not found.");
-
-    }
-
-    return {
-
-      success: true,
-
-      message:
-        "Membership card retrieved successfully.",
-
-      card: {
-
-        id: member._id,
-
-        membershipNumber:
-          member.membershipNumber,
-
-        fullName:
-          member.fullName,
-
-        firstName:
-          member.firstName,
-
-        middleName:
-          member.middleName,
-
-        lastName:
-          member.lastName,
-
-        profilePhoto:
-          member.profilePhoto,
-
-        county:
-          member.location?.county,
-
-        constituency:
-          member.location?.constituency,
-
-        ward:
-          member.location?.ward,
-
-        role:
-          member.role,
-
-        memberSince:
-          member.memberSince,
-
-        membershipStatus:
-          member.membershipStatus,
-
-        activationStatus:
-          member.activationStatus,
-
-        paymentStatus:
-          member.paymentStatus,
+        $ne: member._id,
 
       },
 
-    };
+    });
+
+    if (existingPhone) {
+
+      throw new AppError(
+
+        "Phone number already exists.",
+
+        409
+
+      );
+
+    }
+
+    member.phone = phone;
 
   }
 
-  /* =====================================================
-     ADMIN
-     GET ALL MEMBERS
-  ===================================================== */
+  /* ==========================================
+     UPDATE FIELDS
+  ========================================== */
 
-  async getAllMembers() {
+  if (firstName !== undefined) {
 
-    const members = await Member.find()
+    member.firstName = firstName;
 
-      .select("-password -otp -otpExpires")
+  }
+
+  if (middleName !== undefined) {
+
+    member.middleName = middleName;
+
+  }
+
+  if (lastName !== undefined) {
+
+    member.lastName = lastName;
+
+  }
+
+  if (county !== undefined) {
+
+    member.county = county;
+
+  }
+
+  if (occupation !== undefined) {
+
+    member.occupation = occupation;
+
+  }
+
+  await member.save();
+
+  /* ==========================================
+     ACTIVITY LOG
+  ========================================== */
+
+  await ActivityLog.create({
+
+    user: member.user,
+
+    action: "Updated profile information",
+
+    module: "members",
+
+    description: "Member updated profile information.",
+
+    targetId: member._id,
+
+  });
+
+  return await Member.findById(
+
+    member._id
+
+  ).populate(
+
+    "user",
+
+    "email role isActive createdAt"
+
+  );
+
+};
+
+/* ==========================================================
+   MEMBER DASHBOARD
+========================================================== */
+
+export const getDashboard = async (
+
+  memberId
+
+) => {
+
+  const member = await Member.findById(
+
+    memberId
+
+  ).populate(
+
+    "user",
+
+    "email role isActive"
+
+  );
+
+  if (!member) {
+
+    throw new AppError(
+
+      "Member profile not found.",
+
+      404
+
+    );
+
+  }
+
+  /* ==========================================
+     PAYMENTS
+  ========================================== */
+
+  const totalPayments =
+
+    await Payment.countDocuments({
+
+      member: member._id,
+
+      status: "successful",
+
+    });
+
+  const recentPayments =
+
+    await Payment.find({
+
+      member: member._id,
+
+    })
 
       .sort({
 
-        firstName: 1,
+        createdAt: -1,
 
-        lastName: 1,
+      })
 
-      });
+      .limit(5);
 
-    return {
+  /* ==========================================
+     EVENT REGISTRATIONS
+  ========================================== */
 
-      success: true,
+  const totalRegistrations =
 
-      message:
-        "Members retrieved successfully.",
+    await Registration.countDocuments({
 
-      total: members.length,
+      member: member._id,
 
-      members,
+    });
 
-    };
+  const upcomingEvents =
+
+    await Registration.find({
+
+      member: member._id,
+
+    })
+
+      .populate({
+
+        path: "event",
+
+        select:
+
+          "title venue startDate endDate status",
+
+      })
+
+      .sort({
+
+        createdAt: -1,
+
+      })
+
+      .limit(5);
+
+  return {
+
+    profile: {
+
+      id: member._id,
+
+      memberNumber: member.memberNumber,
+
+      firstName: member.firstName,
+
+      middleName: member.middleName,
+
+      lastName: member.lastName,
+
+      county: member.county,
+
+      membershipType: member.membershipType,
+
+      membershipStatus: member.membershipStatus,
+
+      profilePhoto: member.profilePhoto,
+
+      joinedAt: member.joinedAt,
+
+      email: member.user.email,
+
+      role: member.user.role,
+
+    },
+
+    statistics: {
+
+      totalPayments,
+
+      totalRegistrations,
+
+    },
+
+    recentPayments,
+
+    upcomingEvents,
+
+  };
+
+};
+
+/* ==========================================================
+   UPLOAD PROFILE PHOTO
+========================================================== */
+
+export const uploadProfilePhoto = async (
+
+  memberId,
+
+  imageUrl
+
+) => {
+
+  const member = await Member.findById(
+
+    memberId
+
+  );
+
+  if (!member) {
+
+    throw new AppError(
+
+      "Member profile not found.",
+
+      404
+
+    );
 
   }
 
-  /* =====================================================
-     ADMIN
-     GET MEMBER BY ID
-  ===================================================== */
+  member.profilePhoto = imageUrl;
 
-  async getMemberById(memberId) {
+  await member.save();
 
-    const member = await Member.findById(memberId)
+  await ActivityLog.create({
 
-      .select("-password -otp -otpExpires");
+    user: member.user,
 
-    if (!member) {
+    action: "Updated profile photo",
 
-      throw new Error("Member not found.");
+    module: "members",
 
-    }
+    description: "Profile photo uploaded.",
 
-    return {
+    targetId: member._id,
 
-      success: true,
+  });
 
-      message:
-        "Member retrieved successfully.",
+  return await Member.findById(
 
-      member,
+    member._id
 
-    };
+  ).populate(
 
-  }
+    "user",
 
-  /* =====================================================
-     DELETE OLD PROFILE PHOTO
-  ===================================================== */
+    "email role"
 
-  async deleteOldPhoto(photoPath) {
+  );
 
-    if (!photoPath) {
-
-      return;
-
-    }
-
-    try {
-
-      const relativePath = photoPath.startsWith("/")
-
-        ? photoPath.substring(1)
-
-        : photoPath;
-
-      const fullPath = path.join(
-
-        process.cwd(),
-
-        relativePath
-
-      );
-
-      if (fs.existsSync(fullPath)) {
-
-        fs.unlinkSync(fullPath);
-
-      }
-
-    } catch (error) {
-
-      console.error(
-
-        "Delete Profile Photo:",
-
-        error.message
-
-      );
-
-    }
-
-  }
-
-}
-
-module.exports = new MemberService();
+};

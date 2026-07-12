@@ -1,0 +1,242 @@
+/* ==========================================================
+   COASTAL YOUTH SUMMIT
+   NAVBAR
+========================================================== */
+
+/* ===== NAVBAR ===== */
+
+.summit-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 20px 0;
+    transition: all 0.35s ease;
+}
+
+.summit-navbar.scrolled {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 14px 0;
+}
+
+/* ===== CONTAINER ===== */
+
+.navbar-container {
+    width: min(92%, 1400px);
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ===== BRAND ===== */
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-shrink: 0;
+}
+
+.navbar-brand img {
+    display: block;
+}
+
+.jvp-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.logo-divider {
+    width: 1px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.35);
+    transition: 0.3s;
+}
+
+.summit-navbar.scrolled .logo-divider {
+    background: #dbe4ee;
+}
+
+.summit-logo {
+    width: 170px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* ===== MENU ===== */
+
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+}
+
+.navbar-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    position: relative;
+    transition: 0.3s;
+}
+
+.summit-navbar.scrolled .navbar-menu a {
+    color: #0f172a;
+}
+
+.navbar-menu a:hover {
+    color: #0099cc;
+}
+
+.navbar-menu a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 0;
+    height: 2px;
+    background: #0099cc;
+    transition: 0.3s;
+}
+
+.navbar-menu a:hover::after {
+    width: 100%;
+}
+
+/* ===== ACTIONS ===== */
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+/* ===== REGISTER BUTTON ===== */
+
+.register-btn {
+    background: #0099cc;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.register-btn:hover {
+    background: #0077a3;
+    transform: translateY(-2px);
+}
+
+/* ===== MOBILE TOGGLE ===== */
+
+.mobile-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+.summit-navbar.scrolled .mobile-toggle {
+    color: #0f172a;
+}
+
+/* ===== MOBILE MENU ===== */
+
+.mobile-menu {
+    display: none;
+}
+
+.mobile-menu.active {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+
+    background: white;
+
+    padding: 35px;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,.08);
+}
+
+.mobile-menu a {
+    color: #0f172a;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1100px) {
+
+    .navbar-menu,
+    .navbar-actions {
+        display: none;
+    }
+
+    .mobile-toggle {
+        display: block;
+    }
+
+    .navbar-container {
+        width: 94%;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .jvp-logo {
+        width: 46px;
+        height: 46px;
+    }
+
+    .summit-logo {
+        width: 130px;
+    }
+
+    .logo-divider {
+        height: 34px;
+    }
+
+    .navbar-container {
+        width: 95%;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .summit-logo {
+        width: 110px;
+    }
+
+    .jvp-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+}
+
+/*===============================================================
+ACTIVE NAVIGATION
+===============================================================*/
+
+.navbar-menu a.active {
+    color: #0099cc;
+}
+
+.navbar-menu a.active::after {
+    width: 100%;
+}
+
+.mobile-menu a.active {
+    color: #0099cc;
+    font-weight: 700;
+}

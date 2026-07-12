@@ -3,7 +3,6 @@ import { useRef, useState } from "react";
 import {
   Camera,
   LoaderCircle,
-  User,
 } from "lucide-react";
 
 import {
@@ -17,22 +16,12 @@ import {
 import "./Profile.css";
 
 /* =====================================================
-   API
-===================================================== */
-
-const API_URL =
-  (import.meta.env.VITE_API_URL || "")
-    .replace("/api", "");
-
-/* =====================================================
    PROFILE PHOTO UPLOAD
 ===================================================== */
 
 function ProfilePhotoUpload() {
 
   const {
-
-    profile,
 
     fullName,
 
@@ -42,8 +31,7 @@ function ProfilePhotoUpload() {
 
   } = useProfile();
 
-  const inputRef =
-    useRef(null);
+  const inputRef = useRef(null);
 
   const [uploading, setUploading] =
     useState(false);
@@ -53,16 +41,8 @@ function ProfilePhotoUpload() {
   ========================================== */
 
   const image =
-
-    profilePhoto
-
-      ? profilePhoto.startsWith("http")
-
-        ? profilePhoto
-
-        : `${API_URL}${profilePhoto}`
-
-      : "/images/default-avatar.png";
+    profilePhoto ||
+    "/images/default-avatar.png";
 
   /* ==========================================
      OPEN FILE PICKER
@@ -70,7 +50,11 @@ function ProfilePhotoUpload() {
 
   const selectPhoto = () => {
 
-    inputRef.current?.click();
+    if (!uploading) {
+
+      inputRef.current?.click();
+
+    }
 
   };
 
@@ -79,15 +63,73 @@ function ProfilePhotoUpload() {
   ========================================== */
 
   const handleUpload = async (
-
     event
-
   ) => {
 
     const file =
       event.target.files?.[0];
 
     if (!file) return;
+
+    /* ----------------------------
+       FILE TYPE
+    ---------------------------- */
+
+    const allowedTypes = [
+
+      "image/jpeg",
+
+      "image/jpg",
+
+      "image/png",
+
+      "image/webp",
+
+    ];
+
+    if (
+
+      !allowedTypes.includes(
+        file.type
+      )
+
+    ) {
+
+      alert(
+
+        "Please select a JPG, PNG or WEBP image."
+
+      );
+
+      event.target.value = "";
+
+      return;
+
+    }
+
+    /* ----------------------------
+       FILE SIZE (2 MB)
+    ---------------------------- */
+
+    if (
+
+      file.size >
+
+      2 * 1024 * 1024
+
+    ) {
+
+      alert(
+
+        "Image must be smaller than 2 MB."
+
+      );
+
+      event.target.value = "";
+
+      return;
+
+    }
 
     try {
 
@@ -206,9 +248,7 @@ function ProfilePhotoUpload() {
 
         <p>
 
-          Click your profile photo to upload
-
-          a new picture.
+          Click your profile photo to upload a new picture.
 
         </p>
 

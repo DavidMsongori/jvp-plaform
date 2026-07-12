@@ -1,75 +1,178 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 
-import { createPassword } from "../../services/auth.service";
+import { useAuth } from "../../context/AuthContext";
+
+import * as authService from "../../services/auth.service";
 
 import "./CreatePasswordForm.css";
 
-function CreatePasswordForm({ member }) {
+function CreatePassword() {
+
   const navigate = useNavigate();
 
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const location = useLocation();
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
+  const { updateUser, updateMember } =
+    useAuth();
+
+  const email = location.state?.email;
+
+  if (!email) {
+
+    return (
+      <Navigate
+        to="/register"
+        replace
+      />
+    );
+
+  }
+
+  const [password, setPassword] =
+    useState("");
+
+  const [confirmPassword,
+    setConfirmPassword] =
+    useState("");
+
+  const [showPassword,
+    setShowPassword] =
     useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [showConfirmPassword,
+    setShowConfirmPassword] =
+    useState(false);
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [loading, setLoading] =
+    useState(false);
+
+  const [error, setError] =
+    useState("");
+
+  const [success, setSuccess] =
+    useState("");
+
+  /* ==========================================
+     CREATE PASSWORD
+  ========================================== */
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     setError("");
+
     setSuccess("");
 
     if (!password) {
-      setError("Please enter a password.");
+
+      setError(
+        "Please enter a password."
+      );
+
       return;
+
     }
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+    if (password.length < 6) {
+
+      setError(
+        "Password must be at least 6 characters."
+      );
+
       return;
+
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+
+      setError(
+        "Passwords do not match."
+      );
+
       return;
+
     }
 
     try {
+
       setLoading(true);
 
-      const response = await createPassword({
-        memberId: member.id,
-        password,
-      });
+      const response =
+        await authService.createPassword({
+
+          email,
+
+          password,
+
+          confirmPassword,
+
+        });
+
+      const data = response.data;
 
       localStorage.setItem(
         "token",
-        response.data.token
+        data.token
+      );
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
       );
 
       localStorage.setItem(
         "member",
-        JSON.stringify(response.data.member)
+        JSON.stringify(data.member)
       );
 
-      setSuccess(response.message);
+      updateUser(data.user);
+
+      updateMember(data.member);
+
+      setSuccess(
+        "Account created successfully."
+      );
 
       setTimeout(() => {
-        navigate("/dashboard");
+
+        if (
+          ["admin",
+           "super_admin",
+           "finance",
+           "events"]
+            .includes(data.user.role)
+        ) {
+
+          navigate("/admin", {
+            replace: true,
+          });
+
+        } else {
+
+          navigate("/dashboard", {
+            replace: true,
+          });
+
+        }
+
       }, 1000);
 
     } catch (err) {
 
+      console.error(err);
+
       setError(
+
         err.response?.data?.message ||
-          "Unable to create password."
+
+        "Unable to create password."
+
       );
 
     } finally {
@@ -77,9 +180,11 @@ function CreatePasswordForm({ member }) {
       setLoading(false);
 
     }
+
   };
 
   return (
+
     <div className="create-password-container">
 
       <form
@@ -89,7 +194,11 @@ function CreatePasswordForm({ member }) {
 
         <div className="form-group">
 
-          <label>Create Password</label>
+          <label>
+
+            Create Password
+
+          </label>
 
           <input
             type={
@@ -100,7 +209,9 @@ function CreatePasswordForm({ member }) {
             value={password}
             placeholder="Enter password"
             onChange={(e) =>
-              setPassword(e.target.value)
+              setPassword(
+                e.target.value
+              )
             }
           />
 
@@ -128,7 +239,11 @@ function CreatePasswordForm({ member }) {
 
         <div className="form-group">
 
-          <label>Confirm Password</label>
+          <label>
+
+            Confirm Password
+
+          </label>
 
           <input
             type={
@@ -153,7 +268,9 @@ function CreatePasswordForm({ member }) {
 
             <input
               type="checkbox"
-              checked={showConfirmPassword}
+              checked={
+                showConfirmPassword
+              }
               onChange={() =>
                 setShowConfirmPassword(
                   !showConfirmPassword
@@ -168,15 +285,23 @@ function CreatePasswordForm({ member }) {
         </div>
 
         {error && (
+
           <div className="form-error">
+
             {error}
+
           </div>
+
         )}
 
         {success && (
+
           <div className="form-success">
+
             {success}
+
           </div>
+
         )}
 
         <button
@@ -184,15 +309,25 @@ function CreatePasswordForm({ member }) {
           className="btn-primary"
           disabled={loading}
         >
-          {loading
-            ? "Creating Account..."
-            : "Create Password"}
+
+          {
+
+            loading
+
+              ? "Creating Account..."
+
+              : "Create Password"
+
+          }
+
         </button>
 
       </form>
 
     </div>
+
   );
+
 }
 
-export default CreatePasswordForm;
+export default CreatePassword;

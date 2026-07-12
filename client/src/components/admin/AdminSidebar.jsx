@@ -1,261 +1,212 @@
-import {
-  LayoutDashboard,
-  Users,
-  UserCheck,
-  CalendarDays,
-  Briefcase,
-  CreditCard,
-  Award,
-  Bell,
-  Newspaper,
-  BarChart3,
-  Settings,
-  LogOut,
-  ChevronLeft,
-  ChevronRight,
-  Shield,
-  Building2,
-} from "lucide-react";
-
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-import { useAdminUI } from "../../context/AdminUIContext";
+import {
+  FaChartPie,
+  FaUsers,
+  FaMoneyBillWave,
+  FaCalendarAlt,
+  FaClipboardList,
+  FaHistory,
+  FaCog,
+  FaUserCircle,
+  FaSignOutAlt,
+  FaTimes,
+} from "react-icons/fa";
 
-import "./AdminSidebar.css";
+import { PERMISSIONS } from "../../utils/permissions";
 
-function AdminSidebar() {
+import "./Sidebar.css";
+
+function AdminSidebar({
+
+  isOpen,
+
+  onClose,
+
+}) {
 
   const {
 
-    sidebarOpen,
+    hasPermission,
 
-    toggleSidebar,
+    logout,
 
-  } = useAdminUI();
+  } = useAuth();
 
-  const menu = [
+  /* ==========================================
+     MENU
+  ========================================== */
+
+  const menuItems = [
 
     {
-      title: "Dashboard",
-      icon: LayoutDashboard,
+      name: "Dashboard",
+      icon: <FaChartPie />,
       path: "/admin",
+      permission: PERMISSIONS.VIEW_REPORTS,
     },
 
     {
-      title: "Members",
-      icon: Users,
+      name: "Members",
+      icon: <FaUsers />,
       path: "/admin/members",
+      permission: PERMISSIONS.VIEW_MEMBERS,
     },
 
     {
-      title: "Applications",
-      icon: UserCheck,
-      path: "/admin/applications",
-    },
-
-    {
-      title: "Leadership",
-      icon: Shield,
-      path: "/admin/leadership",
-    },
-
-    {
-      title: "Events",
-      icon: CalendarDays,
-      path: "/admin/events",
-    },
-
-    {
-      title: "Programs",
-      icon: Briefcase,
-      path: "/admin/programs",
-    },
-
-    {
-      title: "Counties",
-      icon: Building2,
-      path: "/admin/counties",
-    },
-
-    {
-      title: "Payments",
-      icon: CreditCard,
+      name: "Payments",
+      icon: <FaMoneyBillWave />,
       path: "/admin/payments",
+      permission: PERMISSIONS.VIEW_PAYMENTS,
     },
 
     {
-      title: "Certificates",
-      icon: Award,
-      path: "/admin/certificates",
+      name: "Events",
+      icon: <FaCalendarAlt />,
+      path: "/admin/events",
+      permission: PERMISSIONS.VIEW_EVENTS,
     },
 
     {
-      title: "News",
-      icon: Newspaper,
-      path: "/admin/news",
-    },
-
-    {
-      title: "Notifications",
-      icon: Bell,
-      path: "/admin/notifications",
-    },
-
-    {
-      title: "Reports",
-      icon: BarChart3,
+      name: "Reports",
+      icon: <FaClipboardList />,
       path: "/admin/reports",
+      permission: PERMISSIONS.VIEW_REPORTS,
     },
 
     {
-      title: "Settings",
-      icon: Settings,
+      name: "Activity Logs",
+      icon: <FaHistory />,
+      path: "/admin/activity-logs",
+      permission: PERMISSIONS.VIEW_REPORTS,
+    },
+
+    {
+      name: "Settings",
+      icon: <FaCog />,
       path: "/admin/settings",
+      permission: PERMISSIONS.MANAGE_SETTINGS,
+    },
+
+    {
+      name: "Profile",
+      icon: <FaUserCircle />,
+      path: "/admin/profile",
+      permission: null,
     },
 
   ];
 
+  /* ==========================================
+     LOGOUT
+  ========================================== */
+
+  const handleLogout = async () => {
+
+    await logout();
+
+  };
+
   return (
 
     <aside
-
-      className={`admin-sidebar ${
-
-        sidebarOpen
-
-          ? "open"
-
-          : "collapsed"
-
+      className={`sidebar ${
+        isOpen ? "open" : ""
       }`}
-
     >
 
-      {/* ==========================================
-          LOGO
-      ========================================== */}
+      {/* Header */}
 
-      <div className="admin-logo">
+      <div className="sidebar-header">
 
         <div>
 
-          <h2>
+          <h2>JVP Connect</h2>
 
-            JVP Connect
-
-          </h2>
-
-          <small>
-
-            Administration
-
-          </small>
+          <span>Admin Panel</span>
 
         </div>
 
         <button
-
-          className="sidebar-toggle"
-
-          onClick={toggleSidebar}
-
+          className="close-btn"
+          onClick={onClose}
         >
 
-          {
-
-            sidebarOpen
-
-              ? <ChevronLeft size={18} />
-
-              : <ChevronRight size={18} />
-
-          }
+          <FaTimes />
 
         </button>
 
       </div>
 
-      {/* ==========================================
-          MENU
-      ========================================== */}
+      {/* Navigation */}
 
-      <nav className="admin-nav">
+      <nav className="sidebar-nav">
 
-        {
+        {menuItems
 
-          menu.map((item) => {
+          .filter((item) => {
 
-            const Icon = item.icon;
+            if (!item.permission) {
 
-            return (
+              return true;
 
-              <NavLink
+            }
 
-                key={item.path}
-
-                to={item.path}
-
-                className={({ isActive }) =>
-
-                  isActive
-
-                    ? "admin-link active"
-
-                    : "admin-link"
-
-                }
-
-              >
-
-                <Icon size={20} />
-
-                {
-
-                  sidebarOpen && (
-
-                    <span>
-
-                      {item.title}
-
-                    </span>
-
-                  )
-
-                }
-
-              </NavLink>
-
+            return hasPermission(
+              item.permission
             );
 
           })
 
-        }
+          .map((item) => (
 
-      </nav>
+            <NavLink
+              key={item.path}
+              to={item.path}
+              end={item.path === "/admin"}
+              className={({ isActive }) =>
+                isActive
+                  ? "sidebar-link active"
+                  : "sidebar-link"
+              }
+              onClick={onClose}
+            >
 
-      {/* ==========================================
-          FOOTER
-      ========================================== */}
+              <span className="sidebar-icon">
 
-      <div className="admin-sidebar-footer">
-
-        <button className="logout-btn">
-
-          <LogOut size={18} />
-
-          {
-
-            sidebarOpen && (
-
-              <span>
-
-                Logout
+                {item.icon}
 
               </span>
 
-            )
+              <span>
 
-          }
+                {item.name}
+
+              </span>
+
+            </NavLink>
+
+          ))}
+
+      </nav>
+
+      {/* Footer */}
+
+      <div className="sidebar-footer">
+
+        <button
+          className="logout-btn"
+          onClick={handleLogout}
+        >
+
+          <FaSignOutAlt />
+
+          <span>
+
+            Logout
+
+          </span>
 
         </button>
 

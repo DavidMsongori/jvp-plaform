@@ -1,206 +1,237 @@
-const express = require("express");
+import express from "express";
+
+import auth from "../middleware/auth.js";
+import authorize from "../middleware/authorize.js";
+import validate from "../middleware/validate.js";
+
+import {
+  /* Dashboard */
+  getDashboard,
+
+  /* Members */
+  getMembers,
+  getMemberById,
+  updateMember,
+  activateMember,
+  deactivateMember,
+  deleteMember,
+
+  /* Payments */
+  getPayments,
+  verifyPayment,
+
+  /* Events */
+  getEvents,
+  getEventById,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+
+  /* Reports */
+  getReports,
+
+  /* Activity */
+  getActivityLogs,
+
+} from "../controllers/admin.controller.js";
+
+import {
+  updateMemberValidator,
+  verifyPaymentValidator,
+  createEventValidator,
+  updateEventValidator,
+} from "../utils/admin.validators.js";
 
 const router = express.Router();
 
-const adminController = require("../controllers/admin.controller");
-
-const {
-  protect,
-  authorize,
-} = require("../middleware/auth.middleware");
-
-/* =====================================================
-   ALL ADMIN ROUTES
-===================================================== */
-
-router.use(
-
-  protect,
-
-  authorize(
-
-    "admin",
-
-    "super_admin"
-
-  )
-
-);
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
+/* ==========================================================
+   ADMIN DASHBOARD
+========================================================== */
 
 router.get(
-
   "/dashboard",
-
-  adminController.getDashboard
-
+  auth,
+  authorize("admin", "super_admin"),
+  getDashboard
 );
 
-/* =====================================================
-   MEMBERS
-===================================================== */
+/* ==========================================================
+   MEMBER MANAGEMENT
+========================================================== */
 
+// Get all members
 router.get(
-
   "/members",
-
-  adminController.getMembers
-
+  auth,
+  authorize("admin", "super_admin"),
+  getMembers
 );
 
+// Get member
 router.get(
-
   "/members/:id",
-
-  adminController.getMember
-
+  auth,
+  authorize("admin", "super_admin"),
+  getMemberById
 );
 
+// Update member
 router.put(
-
   "/members/:id",
-
-  adminController.updateMember
-
+  auth,
+  authorize("admin", "super_admin"),
+  updateMemberValidator,
+  validate,
+  updateMember
 );
 
+// Activate member
+router.patch(
+  "/members/:id/activate",
+  auth,
+  authorize("admin", "super_admin"),
+  activateMember
+);
+
+// Deactivate member
+router.patch(
+  "/members/:id/deactivate",
+  auth,
+  authorize("admin", "super_admin"),
+  deactivateMember
+);
+
+// Delete member
 router.delete(
-
   "/members/:id",
-
-  adminController.deleteMember
-
+  auth,
+  authorize("super_admin"),
+  deleteMember
 );
 
-/* =====================================================
-   MEMBER APPLICATIONS
-===================================================== */
+/* ==========================================================
+   PAYMENT MANAGEMENT
+========================================================== */
 
+// Get payments
 router.get(
-
-  "/applications",
-
-  adminController.getApplications
-
-);
-
-/* =====================================================
-   LEADERSHIP
-===================================================== */
-
-router.get(
-
-  "/leadership",
-
-  adminController.getLeadership
-
-);
-
-/* =====================================================
-   EVENTS
-===================================================== */
-
-router.get(
-
-  "/events",
-
-  adminController.getEvents
-
-);
-
-/* =====================================================
-   PROGRAMS
-===================================================== */
-
-router.get(
-
-  "/programs",
-
-  adminController.getPrograms
-
-);
-
-/* =====================================================
-   COUNTIES
-===================================================== */
-
-router.get(
-
-  "/counties",
-
-  adminController.getCounties
-
-);
-
-/* =====================================================
-   PAYMENTS
-===================================================== */
-
-router.get(
-
   "/payments",
-
-  adminController.getPayments
-
+  auth,
+  authorize(
+    "finance",
+    "admin",
+    "super_admin"
+  ),
+  getPayments
 );
 
-/* =====================================================
-   CERTIFICATES
-===================================================== */
+// Verify payment
+router.patch(
+  "/payments/:id/verify",
+  auth,
+  authorize(
+    "finance",
+    "admin",
+    "super_admin"
+  ),
+  verifyPaymentValidator,
+  validate,
+  verifyPayment
+);
 
+/* ==========================================================
+   EVENT MANAGEMENT
+========================================================== */
+
+// Get all events
 router.get(
-
-  "/certificates",
-
-  adminController.getCertificates
-
+  "/events",
+  auth,
+  authorize(
+    "events",
+    "admin",
+    "super_admin"
+  ),
+  getEvents
 );
 
-/* =====================================================
-   NEWS
-===================================================== */
-
+// Get single event
 router.get(
-
-  "/news",
-
-  adminController.getNews
-
+  "/events/:id",
+  auth,
+  authorize(
+    "events",
+    "admin",
+    "super_admin"
+  ),
+  getEventById
 );
 
-/* =====================================================
-   NOTIFICATIONS
-===================================================== */
-
-router.get(
-
-  "/notifications",
-
-  adminController.getNotifications
-
+// Create event
+router.post(
+  "/events",
+  auth,
+  authorize(
+    "events",
+    "admin",
+    "super_admin"
+  ),
+  createEventValidator,
+  validate,
+  createEvent
 );
 
-/* =====================================================
-   SETTINGS
-===================================================== */
-
-router.get(
-
-  "/settings",
-
-  adminController.getSettings
-
-);
-
+// Update event
 router.put(
-
-  "/settings",
-
-  adminController.updateSettings
-
+  "/events/:id",
+  auth,
+  authorize(
+    "events",
+    "admin",
+    "super_admin"
+  ),
+  updateEventValidator,
+  validate,
+  updateEvent
 );
 
-module.exports = router;
+// Delete event
+router.delete(
+  "/events/:id",
+  auth,
+  authorize(
+    "admin",
+    "super_admin"
+  ),
+  deleteEvent
+);
+
+/* ==========================================================
+   REPORTS
+========================================================== */
+
+router.get(
+  "/reports",
+  auth,
+  authorize(
+    "admin",
+    "super_admin"
+  ),
+  getReports
+);
+
+/* ==========================================================
+   ACTIVITY LOGS
+========================================================== */
+
+router.get(
+  "/activity-logs",
+  auth,
+  authorize(
+    "admin",
+    "super_admin"
+  ),
+  getActivityLogs
+);
+
+export default router;

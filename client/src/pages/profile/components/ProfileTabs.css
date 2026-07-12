@@ -1,0 +1,345 @@
+/* =====================================================
+   PROFILE TABS CARD
+===================================================== */
+
+.profile-tabs-card {
+
+  background: #ffffff;
+
+  border-radius: 20px;
+
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+
+}
+
+/* =====================================================
+   TAB HEADER
+===================================================== */
+
+.profile-tabs-header {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  padding: 20px;
+
+  border-bottom: 1px solid #edf2f7;
+
+  background: #fafbfd;
+
+}
+
+/* =====================================================
+   TAB BUTTON
+===================================================== */
+
+.tab-btn {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 12px 18px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: transparent;
+
+  color: #64748b;
+
+  cursor: pointer;
+
+  font-size: 0.95rem;
+
+  font-weight: 500;
+
+  transition: all .25s ease;
+
+}
+
+.tab-btn:hover {
+
+  background: #eef4ff;
+
+  color: #1565d8;
+
+}
+
+.tab-btn.active {
+
+  background: #1565d8;
+
+  color: #ffffff;
+
+  box-shadow: 0 8px 20px rgba(21, 101, 216, .25);
+
+}
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.profile-tab-content {
+
+  padding: 35px;
+
+}
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.profile-tab-content h2 {
+
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 1.6rem;
+
+  font-weight: 700;
+
+}
+
+.tab-description {
+
+  margin-top: 8px;
+
+  margin-bottom: 30px;
+
+  color: #64748b;
+
+  font-size: .95rem;
+
+}
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.profile-form-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 22px;
+
+}
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.form-group {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+.form-group label {
+
+  margin-bottom: 8px;
+
+  color: #334155;
+
+  font-size: .9rem;
+
+  font-weight: 600;
+
+}
+
+.form-group input,
+
+.form-group select,
+
+.form-group textarea {
+
+  width: 100%;
+
+  padding: 13px 15px;
+
+  border: 1px solid #dbe4ee;
+
+  border-radius: 12px;
+
+  font-size: .95rem;
+
+  background: #ffffff;
+
+  transition: all .25s ease;
+
+}
+
+.form-group input:focus,
+
+.form-group select:focus,
+
+.form-group textarea:focus {
+
+  outline: none;
+
+  border-color: #1565d8;
+
+  box-shadow: 0 0 0 4px rgba(21, 101, 216, .12);
+
+}
+
+.form-group input:disabled,
+
+.form-group select:disabled,
+
+.form-group textarea:disabled {
+
+  background: #f8fafc;
+
+  color: #94a3b8;
+
+  cursor: not-allowed;
+
+}
+
+/* =====================================================
+   TEXTAREA
+===================================================== */
+
+.form-group textarea {
+
+  min-height: 120px;
+
+  resize: vertical;
+
+}
+
+/* =====================================================
+   FULL WIDTH
+===================================================== */
+
+.form-group.full-width {
+
+  grid-column: 1 / -1;
+
+}
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.tab-actions {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  margin-top: 35px;
+
+}
+
+.save-btn {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 13px 24px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #1565d8;
+
+  color: #ffffff;
+
+  font-size: .95rem;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all .25s ease;
+
+}
+
+.save-btn:hover {
+
+  background: #0f4fb5;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 25px rgba(21, 101, 216, .25);
+
+}
+
+/* =====================================================
+   PLACEHOLDER CARD
+===================================================== */
+
+.tab-placeholder {
+
+  padding: 60px 20px;
+
+  text-align: center;
+
+  color: #64748b;
+
+}
+
+.tab-placeholder h3 {
+
+  margin-bottom: 12px;
+
+  color: #334155;
+
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 992px) {
+
+  .profile-form-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .profile-tabs-header {
+
+    flex-direction: column;
+
+  }
+
+  .tab-btn {
+
+    width: 100%;
+
+    justify-content: flex-start;
+
+  }
+
+  .profile-tab-content {
+
+    padding: 24px;
+
+  }
+
+}

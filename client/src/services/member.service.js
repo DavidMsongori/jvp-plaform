@@ -6,20 +6,21 @@ import api from "./api";
 
 export const getMyProfile = async () => {
 
-  const response = await api.get("/member/profile");
+  const response = await api.get(
+    "/member/me"
+  );
 
   return response.data;
 
 };
 
-export const updateMyProfile = async (profileData) => {
+export const updateMyProfile = async (
+  profileData
+) => {
 
   const response = await api.put(
-
     "/member/me",
-
     profileData
-
   );
 
   return response.data;
@@ -30,42 +31,32 @@ export const updateMyProfile = async (profileData) => {
    PROFILE PHOTO
 ========================================== */
 
-export const uploadProfilePhoto = async (file) => {
+export const uploadProfilePhoto = async (
+  file
+) => {
 
   const formData = new FormData();
 
   /*
-    IMPORTANT:
-    Must match upload.single("photo")
-    in upload.middleware.js
+    Must match:
+    upload.single("photo")
+    in middleware/upload.js
   */
 
   formData.append(
-
     "photo",
-
     file
-
   );
 
   const response = await api.post(
-
     "/member/photo",
-
     formData,
-
     {
-
       headers: {
-
         "Content-Type":
-
           "multipart/form-data",
-
       },
-
     }
-
   );
 
   return response.data;
@@ -73,15 +64,13 @@ export const uploadProfilePhoto = async (file) => {
 };
 
 /* ==========================================
-   DASHBOARD
+   MEMBER DASHBOARD
 ========================================== */
 
 export const getDashboard = async () => {
 
   const response = await api.get(
-
     "/member/dashboard"
-
   );
 
   return response.data;
@@ -95,9 +84,7 @@ export const getDashboard = async () => {
 export const getMembershipCard = async () => {
 
   const response = await api.get(
-
     "/member/card"
-
   );
 
   return response.data;
@@ -111,9 +98,7 @@ export const getMembershipCard = async () => {
 export const getMyEvents = async () => {
 
   const response = await api.get(
-
     "/member/events"
-
   );
 
   return response.data;
@@ -127,9 +112,7 @@ export const getMyEvents = async () => {
 export const getMyPrograms = async () => {
 
   const response = await api.get(
-
     "/member/programs"
-
   );
 
   return response.data;
@@ -143,11 +126,33 @@ export const getMyPrograms = async () => {
 export const getMyCertificates = async () => {
 
   const response = await api.get(
-
     "/member/certificates"
-
   );
 
   return response.data;
+
+};
+
+/* ==========================================
+   DEFAULT EXPORT
+========================================== */
+
+export default {
+
+  getMyProfile,
+
+  updateMyProfile,
+
+  uploadProfilePhoto,
+
+  getDashboard,
+
+  getMembershipCard,
+
+  getMyEvents,
+
+  getMyPrograms,
+
+  getMyCertificates,
 
 };

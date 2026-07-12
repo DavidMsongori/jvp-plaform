@@ -1,102 +1,179 @@
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
-const path = require("path");
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const routes = require("./routes");
+import errorHandler from "./middleware/errorHandler.js";
 
-const {
-  errorHandler,
-  notFound,
-} = require("./middleware/error.middleware");
+import authRoutes from "./routes/auth.routes.js";
+import memberRoutes from "./routes/member.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
+import healthRoutes from "./routes/health.routes.js";
 
 const app = express();
 
-/* =====================================================
+/* ==========================================================
+   PATHS
+========================================================== */
+
+const __filename = fileURLToPath(import.meta.url);
+
+const __dirname = path.dirname(__filename);
+
+/* ==========================================================
    SECURITY
-===================================================== */
+========================================================== */
+
+app.use(helmet());
+
+/* ==========================================================
+   CORS
+========================================================== */
+
+const allowedOrigins = [
+
+  "http://localhost:5173",
+
+  process.env.CLIENT_URL,
+
+].filter(Boolean);
 
 app.use(
-  helmet({
-    crossOriginResourcePolicy: false,
-  })
-);
 
-app.use(
   cors({
-    origin: true,
+
+    origin(origin, callback) {
+
+      // Allow Postman and server-to-server requests
+
+      if (!origin) {
+
+        return callback(null, true);
+
+      }
+
+      if (allowedOrigins.includes(origin)) {
+
+        return callback(null, true);
+
+      }
+
+      return callback(
+
+        new Error("Not allowed by CORS")
+
+      );
+
+    },
+
     credentials: true,
+
   })
+
 );
 
-/* =====================================================
+/* ==========================================================
+   LOGGING
+========================================================== */
+
+if (process.env.NODE_ENV !== "test") {
+
+  app.use(morgan("dev"));
+
+}
+
+/* ==========================================================
    BODY PARSERS
-===================================================== */
+========================================================== */
 
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true }));
-
-/* =====================================================
-   LOGGER
-===================================================== */
-
-app.use(morgan("dev"));
-
-/* =====================================================
-   STATIC FILES
-===================================================== */
+app.use(express.json());
 
 app.use(
-  "/uploads",
-  express.static(
-    path.join(__dirname, "../uploads")
-  )
+
+  express.urlencoded({
+
+    extended: true,
+
+  })
+
 );
 
-/* =====================================================
+app.use(cookieParser());
+
+/* ==========================================================
+   STATIC FILES
+========================================================== */
+
+app.use(
+
+  "/uploads",
+
+  express.static(
+
+    path.join(__dirname, "uploads")
+
+  )
+
+);
+
+/* ==========================================================
    ROOT
-===================================================== */
+========================================================== */
 
 app.get("/", (req, res) => {
-  res.json({
+
+  res.status(200).json({
+
     success: true,
-    application: "JVP Connect API",
+
+    message: "JVP Connect API is running.",
+
     version: "1.0.0",
-    status: "Running",
-    documentation: "/api/health",
+
+    environment: process.env.NODE_ENV,
+
   });
+
 });
 
-/* =====================================================
-   HEALTH
-===================================================== */
+/* ==========================================================
+   API ROUTES
+========================================================== */
 
-app.get("/api/health", (req, res) => {
-  res.json({
-    success: true,
-    status: "Healthy",
-    database: "Connected",
-    timestamp: new Date(),
-  });
-});
+app.use("/api/health", healthRoutes);
 
-/* =====================================================
-   ROUTES
-===================================================== */
+app.use("/api/auth", authRoutes);
 
-app.use("/api", routes);
+app.use("/api/member", memberRoutes);
 
-/* =====================================================
+app.use("/api/payments", paymentRoutes);
+
+app.use("/api/admin", adminRoutes);
+
+/* ==========================================================
    404
-===================================================== */
+========================================================== */
 
-app.use(notFound);
+app.use((req, res) => {
 
-/* =====================================================
+  res.status(404).json({
+
+    success: false,
+
+    message: "Route not found.",
+
+  });
+
+});
+
+/* ==========================================================
    ERROR HANDLER
-===================================================== */
+========================================================== */
 
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

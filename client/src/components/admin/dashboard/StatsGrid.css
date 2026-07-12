@@ -1,0 +1,21 @@
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    gap:24px;
+
+    margin-bottom:30px;
+
+}
+
+@media(max-width:768px){
+
+.stats-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+}

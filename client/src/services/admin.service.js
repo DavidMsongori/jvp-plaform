@@ -1,12 +1,14 @@
 import api from "./api";
 
 /* ==========================================
-   ADMIN DASHBOARD
+   DASHBOARD
 ========================================== */
 
 export const getDashboard = async () => {
 
-  const response = await api.get("/admin/dashboard");
+  const response = await api.get(
+    "/admin/dashboard"
+  );
 
   return response.data;
 
@@ -16,30 +18,27 @@ export const getDashboard = async () => {
    MEMBERS
 ========================================== */
 
-export const getMembers = async (params = {}) => {
+export const getMembers = async (
+  params = {}
+) => {
 
   const response = await api.get(
-
     "/admin/members",
-
     {
-
       params,
-
     }
-
   );
 
   return response.data;
 
 };
 
-export const getMember = async (id) => {
+export const getMember = async (
+  id
+) => {
 
   const response = await api.get(
-
     `/admin/members/${id}`
-
   );
 
   return response.data;
@@ -47,31 +46,13 @@ export const getMember = async (id) => {
 };
 
 export const updateMember = async (
-
   id,
-
-  memberData
-
+  payload
 ) => {
 
   const response = await api.put(
-
     `/admin/members/${id}`,
-
-    memberData
-
-  );
-
-  return response.data;
-
-};
-
-export const deleteMember = async (id) => {
-
-  const response = await api.delete(
-
-    `/admin/members/${id}`
-
+    payload
   );
 
   return response.data;
@@ -79,39 +60,72 @@ export const deleteMember = async (id) => {
 };
 
 /* ==========================================
-   MEMBER APPLICATIONS
+   MEMBER STATUS
 ========================================== */
 
-export const getApplications = async () => {
+export const activateMember = async (
+  id
+) => {
+
+  const response = await api.patch(
+    `/admin/members/${id}/activate`
+  );
+
+  return response.data;
+
+};
+
+export const deactivateMember = async (
+  id
+) => {
+
+  const response = await api.patch(
+    `/admin/members/${id}/deactivate`
+  );
+
+  return response.data;
+
+};
+
+export const deleteMember = async (
+  id
+) => {
+
+  const response = await api.delete(
+    `/admin/members/${id}`
+  );
+
+  return response.data;
+
+};
+
+/* ==========================================
+   PAYMENTS
+========================================== */
+
+export const getPayments = async (
+  params = {}
+) => {
 
   const response = await api.get(
-
-    "/admin/applications"
-
+    "/admin/payments",
+    {
+      params,
+    }
   );
 
   return response.data;
 
 };
 
-export const approveApplication = async (id) => {
+export const verifyPayment = async (
+  id,
+  payload = {}
+) => {
 
   const response = await api.patch(
-
-    `/admin/applications/${id}/approve`
-
-  );
-
-  return response.data;
-
-};
-
-export const rejectApplication = async (id) => {
-
-  const response = await api.patch(
-
-    `/admin/applications/${id}/reject`
-
+    `/admin/payments/${id}/verify`,
+    payload
   );
 
   return response.data;
@@ -122,26 +136,40 @@ export const rejectApplication = async (id) => {
    EVENTS
 ========================================== */
 
-export const getEvents = async () => {
+export const getEvents = async (
+  params = {}
+) => {
 
   const response = await api.get(
-
-    "/admin/events"
-
+    "/admin/events",
+    {
+      params,
+    }
   );
 
   return response.data;
 
 };
 
-export const createEvent = async (eventData) => {
+export const getEvent = async (
+  id
+) => {
+
+  const response = await api.get(
+    `/admin/events/${id}`
+  );
+
+  return response.data;
+
+};
+
+export const createEvent = async (
+  payload
+) => {
 
   const response = await api.post(
-
     "/admin/events",
-
-    eventData
-
+    payload
   );
 
   return response.data;
@@ -149,93 +177,25 @@ export const createEvent = async (eventData) => {
 };
 
 export const updateEvent = async (
-
   id,
-
-  eventData
-
+  payload
 ) => {
 
   const response = await api.put(
-
     `/admin/events/${id}`,
-
-    eventData
-
+    payload
   );
 
   return response.data;
 
 };
 
-export const deleteEvent = async (id) => {
-
-  const response = await api.delete(
-
-    `/admin/events/${id}`
-
-  );
-
-  return response.data;
-
-};
-
-/* ==========================================
-   PROGRAMS
-========================================== */
-
-export const getPrograms = async () => {
-
-  const response = await api.get(
-
-    "/admin/programs"
-
-  );
-
-  return response.data;
-
-};
-
-export const createProgram = async (programData) => {
-
-  const response = await api.post(
-
-    "/admin/programs",
-
-    programData
-
-  );
-
-  return response.data;
-
-};
-
-export const updateProgram = async (
-
-  id,
-
-  programData
-
+export const deleteEvent = async (
+  id
 ) => {
 
-  const response = await api.put(
-
-    `/admin/programs/${id}`,
-
-    programData
-
-  );
-
-  return response.data;
-
-};
-
-export const deleteProgram = async (id) => {
-
   const response = await api.delete(
-
-    `/admin/programs/${id}`
-
+    `/admin/events/${id}`
   );
 
   return response.data;
@@ -249,9 +209,7 @@ export const deleteProgram = async (id) => {
 export const getReports = async () => {
 
   const response = await api.get(
-
     "/admin/reports"
-
   );
 
   return response.data;
@@ -259,33 +217,18 @@ export const getReports = async () => {
 };
 
 /* ==========================================
-   NOTIFICATIONS
+   ACTIVITY LOGS
 ========================================== */
 
-export const getNotifications = async () => {
-
-  const response = await api.get(
-
-    "/admin/notifications"
-
-  );
-
-  return response.data;
-
-};
-
-export const sendNotification = async (
-
-  notificationData
-
+export const getActivityLogs = async (
+  params = {}
 ) => {
 
-  const response = await api.post(
-
-    "/admin/notifications",
-
-    notificationData
-
+  const response = await api.get(
+    "/admin/activity-logs",
+    {
+      params,
+    }
   );
 
   return response.data;
@@ -293,69 +236,43 @@ export const sendNotification = async (
 };
 
 /* ==========================================
-   NEWS
+   DEFAULT EXPORT
 ========================================== */
 
-export const getNews = async () => {
+export default {
 
-  const response = await api.get(
+  /* Dashboard */
 
-    "/admin/news"
+  getDashboard,
 
-  );
+  /* Members */
 
-  return response.data;
+  getMembers,
+  getMember,
+  updateMember,
+  activateMember,
+  deactivateMember,
+  deleteMember,
 
-};
+  /* Payments */
 
-export const publishNews = async (
+  getPayments,
+  verifyPayment,
 
-  newsData
+  /* Events */
 
-) => {
+  getEvents,
+  getEvent,
+  createEvent,
+  updateEvent,
+  deleteEvent,
 
-  const response = await api.post(
+  /* Reports */
 
-    "/admin/news",
+  getReports,
 
-    newsData
+  /* Activity */
 
-  );
-
-  return response.data;
-
-};
-
-/* ==========================================
-   SETTINGS
-========================================== */
-
-export const getSettings = async () => {
-
-  const response = await api.get(
-
-    "/admin/settings"
-
-  );
-
-  return response.data;
-
-};
-
-export const updateSettings = async (
-
-  settings
-
-) => {
-
-  const response = await api.put(
-
-    "/admin/settings",
-
-    settings
-
-  );
-
-  return response.data;
+  getActivityLogs,
 
 };

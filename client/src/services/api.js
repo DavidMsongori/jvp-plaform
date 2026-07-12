@@ -1,54 +1,100 @@
 import axios from "axios";
 
-console.log(
-  "API URL:",
-  import.meta.env.VITE_API_URL
-);
+/* ==========================================
+   AXIOS INSTANCE
+========================================== */
 
 const api = axios.create({
+
   baseURL: import.meta.env.VITE_API_URL,
+
   headers: {
+
     "Content-Type": "application/json",
+
   },
+
+  withCredentials: true,
+
 });
 
-api.interceptors.request.use(
-  (config) => {
+/* ==========================================
+   REQUEST INTERCEPTOR
+========================================== */
 
-    console.log("================================");
-    console.log(config.method?.toUpperCase(), config.baseURL + config.url);
-    console.log("Payload:", config.data);
-    console.log("================================");
+api.interceptors.request.use(
+
+  (config) => {
 
     const token = localStorage.getItem("token");
 
     if (token) {
+
       config.headers.Authorization = `Bearer ${token}`;
+
     }
 
     return config;
+
   },
+
   (error) => Promise.reject(error)
+
 );
 
+/* ==========================================
+   RESPONSE INTERCEPTOR
+========================================== */
+
 api.interceptors.response.use(
-  (response) => {
 
-    console.log("Response:", response.data);
+  (response) => response,
 
-    return response;
-  },
   (error) => {
 
-    console.log("API Error:", error.response?.data);
+    const status = error.response?.status;
 
-    if (error.response?.status === 401) {
+    /* --------------------------------------
+       UNAUTHORIZED
+    -------------------------------------- */
+
+    if (status === 401) {
+
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       localStorage.removeItem("member");
+
+      // Later we can automatically
+      // refresh the access token here.
+
+    }
+
+    /* --------------------------------------
+       FORBIDDEN
+    -------------------------------------- */
+
+    if (status === 403) {
+
+      console.warn("Access denied.");
+
+    }
+
+    /* --------------------------------------
+       SERVER ERROR
+    -------------------------------------- */
+
+    if (status >= 500) {
+
+      console.error(
+        "Server error. Please try again later."
+      );
+
     }
 
     return Promise.reject(error);
+
   }
+
 );
 
 export default api;

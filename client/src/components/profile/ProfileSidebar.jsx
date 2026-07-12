@@ -3,82 +3,144 @@ import {
   Circle,
   CalendarDays,
   MapPin,
- ShieldCheck,
+  ShieldCheck,
   Clock3,
   CreditCard,
 } from "lucide-react";
 
-import { useDashboard } from "../../context/DashboardContext";
+import {
+  useDashboard,
+} from "../../context/DashboardContext";
 
 import "./ProfileSidebar.css";
 
 function ProfileSidebar() {
 
   const {
-    dashboard,
+
+    profile,
+
+    statistics,
+
     loading,
+
     error,
+
   } = useDashboard();
 
+  /* ==========================================
+     LOADING
+  ========================================== */
+
   if (loading) {
+
     return (
+
       <aside className="profile-sidebar dashboard-card">
+
         <div className="empty-state">
+
           Loading profile summary...
+
         </div>
+
       </aside>
+
     );
+
   }
+
+  /* ==========================================
+     ERROR
+  ========================================== */
 
   if (error) {
+
     return (
+
       <aside className="profile-sidebar dashboard-card">
+
         <div className="empty-state">
+
           {error}
+
         </div>
+
       </aside>
+
     );
+
   }
 
-  if (!dashboard?.member) {
+  /* ==========================================
+     NO PROFILE
+  ========================================== */
+
+  if (!profile) {
+
     return (
+
       <aside className="profile-sidebar dashboard-card">
+
         <div className="empty-state">
+
           Profile unavailable.
+
         </div>
+
       </aside>
+
     );
+
   }
 
-  const { member } = dashboard;
+  /* ==========================================
+     PROFILE COMPLETION
+     (Temporary until backend computes it)
+  ========================================== */
 
-  const completion = member.profileCompleted || 0;
+  const completion = 100;
 
   const checklist = [
 
     {
+
       title: "Personal Information",
+
       complete: completion >= 20,
+
     },
 
     {
+
       title: "Education",
+
       complete: completion >= 40,
+
     },
 
     {
+
       title: "Employment",
+
       complete: completion >= 60,
+
     },
 
     {
+
       title: "Leadership",
+
       complete: completion >= 80,
+
     },
 
     {
+
       title: "Skills & Social Links",
+
       complete: completion >= 100,
+
     },
 
   ];
@@ -87,7 +149,9 @@ function ProfileSidebar() {
 
     <aside className="profile-sidebar dashboard-card">
 
-      {/* ====================================== */}
+      {/* ======================================
+          PROFILE COMPLETION
+      ====================================== */}
 
       <div className="sidebar-section">
 
@@ -108,10 +172,15 @@ function ProfileSidebar() {
           <div className="progress-bar">
 
             <div
+
               className="progress-fill"
+
               style={{
+
                 width: `${completion}%`,
+
               }}
+
             />
 
           </div>
@@ -120,7 +189,9 @@ function ProfileSidebar() {
 
       </div>
 
-      {/* ====================================== */}
+      {/* ======================================
+          ACCOUNT SUMMARY
+      ====================================== */}
 
       <div className="sidebar-section">
 
@@ -142,7 +213,7 @@ function ProfileSidebar() {
 
               <strong>
 
-                {member.membershipStatus}
+                {profile.membershipStatus || "-"}
 
               </strong>
 
@@ -160,7 +231,7 @@ function ProfileSidebar() {
 
               <strong>
 
-                {member.membershipNumber}
+                {profile.memberNumber || "-"}
 
               </strong>
 
@@ -178,7 +249,7 @@ function ProfileSidebar() {
 
               <strong>
 
-                {member.county}
+                {profile.county || "-"}
 
               </strong>
 
@@ -196,11 +267,19 @@ function ProfileSidebar() {
 
               <strong>
 
-                {member.memberSince
-                  ? new Date(
-                      member.memberSince
-                    ).getFullYear()
-                  : "-"}
+                {
+
+                  profile.joinedAt
+
+                    ? new Date(
+
+                        profile.joinedAt
+
+                      ).getFullYear()
+
+                    : "-"
+
+                }
 
               </strong>
 
@@ -214,17 +293,11 @@ function ProfileSidebar() {
 
             <div>
 
-              <small>Last Login</small>
+              <small>Payments</small>
 
               <strong>
 
-                {
-                  dashboard.statistics?.lastLogin
-                    ? new Date(
-                        dashboard.statistics.lastLogin
-                      ).toLocaleDateString()
-                    : "First Login"
-                }
+                {statistics.totalPayments ?? 0}
 
               </strong>
 
@@ -236,7 +309,9 @@ function ProfileSidebar() {
 
       </div>
 
-      {/* ====================================== */}
+      {/* ======================================
+          CHECKLIST
+      ====================================== */}
 
       <div className="sidebar-section">
 
@@ -253,8 +328,11 @@ function ProfileSidebar() {
             checklist.map((item) => (
 
               <div
+
                 key={item.title}
+
                 className="check-item"
+
               >
 
                 {
@@ -262,15 +340,21 @@ function ProfileSidebar() {
                   item.complete ? (
 
                     <CheckCircle2
+
                       size={18}
+
                       className="check-complete"
+
                     />
 
                   ) : (
 
                     <Circle
+
                       size={18}
+
                       className="check-pending"
+
                     />
 
                   )

@@ -1,22 +1,43 @@
-require("dotenv").config();
+import dotenv from "dotenv";
 
-const app = require("./app");
-const connectDB = require("./config/db");
+dotenv.config();
+
+import connectDB from "./config/db.js";
 
 const PORT = process.env.PORT || 5000;
 
-(async () => {
+/* ==========================================
+   START SERVER
+========================================== */
+
+async function startServer() {
+
   try {
+
+    // Load the app AFTER environment variables
+    const { default: app } = await import("./app.js");
+
     await connectDB();
 
     app.listen(PORT, () => {
-      console.log("===================================");
-      console.log("🚀 JVP Connect API");
-      console.log("Environment:", process.env.NODE_ENV || "development");
-      console.log("Port:", PORT);
-      console.log("===================================");
+
+      console.log("====================================");
+      console.log("🚀 JVP Connect API Started");
+      console.log(`🌍 Environment : ${process.env.NODE_ENV}`);
+      console.log(`📡 Port        : ${PORT}`);
+      console.log("====================================");
+
     });
+
   } catch (error) {
+
+    console.error("Failed to start server.");
     console.error(error);
+
+    process.exit(1);
+
   }
-})();
+
+}
+
+startServer();

@@ -1,0 +1,133 @@
+/* ==========================================================
+   ADMIN DASHBOARD
+========================================================== */
+
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header h1 {
+  color: #1d3557;
+  font-size: 2rem;
+  margin-bottom: .35rem;
+}
+
+.dashboard-header p {
+  color: #6b7280;
+}
+
+/* ==========================================================
+   STATISTICS GRID
+========================================================== */
+
+.statistics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,.06);
+  transition: .25s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  color: #0056b3;
+}
+
+.stat-card span {
+  color: #6b7280;
+  font-size: .9rem;
+}
+
+.stat-card h2 {
+  margin-top: .35rem;
+  color: #1d3557;
+  font-size: 1.8rem;
+}
+
+/* ==========================================================
+   PANELS
+========================================================== */
+
+.dashboard-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px,1fr));
+  gap: 1.5rem;
+}
+
+.dashboard-panel {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.5rem;
+  min-height: 220px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.06);
+}
+
+.dashboard-panel h3 {
+  margin-bottom: 1rem;
+  color: #1d3557;
+}
+
+.dashboard-panel p {
+  color: #6b7280;
+}
+
+/* ==========================================================
+   STATES
+========================================================== */
+
+.dashboard-loading,
+.dashboard-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  font-size: 1.2rem;
+  color: #1d3557;
+}
+
+.dashboard-error {
+  color: #d62828;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .75rem;
+  }
+
+  .dashboard-sections {
+    grid-template-columns: 1fr;
+  }
+
+}

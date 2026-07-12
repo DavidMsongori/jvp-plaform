@@ -1,102 +1,305 @@
-const { Resend } = require("resend");
+import { Resend } from "resend";
 
-const otpEmail = require("../templates/otpEmail");
+/* ==========================================================
+   RESEND CLIENT
+========================================================== */
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
-class EmailService {
+const resend = RESEND_API_KEY
+  ? new Resend(RESEND_API_KEY)
+  : null;
 
-  /* =====================================================
-     SEND EMAIL
-  ===================================================== */
+/* ==========================================================
+   GENERIC EMAIL SENDER
+========================================================== */
 
-  async sendEmail({
-    to,
-    subject,
-    html,
-    text = "",
-  }) {
-    try {
+export const sendEmail = async ({
+  to,
+  subject,
+  html,
+  text,
+  replyTo,
+  attachments = [],
+}) => {
+  /* ----------------------------------------
+     DEVELOPMENT MODE
+  ---------------------------------------- */
 
-      const response = await resend.emails.send({
+  if (!resend) {
+    console.warn(
+      "⚠️ RESEND_API_KEY not configured. Email sending skipped."
+    );
 
-        from:
-          process.env.EMAIL_FROM ||
-          "JVP Connect <onboarding@resend.dev>",
-
-        to: Array.isArray(to)
-          ? to
-          : [to],
-
-        subject,
-
-        html,
-
-        text,
-
-      });
-
-      console.log(
-        `✅ Email sent successfully to ${to}`
-      );
-
-      return response;
-
-    } catch (error) {
-
-      console.error(
-        "❌ Email Service Error:",
-        error
-      );
-
-      throw new Error(
-        "Unable to send email."
-      );
-
-    }
-  }
-
-  /* =====================================================
-     MEMBERSHIP ACTIVATION OTP
-  ===================================================== */
-
-  async sendOTPEmail({
-    email,
-    firstName,
-    otp,
-  }) {
-
-    return this.sendEmail({
-
-      to: email,
-
-      subject:
-        "JVP Connect Membership Verification",
-
-      html: otpEmail({
-        firstName,
-        otp,
-      }),
-
-      text: `
-Hello ${firstName},
-
-Your JVP Connect verification code is:
-
-${otp}
-
-This code expires in 10 minutes.
-
-If you did not request this verification,
-please ignore this email.
-
-Jumuiya ya Vijana wa Pwani
-      `,
-
+    console.log({
+      to,
+      subject,
+      text,
     });
 
+    return {
+      success: true,
+      development: true,
+    };
   }
 
-}
+  try {
+    const { data, error } = await resend.emails.send({
+      from: process.env.EMAIL_FROM,
+      to: Array.isArray(to) ? to : [to],
+      subject,
+      html,
+      text,
+      replyTo,
+      attachments,
+    });
 
-module.exports = new EmailService();
+    if (error) {
+      console.error("Resend Error:", error);
+
+      return {
+        success: false,
+        error,
+      };
+    }
+
+    return {
+      success: true,
+      id: data.id,
+    };
+  } catch (error) {
+    console.error("Email Service Error:", error);
+
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+};
+
+/* ==========================================================
+   SEND OTP EMAIL
+========================================================== */
+
+export const sendOTPEmail = async ({
+  email,
+  firstName = "Member",
+  otp,
+}) => {
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:40px;background:#ffffff;border:1px solid #e5e5e5;border-radius:10px;">
+
+        <h2 style="color:#0056b3;">
+            JVP Connect
+        </h2>
+
+        <p>Hello <strong>${firstName}</strong>,</p>
+
+        <p>Your verification code is:</p>
+
+        <div
+            style="
+                margin:30px 0;
+                font-size:36px;
+                font-weight:bold;
+                letter-spacing:8px;
+                text-align:center;
+                background:#f4f6f8;
+                padding:20px;
+                border-radius:8px;
+            "
+        >
+            ${otp}
+        </div>
+
+        <p>
+            This code expires in
+            <strong>10 minutes</strong>.
+        </p>
+
+        <p>
+            If you did not request this code,
+            you can safely ignore this email.
+        </p>
+
+        <hr>
+
+        <small>
+            © ${new Date().getFullYear()} JVP Connect
+        </small>
+
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: "Your Verification Code",
+    html,
+    text: `Your verification code is ${otp}`,
+  });
+};
+
+/* ==========================================================
+   WELCOME EMAIL
+========================================================== */
+
+export const sendWelcomeEmail = async ({
+  email,
+  firstName = "Member",
+}) => {
+  const html = `
+    <div style="font-family:Arial;padding:40px;">
+
+        <h2>Welcome to JVP Connect</h2>
+
+        <p>Hello <strong>${firstName}</strong>,</p>
+
+        <p>Your account has been successfully activated.</p>
+
+        <p>
+            Welcome to the JVP community.
+        </p>
+
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: "Welcome to JVP Connect",
+    html,
+    text: "Welcome to JVP Connect",
+  });
+};
+
+/* ==========================================================
+   PASSWORD RESET EMAIL
+========================================================== */
+
+export const sendPasswordResetEmail = async ({
+  email,
+  firstName = "Member",
+  otp,
+}) => {
+  const html = `
+    <div style="font-family:Arial;padding:40px;">
+
+        <h2>Password Reset</h2>
+
+        <p>Hello <strong>${firstName}</strong>,</p>
+
+        <p>Your password reset code is:</p>
+
+        <div
+            style="
+                margin:30px 0;
+                font-size:34px;
+                font-weight:bold;
+                letter-spacing:6px;
+                text-align:center;
+                background:#f5f5f5;
+                padding:20px;
+                border-radius:8px;
+            "
+        >
+            ${otp}
+        </div>
+
+        <p>
+            This code expires in 10 minutes.
+        </p>
+
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: "Reset Your Password",
+    html,
+    text: `Your password reset code is ${otp}`,
+  });
+};
+
+/* ==========================================================
+   MEMBERSHIP APPROVED
+========================================================== */
+
+export const sendApprovalEmail = async ({
+  email,
+  firstName = "Member",
+}) => {
+  const html = `
+    <div style="font-family:Arial;padding:40px;">
+
+        <h2>Membership Approved</h2>
+
+        <p>Hello <strong>${firstName}</strong>,</p>
+
+        <p>
+            Congratulations!
+        </p>
+
+        <p>
+            Your membership has been approved.
+        </p>
+
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: "Membership Approved",
+    html,
+    text: "Your membership has been approved.",
+  });
+};
+
+/* ==========================================================
+   MEMBERSHIP REJECTED
+========================================================== */
+
+export const sendRejectionEmail = async ({
+  email,
+  firstName = "Member",
+  reason,
+}) => {
+  const html = `
+    <div style="font-family:Arial;padding:40px;">
+
+        <h2>Membership Update</h2>
+
+        <p>Hello <strong>${firstName}</strong>,</p>
+
+        <p>
+            Unfortunately your membership application
+            was not approved.
+        </p>
+
+        <p><strong>Reason</strong></p>
+
+        <blockquote>
+            ${reason}
+        </blockquote>
+
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: "Membership Application Update",
+    html,
+    text: reason,
+  });
+};
+
+/* ==========================================================
+   DEFAULT EXPORT
+========================================================== */
+
+export default {
+  sendEmail,
+  sendOTPEmail,
+  sendWelcomeEmail,
+  sendPasswordResetEmail,
+  sendApprovalEmail,
+  sendRejectionEmail,
+};

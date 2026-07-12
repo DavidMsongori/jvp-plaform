@@ -1,15 +1,34 @@
-const memberService = require("../services/member.service");
-const dashboardService = require("../services/dashboard.service");
+import * as memberService from "../services/member.service.js";
 
-/* =====================================================
-   GET CURRENT MEMBER PROFILE
-===================================================== */
+/* ==========================================================
+   GET MY PROFILE
+========================================================== */
 
-exports.getProfile = async (req, res) => {
+export const getMyProfile = async (
+
+  req,
+
+  res,
+
+  next
+
+) => {
 
   try {
 
-    const result = await memberService.getProfile(
+    if (!req.member) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message: "Member profile not found.",
+
+      });
+
+    }
+
+    const member = await memberService.getMyProfile(
 
       req.member._id
 
@@ -19,45 +38,49 @@ exports.getProfile = async (req, res) => {
 
       success: true,
 
-      message: result.message,
+      message: "Member profile retrieved successfully.",
 
-      data: result.member,
+      data: member,
 
     });
 
   } catch (error) {
 
-    console.error(
-
-      "Get Profile:",
-
-      error.message
-
-    );
-
-    return res.status(400).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
+    next(error);
 
   }
 
 };
 
-/* =====================================================
-   UPDATE CURRENT MEMBER PROFILE
-===================================================== */
+/* ==========================================================
+   UPDATE MY PROFILE
+========================================================== */
 
-exports.updateProfile = async (req, res) => {
+export const updateMyProfile = async (
+
+  req,
+
+  res,
+
+  next
+
+) => {
 
   try {
 
-    const result = await memberService.updateProfile(
+    if (!req.member) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message: "Member profile not found.",
+
+      });
+
+    }
+
+    const member = await memberService.updateMyProfile(
 
       req.member._id,
 
@@ -69,49 +92,65 @@ exports.updateProfile = async (req, res) => {
 
       success: true,
 
-      message: result.message,
+      message: "Profile updated successfully.",
 
-      data: result.member,
+      data: member,
 
     });
 
   } catch (error) {
 
-    console.error(
-
-      "Update Profile:",
-
-      error.message
-
-    );
-
-    return res.status(400).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
+    next(error);
 
   }
 
 };
 
-/* =====================================================
+/* ==========================================================
    UPLOAD PROFILE PHOTO
-===================================================== */
+========================================================== */
 
-exports.uploadProfilePhoto = async (req, res) => {
+export const uploadProfilePhoto = async (
+
+  req,
+
+  res,
+
+  next
+
+) => {
 
   try {
 
-    const result = await memberService.uploadProfilePhoto(
+    if (!req.member) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message: "Member profile not found.",
+
+      });
+
+    }
+
+    if (!req.file) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        message: "Please upload a profile photo.",
+
+      });
+
+    }
+
+    const member = await memberService.uploadProfilePhoto(
 
       req.member._id,
 
-      req.file
+      req.file.path
 
     );
 
@@ -119,51 +158,49 @@ exports.uploadProfilePhoto = async (req, res) => {
 
       success: true,
 
-      message: result.message,
+      message: "Profile photo uploaded successfully.",
 
-      data: {
-
-        member: result.member,
-
-        profilePhoto: result.member.profilePhoto,
-
-      },
+      data: member,
 
     });
 
   } catch (error) {
 
-    console.error(
-
-      "Upload Profile Photo:",
-
-      error.message
-
-    );
-
-    return res.status(400).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
+    next(error);
 
   }
 
 };
 
-/* =====================================================
+/* ==========================================================
    MEMBER DASHBOARD
-===================================================== */
+========================================================== */
 
-exports.getDashboard = async (req, res) => {
+export const getDashboard = async (
+
+  req,
+
+  res,
+
+  next
+
+) => {
 
   try {
 
-    const result = await dashboardService.getDashboard(
+    if (!req.member) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message: "Member profile not found.",
+
+      });
+
+    }
+
+    const dashboard = await memberService.getDashboard(
 
       req.member._id
 
@@ -173,198 +210,16 @@ exports.getDashboard = async (req, res) => {
 
       success: true,
 
-      message: result.message,
+      message: "Dashboard retrieved successfully.",
 
-      data: result.dashboard,
-
-    });
-
-  } catch (error) {
-
-    console.error(
-
-      "Dashboard:",
-
-      error.message
-
-    );
-
-    return res.status(400).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
-
-  }
-
-};
-
-/* =====================================================
-   MEMBERSHIP CARD
-===================================================== */
-
-exports.getMembershipCard = async (req, res) => {
-
-  try {
-
-    const result = await memberService.getMembershipCard(
-
-      req.member._id
-
-    );
-
-    return res.status(200).json({
-
-      success: true,
-
-      message: result.message,
-
-      data: result.card,
+      data: dashboard,
 
     });
 
   } catch (error) {
 
-    console.error(
-
-      "Membership Card:",
-
-      error.message
-
-    );
-
-    return res.status(400).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
+    next(error);
 
   }
-
-};
-
-/* =====================================================
-   ADMIN
-   GET ALL MEMBERS
-===================================================== */
-
-exports.getAllMembers = async (req, res) => {
-
-  try {
-
-    const result = await memberService.getAllMembers();
-
-    return res.status(200).json({
-
-      success: true,
-
-      message: result.message,
-
-      total: result.total,
-
-      data: result.members,
-
-    });
-
-  } catch (error) {
-
-    console.error(
-
-      "Get Members:",
-
-      error.message
-
-    );
-
-    return res.status(400).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
-
-  }
-
-};
-
-/* =====================================================
-   ADMIN
-   GET MEMBER BY ID
-===================================================== */
-
-exports.getMemberById = async (req, res) => {
-
-  try {
-
-    const result = await memberService.getMemberById(
-
-      req.params.id
-
-    );
-
-    return res.status(200).json({
-
-      success: true,
-
-      message: result.message,
-
-      data: result.member,
-
-    });
-
-  } catch (error) {
-
-    console.error(
-
-      "Get Member:",
-
-      error.message
-
-    );
-
-    return res.status(400).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
-
-  }
-
-};
-
-/* =====================================================
-   EXPORTS
-===================================================== */
-
-module.exports = {
-
-  getProfile: exports.getProfile,
-
-  updateProfile: exports.updateProfile,
-
-  uploadProfilePhoto: exports.uploadProfilePhoto,
-
-  getDashboard: exports.getDashboard,
-
-  getMembershipCard: exports.getMembershipCard,
-
-  getAllMembers: exports.getAllMembers,
-
-  getMemberById: exports.getMemberById,
 
 };

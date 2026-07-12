@@ -6,17 +6,11 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import { useProfile } from "../../context/ProfileContext";
+import {
+  useProfile,
+} from "../../context/ProfileContext";
 
 import "./Profile.css";
-
-/* =====================================================
-   API URL
-===================================================== */
-
-const API_URL =
-  (import.meta.env.VITE_API_URL || "")
-    .replace("/api", "");
 
 /* =====================================================
    PROFILE HEADER
@@ -32,35 +26,23 @@ function ProfileHeader() {
 
     profilePhoto,
 
-    membershipNumber,
-
     membershipStatus,
-
-    county,
-
-    role,
 
   } = useProfile();
 
+  if (!profile) return null;
+
   const memberSince =
 
-    profile?.memberSince
+    profile.joinedAt
 
       ? new Date(
 
-          profile.memberSince
+          profile.joinedAt
 
         ).getFullYear()
 
       : "-";
-
-  const photo =
-
-    profilePhoto
-
-      ? `${API_URL}${profilePhoto}`
-
-      : "/images/default-avatar.png";
 
   return (
 
@@ -76,9 +58,18 @@ function ProfileHeader() {
 
           <img
 
-            src={photo}
+            src={
+              profilePhoto ||
+              "/images/default-avatar.png"
+            }
 
-            alt={fullName}
+            alt={
+
+              fullName ||
+
+              "JVP Member"
+
+            }
 
             onError={(event) => {
 
@@ -101,7 +92,7 @@ function ProfileHeader() {
 
           <span className="profile-role">
 
-            {role || "Member"}
+            {profile.role || "Member"}
 
           </span>
 
@@ -109,9 +100,9 @@ function ProfileHeader() {
 
             Welcome to your JVP Connect profile.
 
-            Keep your information updated to enjoy all
+            Keep your information updated to
 
-            membership services.
+            enjoy all membership services.
 
           </p>
 
@@ -139,7 +130,7 @@ function ProfileHeader() {
 
             <strong>
 
-              {membershipNumber || "-"}
+              {profile.memberNumber || "-"}
 
             </strong>
 
@@ -183,7 +174,7 @@ function ProfileHeader() {
 
             <strong>
 
-              {county || "-"}
+              {profile.county || "-"}
 
             </strong>
 

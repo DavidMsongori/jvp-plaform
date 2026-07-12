@@ -1,36 +1,104 @@
-import MemberStats from "../../components/admin/members/MemberStats";
-import MembersToolbar from "../../components/admin/members/MembersToolbar";
+import { useEffect, useState } from "react";
+
+import {
+  getMembers,
+} from "../../services/admin.service";
+
+import MemberSummary from "../../components/admin/members/MemberSummary";
+import MemberFilters from "../../components/admin/members/MemberFilters";
 import MembersTable from "../../components/admin/members/MembersTable";
-import MemberPagination from "../../components/admin/members/MemberPagination";
 
 import "./Members.css";
 
 function Members() {
 
+  const [members, setMembers] = useState([]);
+
+  const [summary, setSummary] = useState({});
+
+  const [pagination, setPagination] =
+    useState({});
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [filters, setFilters] =
+    useState({
+
+      search: "",
+
+      county: "",
+
+      membershipStatus: "",
+
+      membershipType: "",
+
+      page: 1,
+
+      limit: 10,
+
+    });
+
+  /* ==========================================
+     LOAD MEMBERS
+  ========================================== */
+
+  const loadMembers = async () => {
+
+    try {
+
+      setLoading(true);
+
+      const response =
+        await getMembers(filters);
+
+      setMembers(
+        response.data.members
+      );
+
+      setSummary(
+        response.data.summary
+      );
+
+      setPagination(
+        response.data.pagination
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  useEffect(() => {
+
+    loadMembers();
+
+  }, [filters]);
+
   return (
 
-    <section className="members-page">
+    <div className="admin-members-page">
 
-      {/* ==========================================
-          PAGE HEADER
-      ========================================== */}
-
-      <div className="members-header">
+      <div className="page-header">
 
         <div>
 
           <h1>
 
-            Members Management
+            Members
 
           </h1>
 
           <p>
 
-            Manage registrations, memberships,
-            leadership, activation, payments
-            and member records across all six
-            coastal counties.
+            Manage all registered JVP members.
 
           </p>
 
@@ -38,31 +106,35 @@ function Members() {
 
       </div>
 
-      {/* ==========================================
-          MEMBER STATISTICS
-      ========================================== */}
+      <MemberSummary
+        summary={summary}
+      />
 
-      <MemberStats />
+      <MemberFilters
 
-      {/* ==========================================
-          TOOLBAR
-      ========================================== */}
+        filters={filters}
 
-      <MembersToolbar />
+        setFilters={setFilters}
 
-      {/* ==========================================
-          MEMBERS TABLE
-      ========================================== */}
+      />
 
-      <MembersTable />
+      <MembersTable
 
-      {/* ==========================================
-          PAGINATION
-      ========================================== */}
+        members={members}
 
-      <MemberPagination />
+        loading={loading}
 
-    </section>
+        pagination={pagination}
+
+        filters={filters}
+
+        setFilters={setFilters}
+
+        refresh={loadMembers}
+
+      />
+
+    </div>
 
   );
 

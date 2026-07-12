@@ -1,0 +1,205 @@
+/* ==================================================
+   WHY ATTEND
+================================================== */
+
+.why-attend{
+
+    background:#f8fafc;
+
+    padding:120px 0;
+
+}
+
+.why-container{
+
+    width:92%;
+
+    max-width:1400px;
+
+    margin:auto;
+
+}
+
+/* HEADER */
+
+.section-header{
+
+    text-align:center;
+
+    max-width:760px;
+
+    margin:0 auto 70px;
+
+}
+
+.section-tag{
+
+    display:inline-block;
+
+    color:#0099cc;
+
+    font-size:.9rem;
+
+    font-weight:700;
+
+    letter-spacing:3px;
+
+    margin-bottom:18px;
+
+}
+
+.section-header h2{
+
+    font-size:3rem;
+
+    color:#0f172a;
+
+    margin-bottom:20px;
+
+}
+
+.section-header p{
+
+    font-size:1.1rem;
+
+    color:#64748b;
+
+    line-height:1.9;
+
+}
+
+/* GRID */
+
+.why-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:30px;
+
+}
+
+/* CARD */
+
+.why-card{
+
+    background:white;
+
+    padding:45px 35px;
+
+    border-radius:24px;
+
+    text-align:center;
+
+    transition:.35s;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.06);
+
+    border:1px solid #eef2f7;
+
+}
+
+.why-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 30px 60px rgba(0,0,0,.12);
+
+}
+
+/* ICON */
+
+.why-icon{
+
+    width:90px;
+
+    height:90px;
+
+    margin:0 auto 30px;
+
+    border-radius:50%;
+
+    background:#e6f7fc;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#0099cc;
+
+    transition:.35s;
+
+}
+
+.why-card:hover .why-icon{
+
+    background:#0099cc;
+
+    color:white;
+
+}
+
+/* TEXT */
+
+.why-card h3{
+
+    margin-bottom:18px;
+
+    color:#0f172a;
+
+    font-size:1.5rem;
+
+}
+
+.why-card p{
+
+    color:#64748b;
+
+    line-height:1.8;
+
+    font-size:1rem;
+
+}
+
+/* RESPONSIVE */
+
+@media(max-width:992px){
+
+.why-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:768px){
+
+.why-attend{
+
+padding:90px 0;
+
+}
+
+.section-header h2{
+
+font-size:2.4rem;
+
+}
+
+.why-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.why-card{
+
+padding:35px 25px;
+
+}
+
+}

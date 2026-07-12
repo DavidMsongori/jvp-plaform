@@ -1,0 +1,53 @@
+.section-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.05);
+
+    overflow:hidden;
+
+}
+
+.section-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:22px 24px;
+
+    border-bottom:1px solid #edf2f7;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+}
+
+.section-header h4{
+
+    margin:0;
+
+    font-weight:700;
+
+    color:#1f2937;
+
+}
+
+.section-header p{
+
+    margin:5px 0 0;
+
+    color:#6b7280;
+
+}
+
+.section-content{
+
+    padding:24px;
+
+}

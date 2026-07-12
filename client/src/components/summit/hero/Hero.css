@@ -1,0 +1,442 @@
+/* ==========================================================
+   HERO SECTION
+========================================================== */
+
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(2,23,40,.90) 0%,
+        rgba(2,23,40,.72) 45%,
+        rgba(2,23,40,.45) 100%
+    );
+}
+
+.hero-container {
+    position: relative;
+    z-index: 2;
+    width: min(92%, 1400px);
+    margin: 0 auto;
+    padding-top: 130px;
+
+    display: grid;
+    grid-template-columns: 1.6fr .8fr;
+    gap: 70px;
+    align-items: center;
+}
+
+/* ==========================================================
+   LEFT CONTENT
+========================================================== */
+
+.hero-content{
+    max-width:760px;
+}
+
+.hero-badge{
+
+    display:inline-block;
+
+    background:#0099cc;
+
+    color:#ffffff;
+
+    padding:14px 28px;
+
+    border-radius:40px;
+
+    font-size:.95rem;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+
+}
+
+.hero-content h1{
+
+    margin:35px 0 25px;
+
+    font-size:clamp(3.2rem,6vw,6rem);
+
+    line-height:1.05;
+
+    color:#ffffff;
+
+    font-weight:800;
+
+}
+
+.hero-theme{
+
+    font-size:1.45rem;
+
+    color:#e2e8f0;
+
+    line-height:1.8;
+
+    margin-bottom:40px;
+
+}
+
+.hero-theme strong{
+
+    color:#ffffff;
+
+}
+
+/* ==========================================================
+   EVENT DETAILS
+========================================================== */
+
+.hero-details{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:30px;
+
+    margin-bottom:45px;
+
+}
+
+.hero-detail{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    color:#ffffff;
+
+    font-size:1.05rem;
+
+}
+
+.hero-detail svg{
+
+    color:#00c4ff;
+
+}
+
+/* ==========================================================
+   BUTTONS
+========================================================== */
+
+.hero-buttons{
+
+    display:flex;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+}
+
+.hero-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    padding:18px 36px;
+
+    border-radius:14px;
+
+    font-weight:700;
+
+    transition:.35s;
+
+    text-decoration:none;
+
+}
+
+.hero-btn.primary{
+
+    background:#00a651;
+
+    color:white;
+
+}
+
+.hero-btn.primary:hover{
+
+    background:#008b45;
+
+    transform:translateY(-4px);
+
+}
+
+.hero-btn.secondary{
+
+    background:white;
+
+    color:#1e293b;
+
+}
+
+.hero-btn.secondary:hover{
+
+    background:#f1f5f9;
+
+    transform:translateY(-4px);
+
+}
+
+/* ==========================================================
+   RIGHT STATS
+========================================================== */
+
+.hero-right{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:22px;
+
+}
+
+.hero-stat{
+
+    background:rgba(255,255,255,.14);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    border-radius:22px;
+
+    padding:35px 20px;
+
+    text-align:center;
+
+    transition:.35s;
+
+}
+
+.hero-stat:hover{
+
+    transform:translateY(-8px);
+
+    background:rgba(255,255,255,.22);
+
+}
+
+.hero-stat h2{
+
+    color:#ffffff;
+
+    font-size:3rem;
+
+    font-weight:800;
+
+    margin-bottom:12px;
+
+}
+
+.hero-stat p{
+
+    color:#dbeafe;
+
+    text-transform:uppercase;
+
+    letter-spacing:2px;
+
+    font-size:.9rem;
+
+}
+
+/* ==========================================================
+   SCROLL INDICATOR
+========================================================== */
+
+.hero-scroll{
+
+    position:absolute;
+
+    bottom:35px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:white;
+
+    text-align:center;
+
+    animation:bounce 2s infinite;
+
+}
+
+.hero-scroll span{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    letter-spacing:3px;
+
+    text-transform:uppercase;
+
+    font-size:.8rem;
+
+}
+
+@keyframes bounce{
+
+    0%,20%,50%,80%,100%{
+
+        transform:translate(-50%,0);
+
+    }
+
+    40%{
+
+        transform:translate(-50%,-10px);
+
+    }
+
+    60%{
+
+        transform:translate(-50%,-5px);
+
+    }
+
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width:1100px){
+
+.hero-container{
+
+grid-template-columns:1fr;
+
+gap:50px;
+
+}
+
+.hero-right{
+
+max-width:700px;
+
+margin:auto;
+
+}
+
+}
+
+@media (max-width:768px){
+
+.hero{
+
+min-height:auto;
+
+padding:120px 0 80px;
+
+}
+
+.hero-container{
+
+padding-top:40px;
+
+}
+
+.hero-content h1{
+
+font-size:3rem;
+
+}
+
+.hero-theme{
+
+font-size:1.15rem;
+
+}
+
+.hero-details{
+
+flex-direction:column;
+
+gap:18px;
+
+}
+
+.hero-buttons{
+
+flex-direction:column;
+
+}
+
+.hero-btn{
+
+width:100%;
+
+}
+
+.hero-right{
+
+grid-template-columns:repeat(2,1fr);
+
+gap:15px;
+
+}
+
+.hero-stat{
+
+padding:25px 15px;
+
+}
+
+.hero-stat h2{
+
+font-size:2.1rem;
+
+}
+
+}
+
+@media (max-width:500px){
+
+.hero-right{
+
+grid-template-columns:1fr;
+
+}
+
+.hero-content h1{
+
+font-size:2.4rem;
+
+}
+
+.hero-theme{
+
+font-size:1rem;
+
+}
+
+}

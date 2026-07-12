@@ -1,611 +1,357 @@
-const adminService = require("../services/admin.service");
+import * as adminService from "../services/admin.service.js";
 
-/* =====================================================
+/* ==========================================
    ADMIN DASHBOARD
-===================================================== */
+========================================== */
 
-exports.getDashboard = async (req, res) => {
-
+export const getDashboard = async (req, res, next) => {
   try {
 
-    const dashboard = await adminService.getDashboard();
+    const dashboard =
+      await adminService.getDashboard();
 
     return res.status(200).json({
-
       success: true,
-
       message: "Dashboard retrieved successfully.",
-
       data: dashboard,
-
     });
 
   } catch (error) {
 
-    console.error(
-
-      "Admin Dashboard:",
-
-      error.message
-
-    );
-
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   GET ALL MEMBERS
-===================================================== */
+/* ==========================================
+   MEMBER MANAGEMENT
+========================================== */
 
-exports.getMembers = async (req, res) => {
-
+export const getMembers = async (req, res, next) => {
   try {
 
-    const members = await adminService.getMembers(
-
-      req.query
-
-    );
+    const members =
+      await adminService.getMembers(req.query);
 
     return res.status(200).json({
-
       success: true,
-
       message: "Members retrieved successfully.",
-
-      total: members.length,
-
       data: members,
-
     });
 
   } catch (error) {
 
-    console.error(
-
-      "Get Members:",
-
-      error.message
-
-    );
-
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   GET MEMBER BY ID
-===================================================== */
-
-exports.getMember = async (req, res) => {
-
+export const getMemberById = async (req, res, next) => {
   try {
 
-    const member = await adminService.getMemberById(
-
-      req.params.id
-
-    );
+    const member =
+      await adminService.getMemberById(
+        req.params.id
+      );
 
     return res.status(200).json({
-
       success: true,
-
       message: "Member retrieved successfully.",
-
       data: member,
-
     });
 
   } catch (error) {
 
-    console.error(
-
-      "Get Member:",
-
-      error.message
-
-    );
-
-    return res.status(404).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   UPDATE MEMBER
-===================================================== */
-
-exports.updateMember = async (req, res) => {
-
+export const updateMember = async (req, res, next) => {
   try {
 
-    const member = await adminService.updateMember(
-
-      req.params.id,
-
-      req.body
-
-    );
+    const member =
+      await adminService.updateMember(
+        req.params.id,
+        req.body,
+        req.user._id
+      );
 
     return res.status(200).json({
-
       success: true,
-
       message: "Member updated successfully.",
-
       data: member,
-
     });
 
   } catch (error) {
 
-    console.error(
-
-      "Update Member:",
-
-      error.message
-
-    );
-
-    return res.status(400).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   DELETE MEMBER
-===================================================== */
-
-exports.deleteMember = async (req, res) => {
-
+export const activateMember = async (req, res, next) => {
   try {
 
-    await adminService.deleteMember(
-
-      req.params.id
-
-    );
+    const member =
+      await adminService.activateMember(
+        req.params.id,
+        req.user._id
+      );
 
     return res.status(200).json({
-
       success: true,
-
-      message: "Member deleted successfully.",
-
+      message: "Member activated successfully.",
+      data: member,
     });
 
   } catch (error) {
 
-    console.error(
-
-      "Delete Member:",
-
-      error.message
-
-    );
-
-    return res.status(400).json({
-
-      success: false,
-
-      message: error.message,
-
-      errors: [],
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   MEMBER APPLICATIONS
-===================================================== */
-
-exports.getApplications = async (req, res) => {
-
+export const deactivateMember = async (req, res, next) => {
   try {
 
-    const applications =
-
-      await adminService.getApplications();
+    const member =
+      await adminService.deactivateMember(
+        req.params.id,
+        req.user._id
+      );
 
     return res.status(200).json({
-
       success: true,
-
-      data: applications,
-
+      message: "Member deactivated successfully.",
+      data: member,
     });
 
   } catch (error) {
 
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   LEADERSHIP
-===================================================== */
-
-exports.getLeadership = async (req, res) => {
-
+export const deleteMember = async (req, res, next) => {
   try {
 
-    const leadership =
+    const result =
+      await adminService.deleteMember(
+        req.params.id,
+        req.user._id
+      );
 
-      await adminService.getLeadership();
-
-    return res.status(200).json({
-
-      success: true,
-
-      data: leadership,
-
-    });
+    return res.status(200).json(result);
 
   } catch (error) {
 
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   EVENTS
-===================================================== */
+/* ==========================================
+   PAYMENT MANAGEMENT
+========================================== */
 
-exports.getEvents = async (req, res) => {
-
-  try {
-
-    const events =
-
-      await adminService.getEvents();
-
-    return res.status(200).json({
-
-      success: true,
-
-      data: events,
-
-    });
-
-  } catch (error) {
-
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
-
-  }
-
-};
-
-/* =====================================================
-   PROGRAMS
-===================================================== */
-
-exports.getPrograms = async (req, res) => {
-
-  try {
-
-    const programs =
-
-      await adminService.getPrograms();
-
-    return res.status(200).json({
-
-      success: true,
-
-      data: programs,
-
-    });
-
-  } catch (error) {
-
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
-
-  }
-
-};
-
-/* =====================================================
-   COUNTIES
-===================================================== */
-
-exports.getCounties = async (req, res) => {
-
-  try {
-
-    const counties =
-
-      await adminService.getCounties();
-
-    return res.status(200).json({
-
-      success: true,
-
-      data: counties,
-
-    });
-
-  } catch (error) {
-
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
-
-  }
-
-};
-
-/* =====================================================
-   PAYMENTS
-===================================================== */
-
-exports.getPayments = async (req, res) => {
-
+export const getPayments = async (req, res, next) => {
   try {
 
     const payments =
-
-      await adminService.getPayments();
+      await adminService.getPayments(req.query);
 
     return res.status(200).json({
-
       success: true,
-
+      message: "Payments retrieved successfully.",
       data: payments,
-
     });
 
   } catch (error) {
 
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   CERTIFICATES
-===================================================== */
-
-exports.getCertificates = async (req, res) => {
-
+export const verifyPayment = async (req, res, next) => {
   try {
 
-    const certificates =
-
-      await adminService.getCertificates();
+    const payment =
+      await adminService.verifyPayment(
+        req.params.id,
+        req.user._id
+      );
 
     return res.status(200).json({
-
       success: true,
-
-      data: certificates,
-
+      message: "Payment verified successfully.",
+      data: payment,
     });
 
   } catch (error) {
 
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   NEWS
-===================================================== */
+/* ==========================================
+   EVENT MANAGEMENT
+========================================== */
 
-exports.getNews = async (req, res) => {
-
+export const getEvents = async (req, res, next) => {
   try {
 
-    const news =
-
-      await adminService.getNews();
+    const events =
+      await adminService.getEvents(req.query);
 
     return res.status(200).json({
-
       success: true,
-
-      data: news,
-
+      message: "Events retrieved successfully.",
+      data: events,
     });
 
   } catch (error) {
 
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   NOTIFICATIONS
-===================================================== */
-
-exports.getNotifications = async (req, res) => {
-
+export const getEventById = async (req, res, next) => {
   try {
 
-    const notifications =
-
-      await adminService.getNotifications();
+    const event =
+      await adminService.getEventById(
+        req.params.id
+      );
 
     return res.status(200).json({
-
       success: true,
-
-      data: notifications,
-
+      message: "Event retrieved successfully.",
+      data: event,
     });
 
   } catch (error) {
 
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
+    next(error);
 
   }
-
 };
 
-/* =====================================================
-   SETTINGS
-===================================================== */
-
-exports.getSettings = async (req, res) => {
-
+export const createEvent = async (req, res, next) => {
   try {
 
-    const settings =
+    const event =
+      await adminService.createEvent(
+        req.body,
+        req.user._id
+      );
 
-      await adminService.getSettings();
-
-    return res.status(200).json({
-
+    return res.status(201).json({
       success: true,
-
-      data: settings,
-
+      message: "Event created successfully.",
+      data: event,
     });
 
   } catch (error) {
 
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
+    next(error);
 
   }
-
 };
 
-exports.updateSettings = async (req, res) => {
-
+export const updateEvent = async (req, res, next) => {
   try {
 
-    await adminService.updateSettings(
-
-      req.body
-
-    );
+    const event =
+      await adminService.updateEvent(
+        req.params.id,
+        req.body,
+        req.user._id
+      );
 
     return res.status(200).json({
-
       success: true,
-
-      message: "Settings updated successfully.",
-
+      message: "Event updated successfully.",
+      data: event,
     });
 
   } catch (error) {
 
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
+    next(error);
 
   }
+};
 
+export const deleteEvent = async (req, res, next) => {
+  try {
+
+    const result =
+      await adminService.deleteEvent(
+        req.params.id,
+        req.user._id
+      );
+
+    return res.status(200).json(result);
+
+  } catch (error) {
+
+    next(error);
+
+  }
+};
+
+/* ==========================================
+   REPORTS
+========================================== */
+
+export const getReports = async (req, res, next) => {
+  try {
+
+    const reports =
+      await adminService.getReports();
+
+    return res.status(200).json({
+      success: true,
+      message: "Reports generated successfully.",
+      data: reports,
+    });
+
+  } catch (error) {
+
+    next(error);
+
+  }
+};
+
+/* ==========================================
+   ACTIVITY LOGS
+========================================== */
+
+export const getActivityLogs = async (
+  req,
+  res,
+  next
+) => {
+  try {
+
+    const logs =
+      await adminService.getActivityLogs(
+        req.query
+      );
+
+    return res.status(200).json({
+      success: true,
+      message: "Activity logs retrieved successfully.",
+      data: logs,
+    });
+
+  } catch (error) {
+
+    next(error);
+
+  }
 };

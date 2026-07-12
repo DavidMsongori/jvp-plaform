@@ -1,10 +1,22 @@
-const Member = require("../models/Member");
+import mongoose from "mongoose";
 
-/* =====================================================
-   DASHBOARD
-===================================================== */
+import Member from "../models/Member.js";
+import Payment from "../models/Payment.js";
+import Event from "../models/Event.js";
+import ActivityLog from "../models/ActivityLog.js";
+import User from "../models/User.js";
+import AppError from "../utils/AppError.js";
+import { logActivity } from "../utils/activity.js";
 
-exports.getDashboard = async () => {
+/* ==========================================================
+   ADMIN DASHBOARD
+========================================================== */
+
+export const getDashboard = async () => {
+
+  /* ----------------------------------------
+     MEMBER STATISTICS
+  ---------------------------------------- */
 
   const [
 
@@ -14,8 +26,6 @@ exports.getDashboard = async () => {
 
     pendingMembers,
 
-    suspendedMembers,
-
     expiredMembers,
 
   ] = await Promise.all([
@@ -23,84 +33,145 @@ exports.getDashboard = async () => {
     Member.countDocuments(),
 
     Member.countDocuments({
-
-      membershipStatus: "Active",
-
+      membershipStatus: "active",
     }),
 
     Member.countDocuments({
-
-      membershipStatus: "Pending",
-
+      membershipStatus: "pending_payment",
     }),
 
     Member.countDocuments({
-
-      membershipStatus: "Suspended",
-
-    }),
-
-    Member.countDocuments({
-
-      membershipStatus: "Expired",
-
+      membershipStatus: "expired",
     }),
 
   ]);
 
-  /* ==========================================
-     COUNTY OVERVIEW
-  ========================================== */
+  /* ----------------------------------------
+     PAYMENT STATISTICS
+  ---------------------------------------- */
 
-  const countyOverview = await Member.aggregate([
+  const [
 
-    {
+    totalPayments,
 
-      $group: {
+    revenue,
 
-        _id: "$location.county",
+  ] = await Promise.all([
 
-        members: {
+    Payment.countDocuments(),
 
-          $sum: 1,
-
+    Payment.aggregate([
+      {
+        $match: {
+          status: "completed",
         },
-
       },
-
-    },
-
-    {
-
-      $sort: {
-
-        members: -1,
-
+      {
+        $group: {
+          _id: null,
+          total: {
+            $sum: "$amount",
+          },
+        },
       },
-
-    },
+    ]),
 
   ]);
 
-  /* ==========================================
+  const totalRevenue =
+    revenue.length > 0
+      ? revenue[0].total
+      : 0;
+
+  /* ----------------------------------------
+     EVENTS
+  ---------------------------------------- */
+
+  const totalEvents =
+    await Event.countDocuments();
+
+  /* ----------------------------------------
      RECENT MEMBERS
-  ========================================== */
+  ---------------------------------------- */
 
-  const recentMembers = await Member.find()
+  const recentMembers =
+    await Member.find()
 
-    .sort({
+      .populate(
+        "user",
+        "email role"
+      )
 
-      createdAt: -1,
+      .sort({
+        createdAt: -1,
+      })
+
+      .limit(5);
+
+  /* ----------------------------------------
+     RECENT PAYMENTS
+  ---------------------------------------- */
+
+  const recentPayments =
+    await Payment.find()
+
+      .populate(
+        "member",
+        "firstName lastName memberNumber"
+      )
+
+      .sort({
+        createdAt: -1,
+      })
+
+      .limit(5);
+
+  /* ----------------------------------------
+     UPCOMING EVENTS
+  ---------------------------------------- */
+
+  const upcomingEvents =
+    await Event.find({
+
+      startDate: {
+
+        $gte: new Date(),
+
+      },
 
     })
 
-    .limit(10)
+      .sort({
 
-    .select(
+        startDate: 1,
 
-      "membershipNumber firstName middleName lastName profilePhoto role membershipStatus paymentStatus location createdAt"
+      })
 
-    );
+      .limit(5);
+
+  /* ----------------------------------------
+     RECENT ACTIVITY
+  ---------------------------------------- */
+
+  const recentActivity =
+    await ActivityLog.find()
+
+      .populate(
+        "user",
+        "email role"
+      )
+
+      .sort({
+
+        createdAt: -1,
+
+      })
+
+      .limit(10);
+
+  /* ----------------------------------------
+     RETURN
+  ---------------------------------------- */
 
   return {
 
@@ -112,258 +183,1703 @@ exports.getDashboard = async () => {
 
       pendingMembers,
 
-      suspendedMembers,
-
       expiredMembers,
+
+      totalPayments,
+
+      totalRevenue,
+
+      totalEvents,
 
     },
 
-    countyOverview,
-
     recentMembers,
 
-    recentActivities: [],
+    recentPayments,
+
+    upcomingEvents,
+
+    recentActivity,
 
   };
 
 };
 
-/* =====================================================
+
+/* ==========================================================
+   MEMBER MANAGEMENT
+========================================================== */
+
+/* ==========================================================
    GET MEMBERS
-===================================================== */
+========================================================== */
 
-exports.getMembers = async (filters = {}) => {
+export const getMembers = async (query = {}) => {
 
-  const query = {};
+  const {
 
-  if (filters.county) {
+    page = 1,
 
-    query["location.county"] = filters.county;
+    limit = 10,
+
+    search = "",
+
+    county,
+
+    membershipStatus,
+
+    membershipType,
+
+    role,
+
+    isActive,
+
+    emailVerified,
+
+    sortBy = "createdAt",
+
+    order = "desc",
+
+  } = query;
+
+  const pageNumber = Math.max(Number(page), 1);
+
+  const pageSize = Math.max(Number(limit), 1);
+
+  /* ----------------------------------------
+     USER FILTERS
+  ---------------------------------------- */
+
+  const userFilters = {};
+
+  if (role) {
+
+    userFilters.role = role;
 
   }
 
-  if (filters.role) {
+  if (isActive !== undefined) {
 
-    query.role = filters.role;
-
-  }
-
-  if (filters.membershipStatus) {
-
-    query.membershipStatus = filters.membershipStatus;
+    userFilters.isActive =
+      isActive === "true";
 
   }
 
-  const members = await Member.find(query)
+  if (emailVerified !== undefined) {
 
-    .sort({
+    userFilters.emailVerified =
+      emailVerified === "true";
 
-      createdAt: -1,
+  }
+
+  /* ----------------------------------------
+     MEMBER FILTERS
+  ---------------------------------------- */
+
+  const memberFilters = {};
+
+  if (county) {
+
+    memberFilters.county = county;
+
+  }
+
+  if (membershipStatus) {
+
+    memberFilters.membershipStatus =
+      membershipStatus;
+
+  }
+
+  if (membershipType) {
+
+    memberFilters.membershipType =
+      membershipType;
+
+  }
+
+  /* ----------------------------------------
+     SEARCH
+  ---------------------------------------- */
+
+  if (search.trim()) {
+
+    memberFilters.$or = [
+
+      {
+        firstName: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+
+      {
+        middleName: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+
+      {
+        lastName: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+
+      {
+        memberNumber: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+
+      {
+        nationalId: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+
+      {
+        phone: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+
+    ];
+
+  }
+
+  /* ----------------------------------------
+     SORT
+  ---------------------------------------- */
+
+  const sort = {
+
+    [sortBy]:
+      order === "asc"
+        ? 1
+        : -1,
+
+  };
+
+  /* ----------------------------------------
+     QUERY
+  ---------------------------------------- */
+
+  const members = await Member.find(
+    memberFilters
+  )
+
+    .populate({
+
+      path: "user",
+
+      select:
+        "email role isActive emailVerified createdAt",
+
+      match: userFilters,
+
+    })
+
+    .sort(sort)
+
+    .skip((pageNumber - 1) * pageSize)
+
+    .limit(pageSize);
+
+  /* ----------------------------------------
+     REMOVE MEMBERS THAT DIDN'T MATCH USER FILTERS
+  ---------------------------------------- */
+
+  const filteredMembers =
+    members.filter(
+      (member) => member.user
+    );
+
+  /* ----------------------------------------
+     TOTAL
+  ---------------------------------------- */
+
+  const total =
+    filteredMembers.length;
+
+  /* ----------------------------------------
+     SUMMARY
+  ---------------------------------------- */
+
+  const summary = {
+
+    totalMembers:
+      await Member.countDocuments(),
+
+    activeMembers:
+      await Member.countDocuments({
+
+        membershipStatus: "active",
+
+      }),
+
+    pendingMembers:
+      await Member.countDocuments({
+
+        membershipStatus:
+          "pending_payment",
+
+      }),
+
+    expiredMembers:
+      await Member.countDocuments({
+
+        membershipStatus:
+          "expired",
+
+      }),
+
+  };
+
+  /* ----------------------------------------
+     RETURN
+  ---------------------------------------- */
+
+  return {
+
+    summary,
+
+    members: filteredMembers,
+
+    pagination: {
+
+      page: pageNumber,
+
+      limit: pageSize,
+
+      total,
+
+      totalPages: Math.ceil(
+        total / pageSize
+      ),
+
+      hasNextPage:
+        pageNumber <
+        Math.ceil(total / pageSize),
+
+      hasPreviousPage:
+        pageNumber > 1,
+
+    },
+
+  };
+
+};
+
+/**
+ * Get single member.
+ */
+
+export const getMemberById = async (id) => {
+
+  const member = await Member.findById(id)
+
+    .populate(
+      "user"
+    );
+
+  if (!member) {
+
+    throw new Error(
+      "Member not found."
+    );
+
+  }
+
+  return member;
+
+};
+
+
+export const updateMember = async (
+  id,
+  payload,
+  adminId
+) => {
+
+  const session = await mongoose.startSession();
+
+  session.startTransaction();
+
+  try {
+
+    const member = await Member.findById(id).session(session);
+
+    if (!member) {
+
+      throw new AppError(
+        "Member not found.",
+        404
+      );
+
+    }
+
+    Object.assign(member, payload);
+
+    await member.save({ session });
+
+    await logActivity(
+      adminId,
+      `Updated member ${member.memberNumber}`,
+      session
+    );
+
+    await session.commitTransaction();
+
+    return await Member.findById(id)
+      .populate("user");
+
+  } catch (error) {
+
+    await session.abortTransaction();
+
+    throw error;
+
+  } finally {
+
+    session.endSession();
+
+  }
+
+};
+
+/**
+ * Activate member.
+ */
+
+export const activateMember = async (
+  id,
+  adminId
+) => {
+
+  const session = await mongoose.startSession();
+
+  session.startTransaction();
+
+  try {
+
+    const member = await Member.findById(id).session(session);
+
+    if (!member) {
+
+      throw new AppError(
+        "Member not found.",
+        404
+      );
+
+    }
+
+    member.membershipStatus = "active";
+
+    await member.save({ session });
+
+    await logActivity(
+      adminId,
+      `Activated member ${member.memberNumber}`,
+      session
+    );
+
+    await session.commitTransaction();
+
+    return member;
+
+  } catch (error) {
+
+    await session.abortTransaction();
+
+    throw error;
+
+  } finally {
+
+    session.endSession();
+
+  }
+
+};
+
+
+/**
+ * Deactivate member.
+ */
+
+export const deactivateMember = async (
+  id,
+  adminId
+) => {
+
+  const session = await mongoose.startSession();
+
+  session.startTransaction();
+
+  try {
+
+    const member = await Member.findById(id).session(session);
+
+    if (!member) {
+
+      throw new AppError(
+        "Member not found.",
+        404
+      );
+
+    }
+
+    member.membershipStatus = "inactive";
+
+    await member.save({ session });
+
+    await logActivity(
+      adminId,
+      `Deactivated member ${member.memberNumber}`,
+      session
+    );
+
+    await session.commitTransaction();
+
+    return member;
+
+  } catch (error) {
+
+    await session.abortTransaction();
+
+    throw error;
+
+  } finally {
+
+    session.endSession();
+
+  }
+
+};
+
+
+/**
+ * Delete member.
+ */
+
+export const deleteMember = async (
+  id,
+  adminId
+) => {
+
+  const session = await mongoose.startSession();
+
+  session.startTransaction();
+
+  try {
+
+    const member = await Member.findById(id).session(session);
+
+    if (!member) {
+
+      throw new AppError(
+        "Member not found.",
+        404
+      );
+
+    }
+
+    const user = await User.findById(member.user).session(session);
+
+    if (!user) {
+
+      throw new AppError(
+        "User account not found.",
+        404
+      );
+
+    }
+
+    /* ----------------------------------------
+       PROTECT SUPER ADMIN
+    ---------------------------------------- */
+
+    if (user.role === "super_admin") {
+
+      throw new AppError(
+        "Super Admin accounts cannot be deleted.",
+        403
+      );
+
+    }
+
+    /* ----------------------------------------
+       DELETE MEMBER
+    ---------------------------------------- */
+
+    await Member.deleteOne(
+      { _id: id },
+      { session }
+    );
+
+    await User.deleteOne(
+      { _id: user._id },
+      { session }
+    );
+
+    await logActivity(
+      adminId,
+      `Deleted member ${member.memberNumber}`,
+      session
+    );
+
+    await session.commitTransaction();
+
+    return {
+
+      success: true,
+
+      message:
+        "Member deleted successfully.",
+
+    };
+
+  } catch (error) {
+
+    await session.abortTransaction();
+
+    throw error;
+
+  } finally {
+
+    session.endSession();
+
+  }
+
+};
+
+
+/* ==========================================================
+   PAYMENT MANAGEMENT
+========================================================== */
+
+/**
+ * Get all payments.
+ */
+
+export const getPayments = async (query = {}) => {
+
+  const {
+
+    page = 1,
+
+    limit = 10,
+
+    search = "",
+
+    status,
+
+    paymentMethod,
+
+    startDate,
+
+    endDate,
+
+    sortBy = "createdAt",
+
+    order = "desc",
+
+  } = query;
+
+  const pageNumber = Math.max(Number(page), 1);
+
+  const pageSize = Math.max(Number(limit), 1);
+
+  /* ----------------------------------------
+     FILTERS
+  ---------------------------------------- */
+
+  const filters = {};
+
+  if (status) {
+
+    filters.status = status;
+
+  }
+
+  if (paymentMethod) {
+
+    filters.paymentMethod = paymentMethod;
+
+  }
+
+  if (startDate || endDate) {
+
+    filters.createdAt = {};
+
+    if (startDate) {
+
+      filters.createdAt.$gte =
+        new Date(startDate);
+
+    }
+
+    if (endDate) {
+
+      filters.createdAt.$lte =
+        new Date(endDate);
+
+    }
+
+  }
+
+  /* ----------------------------------------
+     SORT
+  ---------------------------------------- */
+
+  const sort = {
+
+    [sortBy]:
+      order === "asc"
+        ? 1
+        : -1,
+
+  };
+
+  /* ----------------------------------------
+     QUERY
+  ---------------------------------------- */
+
+  let payments = await Payment.find(filters)
+
+    .populate({
+
+      path: "member",
+
+      select:
+        "firstName lastName memberNumber phone",
+
+    })
+
+    .sort(sort)
+
+    .skip((pageNumber - 1) * pageSize)
+
+    .limit(pageSize);
+
+  /* ----------------------------------------
+     SEARCH
+  ---------------------------------------- */
+
+  if (search.trim()) {
+
+    const keyword =
+      search.toLowerCase();
+
+    payments = payments.filter((payment) => {
+
+      const member =
+        payment.member || {};
+
+      return (
+
+        member.firstName
+          ?.toLowerCase()
+          .includes(keyword) ||
+
+        member.lastName
+          ?.toLowerCase()
+          .includes(keyword) ||
+
+        member.memberNumber
+          ?.toLowerCase()
+          .includes(keyword) ||
+
+        payment.transactionReference
+          ?.toLowerCase()
+          .includes(keyword)
+
+      );
 
     });
 
-  return members;
-
-};
-
-/* =====================================================
-   GET MEMBER
-===================================================== */
-
-exports.getMemberById = async (id) => {
-
-  const member = await Member.findById(id);
-
-  if (!member) {
-
-    throw new Error(
-
-      "Member not found."
-
-    );
-
   }
 
-  return member;
+  /* ----------------------------------------
+     TOTALS
+  ---------------------------------------- */
+
+  const totalPayments =
+    await Payment.countDocuments(filters);
+
+  const revenue =
+    await Payment.aggregate([
+
+      {
+
+        $match: {
+
+          status: "completed",
+
+        },
+
+      },
+
+      {
+
+        $group: {
+
+          _id: null,
+
+          total: {
+
+            $sum: "$amount",
+
+          },
+
+        },
+
+      },
+
+    ]);
+
+  const totalRevenue =
+    revenue.length
+      ? revenue[0].total
+      : 0;
+
+  const pendingPayments =
+    await Payment.countDocuments({
+
+      status: "pending",
+
+    });
+
+  const failedPayments =
+    await Payment.countDocuments({
+
+      status: "failed",
+
+    });
+
+  /* ----------------------------------------
+     RETURN
+  ---------------------------------------- */
+
+  return {
+
+    summary: {
+
+      totalPayments,
+
+      totalRevenue,
+
+      pendingPayments,
+
+      failedPayments,
+
+    },
+
+    payments,
+
+    pagination: {
+
+      page: pageNumber,
+
+      limit: pageSize,
+
+      total: totalPayments,
+
+      totalPages: Math.ceil(
+        totalPayments / pageSize
+      ),
+
+      hasNextPage:
+        pageNumber <
+        Math.ceil(totalPayments / pageSize),
+
+      hasPreviousPage:
+        pageNumber > 1,
+
+    },
+
+  };
 
 };
 
-/* =====================================================
-   UPDATE MEMBER
-===================================================== */
+/**
+ * Verify payment.
+ */
 
-exports.updateMember = async (
+export const verifyPayment = async (
 
-  id,
+  paymentId,
 
-  data
+  adminId
 
 ) => {
 
-  const member = await Member.findById(id);
+  const session =
+    await mongoose.startSession();
 
-  if (!member) {
+  session.startTransaction();
 
-    throw new Error(
+  try {
 
-      "Member not found."
+    const payment =
+      await Payment.findById(paymentId)
+        .session(session);
 
-    );
+    if (!payment) {
 
-  }
+      throw new AppError(
+        "Payment not found.",
+        404
+      );
 
-  Object.assign(
+    }
 
-    member,
+    if (payment.status === "completed") {
 
-    data
+      throw new AppError(
+        "Payment has already been verified.",
+        400
+      );
 
+    }
+
+    payment.status = "completed";
+
+    payment.verifiedBy = adminId;
+
+    payment.verifiedAt = new Date();
+
+    await payment.save({
+      session,
+    });
+
+    /* ----------------------------------------
+       UPDATE MEMBER
+    ---------------------------------------- */
+
+    const member =
+      await Member.findById(
+        payment.member
+      ).session(session);
+
+    if (member) {
+
+      /* ----------------------------------------
+   ACTIVATE / RENEW MEMBERSHIP
+---------------------------------------- */
+
+const today = new Date();
+
+let baseDate = today;
+
+/*
+ * If the current membership is still valid,
+ * extend from the existing expiry date.
+ */
+
+if (
+
+  member.membershipExpiry &&
+
+  member.membershipExpiry > today
+
+) {
+
+  baseDate = new Date(
+    member.membershipExpiry
   );
 
-  if (
+}
 
-    typeof member.calculateProfileCompletion ===
+/*
+ * Add one year.
+ */
 
-    "function"
+const newExpiry = new Date(baseDate);
 
-  ) {
+newExpiry.setFullYear(
+  newExpiry.getFullYear() + 1
+);
 
-    member.calculateProfileCompletion();
+member.membershipFeePaid = true;
+
+member.membershipStatus = "active";
+
+member.membershipExpiry = newExpiry;
+
+await member.save({
+  session,
+});
+
+    }
+
+    await session.commitTransaction();
+
+    return payment;
+
+  } catch (error) {
+
+    await session.abortTransaction();
+
+    throw error;
+
+  } finally {
+
+    session.endSession();
 
   }
 
-  await member.save();
+};
 
-  return member;
+
+
+/* ==========================================================
+   EVENT MANAGEMENT
+========================================================== */
+
+/**
+ * Get all events.
+ */
+
+export const getEvents = async (query = {}) => {
+
+  const {
+
+    page = 1,
+
+    limit = 10,
+
+    search = "",
+
+    county,
+
+    status,
+
+    sortBy = "startDate",
+
+    order = "asc",
+
+  } = query;
+
+  const pageNumber = Math.max(Number(page), 1);
+
+  const pageSize = Math.max(Number(limit), 1);
+
+  const filters = {};
+
+  /* ----------------------------------------
+     FILTERS
+  ---------------------------------------- */
+
+  if (county) {
+
+    filters.county = county;
+
+  }
+
+  if (status) {
+
+    filters.status = status;
+
+  }
+
+  if (search.trim()) {
+
+    filters.$or = [
+
+      {
+
+        title: {
+
+          $regex: search,
+
+          $options: "i",
+
+        },
+
+      },
+
+      {
+
+        description: {
+
+          $regex: search,
+
+          $options: "i",
+
+        },
+
+      },
+
+      {
+
+        venue: {
+
+          $regex: search,
+
+          $options: "i",
+
+        },
+
+      },
+
+    ];
+
+  }
+
+  const sort = {
+
+    [sortBy]:
+
+      order === "asc"
+
+        ? 1
+
+        : -1,
+
+  };
+
+  const events = await Event.find(filters)
+
+    .sort(sort)
+
+    .skip((pageNumber - 1) * pageSize)
+
+    .limit(pageSize);
+
+  const total =
+    await Event.countDocuments(filters);
+
+  const summary = {
+
+    totalEvents:
+      await Event.countDocuments(),
+
+    upcomingEvents:
+      await Event.countDocuments({
+
+        startDate: {
+
+          $gte: new Date(),
+
+        },
+
+      }),
+
+    completedEvents:
+      await Event.countDocuments({
+
+        endDate: {
+
+          $lt: new Date(),
+
+        },
+
+      }),
+
+  };
+
+  return {
+
+    summary,
+
+    events,
+
+    pagination: {
+
+      page: pageNumber,
+
+      limit: pageSize,
+
+      total,
+
+      totalPages:
+        Math.ceil(total / pageSize),
+
+      hasNextPage:
+
+        pageNumber <
+
+        Math.ceil(total / pageSize),
+
+      hasPreviousPage:
+
+        pageNumber > 1,
+
+    },
+
+  };
 
 };
 
-/* =====================================================
-   DELETE MEMBER
-===================================================== */
+/**
+ * Get one event.
+ */
 
-exports.deleteMember = async (id) => {
+export const getEventById = async (id) => {
 
-  const member = await Member.findById(id);
+  const event = await Event.findById(id);
 
-  if (!member) {
+  if (!event) {
 
-    throw new Error(
+    throw new AppError(
 
-      "Member not found."
+      "Event not found.",
+
+      404
 
     );
 
   }
 
-  await member.deleteOne();
-
-  return true;
+  return event;
 
 };
 
-/* =====================================================
-   APPLICATIONS
-===================================================== */
+/**
+ * Create event.
+ */
 
-exports.getApplications = async () => {
+export const createEvent = async (
 
-  return [];
+  payload
 
-};
+) => {
 
-/* =====================================================
-   LEADERSHIP
-===================================================== */
+  const event =
+    await Event.create(payload);
 
-exports.getLeadership = async () => {
-
-  return [];
+  return event;
 
 };
 
-/* =====================================================
-   EVENTS
-===================================================== */
+/**
+ * Update event.
+ */
 
-exports.getEvents = async () => {
+export const updateEvent = async (
 
-  return [];
+  id,
 
-};
+  payload
 
-/* =====================================================
-   PROGRAMS
-===================================================== */
+) => {
 
-exports.getPrograms = async () => {
+  const event =
+    await Event.findByIdAndUpdate(
 
-  return [];
+      id,
 
-};
+      payload,
 
-/* =====================================================
-   COUNTIES
-===================================================== */
+      {
 
-exports.getCounties = async () => {
+        new: true,
 
-  return [];
+        runValidators: true,
 
-};
+      }
 
-/* =====================================================
-   PAYMENTS
-===================================================== */
+    );
 
-exports.getPayments = async () => {
+  if (!event) {
 
-  return [];
+    throw new AppError(
 
-};
+      "Event not found.",
 
-/* =====================================================
-   CERTIFICATES
-===================================================== */
+      404
 
-exports.getCertificates = async () => {
+    );
 
-  return [];
+  }
+
+  return event;
 
 };
 
-/* =====================================================
-   NEWS
-===================================================== */
+/**
+ * Delete event.
+ */
 
-exports.getNews = async () => {
+export const deleteEvent = async (
 
-  return [];
+  id
+
+) => {
+
+  const event =
+    await Event.findById(id);
+
+  if (!event) {
+
+    throw new AppError(
+
+      "Event not found.",
+
+      404
+
+    );
+
+  }
+
+  await Event.deleteOne({
+
+    _id: id,
+
+  });
+
+  return {
+
+    success: true,
+
+    message:
+
+      "Event deleted successfully.",
+
+  };
 
 };
 
-/* =====================================================
-   NOTIFICATIONS
-===================================================== */
 
-exports.getNotifications = async () => {
+/* ==========================================================
+   ACTIVITY LOGS
+========================================================== */
 
-  return [];
+/**
+ * Get activity logs.
+ */
+
+export const getActivityLogs = async (query = {}) => {
+
+  const {
+
+    page = 1,
+
+    limit = 20,
+
+    search = "",
+
+    action,
+
+    user,
+
+    startDate,
+
+    endDate,
+
+    sortBy = "createdAt",
+
+    order = "desc",
+
+  } = query;
+
+  const pageNumber = Math.max(Number(page), 1);
+
+  const pageSize = Math.max(Number(limit), 1);
+
+  /* ----------------------------------------
+     FILTERS
+  ---------------------------------------- */
+
+  const filters = {};
+
+  if (action) {
+
+    filters.action = action;
+
+  }
+
+  if (user) {
+
+    filters.user = user;
+
+  }
+
+  if (startDate || endDate) {
+
+    filters.createdAt = {};
+
+    if (startDate) {
+
+      filters.createdAt.$gte =
+        new Date(startDate);
+
+    }
+
+    if (endDate) {
+
+      filters.createdAt.$lte =
+        new Date(endDate);
+
+    }
+
+  }
+
+  /* ----------------------------------------
+     SEARCH
+  ---------------------------------------- */
+
+  if (search.trim()) {
+
+    filters.$or = [
+
+      {
+
+        action: {
+
+          $regex: search,
+
+          $options: "i",
+
+        },
+
+      },
+
+      {
+
+        description: {
+
+          $regex: search,
+
+          $options: "i",
+
+        },
+
+      },
+
+    ];
+
+  }
+
+  /* ----------------------------------------
+     SORT
+  ---------------------------------------- */
+
+  const sort = {
+
+    [sortBy]:
+      order === "asc"
+        ? 1
+        : -1,
+
+  };
+
+  /* ----------------------------------------
+     QUERY
+  ---------------------------------------- */
+
+  const logs = await ActivityLog.find(filters)
+
+    .populate(
+
+      "user",
+
+      "email role"
+
+    )
+
+    .sort(sort)
+
+    .skip((pageNumber - 1) * pageSize)
+
+    .limit(pageSize);
+
+  const total =
+    await ActivityLog.countDocuments(filters);
+
+  /* ----------------------------------------
+     SUMMARY
+  ---------------------------------------- */
+
+  const summary = {
+
+    totalLogs:
+      await ActivityLog.countDocuments(),
+
+    todayLogs:
+      await ActivityLog.countDocuments({
+
+        createdAt: {
+
+          $gte: new Date(
+            new Date().setHours(
+              0,
+              0,
+              0,
+              0
+            )
+          ),
+
+        },
+
+      }),
+
+  };
+
+  /* ----------------------------------------
+     RETURN
+  ---------------------------------------- */
+
+  return {
+
+    summary,
+
+    logs,
+
+    pagination: {
+
+      page: pageNumber,
+
+      limit: pageSize,
+
+      total,
+
+      totalPages: Math.ceil(
+        total / pageSize
+      ),
+
+      hasNextPage:
+        pageNumber <
+        Math.ceil(total / pageSize),
+
+      hasPreviousPage:
+        pageNumber > 1,
+
+    },
+
+  };
 
 };
 
-/* =====================================================
-   SETTINGS
-===================================================== */
+/* ==========================================================
+   REPORTS
+========================================================== */
 
-exports.getSettings = async () => {
+export const getReports = async () => {
 
-  return {};
+  /* ----------------------------------------
+     MEMBERS
+  ---------------------------------------- */
+
+  const members = {
+
+    total:
+      await Member.countDocuments(),
+
+    active:
+      await Member.countDocuments({
+
+        membershipStatus: "active",
+
+      }),
+
+    pending:
+      await Member.countDocuments({
+
+        membershipStatus:
+          "pending_payment",
+
+      }),
+
+    expired:
+      await Member.countDocuments({
+
+        membershipStatus:
+          "expired",
+
+      }),
+
+  };
+
+  /* ----------------------------------------
+     PAYMENTS
+  ---------------------------------------- */
+
+  const payments = {
+
+    total:
+      await Payment.countDocuments(),
+
+    completed:
+      await Payment.countDocuments({
+
+        status: "completed",
+
+      }),
+
+    pending:
+      await Payment.countDocuments({
+
+        status: "pending",
+
+      }),
+
+    failed:
+      await Payment.countDocuments({
+
+        status: "failed",
+
+      }),
+
+  };
+
+  const revenueResult =
+    await Payment.aggregate([
+
+      {
+
+        $match: {
+
+          status: "completed",
+
+        },
+
+      },
+
+      {
+
+        $group: {
+
+          _id: null,
+
+          total: {
+
+            $sum: "$amount",
+
+          },
+
+        },
+
+      },
+
+    ]);
+
+  const revenue =
+    revenueResult.length
+
+      ? revenueResult[0].total
+
+      : 0;
+
+  /* ----------------------------------------
+     EVENTS
+  ---------------------------------------- */
+
+  const events = {
+
+    total:
+      await Event.countDocuments(),
+
+    upcoming:
+      await Event.countDocuments({
+
+        startDate: {
+
+          $gte: new Date(),
+
+        },
+
+      }),
+
+    completed:
+      await Event.countDocuments({
+
+        endDate: {
+
+          $lt: new Date(),
+
+        },
+
+      }),
+
+  };
+
+  /* ----------------------------------------
+     COUNTY BREAKDOWN
+  ---------------------------------------- */
+
+  const countySummary =
+    await Member.aggregate([
+
+      {
+
+        $group: {
+
+          _id: "$county",
+
+          members: {
+
+            $sum: 1,
+
+          },
+
+        },
+
+      },
+
+      {
+
+        $sort: {
+
+          members: -1,
+
+        },
+
+      },
+
+    ]);
+
+  /* ----------------------------------------
+     MEMBERSHIP TYPES
+  ---------------------------------------- */
+
+  const membershipTypes =
+    await Member.aggregate([
+
+      {
+
+        $group: {
+
+          _id: "$membershipType",
+
+          total: {
+
+            $sum: 1,
+
+          },
+
+        },
+
+      },
+
+    ]);
+
+  /* ----------------------------------------
+     RETURN
+  ---------------------------------------- */
+
+  return {
+
+    members,
+
+    payments,
+
+    revenue,
+
+    events,
+
+    countySummary,
+
+    membershipTypes,
+
+    generatedAt: new Date(),
+
+  };
 
 };
 
-exports.updateSettings = async () => {
-
-  return true;
-
-};

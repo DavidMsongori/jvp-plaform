@@ -1,0 +1,160 @@
+/* ==========================================================
+   ACTIVATE MEMBERSHIP FORM
+========================================================== */
+
+.activate-membership-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ==========================================================
+   FORM GROUP
+========================================================== */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1d3557;
+}
+
+/* ==========================================================
+   INPUTS
+========================================================== */
+
+.activate-membership-form input {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  font-size: 0.95rem;
+  color: #1d3557;
+  background: #ffffff;
+  border: 1px solid #d9dee5;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+
+.activate-membership-form input::placeholder {
+  color: #9ca3af;
+}
+
+.activate-membership-form input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+}
+
+/* ==========================================================
+   BUTTON
+========================================================== */
+
+.activate-membership-form .btn-primary {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: #0066cc;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.activate-membership-form .btn-primary:hover:not(:disabled) {
+  background: #0052a3;
+  transform: translateY(-1px);
+}
+
+.activate-membership-form .btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==========================================================
+   ALERTS
+========================================================== */
+
+.form-error {
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  background: #fdeaea;
+  color: #b42318;
+  border: 1px solid #f5c2c7;
+  font-size: 0.92rem;
+}
+
+.form-success {
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  background: #e8f7ec;
+  color: #0f7b3d;
+  border: 1px solid #b7e4c7;
+  font-size: 0.92rem;
+}
+
+/* ==========================================================
+   INFO BOX
+========================================================== */
+
+.activation-info {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: #eef6ff;
+  border-left: 4px solid #0066cc;
+  border-radius: 8px;
+}
+
+.activation-info h3 {
+  margin: 0 0 0.5rem;
+  color: #1d3557;
+  font-size: 1rem;
+}
+
+.activation-info p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+  font-size: 0.92rem;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+
+  .activate-membership-form {
+    gap: 1.25rem;
+  }
+
+  .activate-membership-form input {
+    padding: 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .activate-membership-form .btn-primary {
+    padding: 0.95rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .activate-membership-form input {
+    font-size: 0.9rem;
+  }
+
+  .activation-info {
+    padding: 0.9rem 1rem;
+  }
+
+}

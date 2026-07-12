@@ -7,13 +7,23 @@ import {
 
 import * as authService from "../services/auth.service";
 
+import {
+  hasPermission as checkPermission,
+} from "../utils/permissions";
+
 const AuthContext = createContext();
+
+/* ==========================================================
+   AUTH PROVIDER
+========================================================== */
 
 export function AuthProvider({ children }) {
 
-  const [member, setMember] = useState(null);
-
   const [token, setToken] = useState(null);
+
+  const [user, setUser] = useState(null);
+
+  const [member, setMember] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -23,30 +33,35 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
 
-    const storedToken =
-      localStorage.getItem("token");
-
-    const storedMember =
-      localStorage.getItem("member");
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+    const storedMember = localStorage.getItem("member");
 
     if (storedToken) {
       setToken(storedToken);
+    }
+
+    if (storedUser) {
+
+      try {
+
+        setUser(JSON.parse(storedUser));
+
+      } catch {
+
+        localStorage.removeItem("user");
+
+      }
+
     }
 
     if (storedMember) {
 
       try {
 
-        setMember(
-          JSON.parse(storedMember)
-        );
+        setMember(JSON.parse(storedMember));
 
-      } catch (error) {
-
-        console.error(
-          "Invalid stored member:",
-          error
-        );
+      } catch {
 
         localStorage.removeItem("member");
 
@@ -67,27 +82,28 @@ export function AuthProvider({ children }) {
     const response =
       await authService.login(credentials);
 
-    const jwt =
-      response.data.token;
-
-    const memberData =
-      response.data.member;
+    const data = response.data;
 
     localStorage.setItem(
       "token",
-      jwt
+      data.token
+    );
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(data.user)
     );
 
     localStorage.setItem(
       "member",
-      JSON.stringify(memberData)
+      JSON.stringify(data.member)
     );
 
-    setToken(jwt);
+    setToken(data.token);
+    setUser(data.user);
+    setMember(data.member);
 
-    setMember(memberData);
-
-    return response;
+    return data;
 
   };
 
@@ -95,20 +111,30 @@ export function AuthProvider({ children }) {
      LOGOUT
   ========================================== */
 
-  const logout = () => {
+  const logout = async () => {
+
+    try {
+
+      await authService.logout();
+
+    } catch {
+
+      // Ignore logout API errors
+
+    }
 
     localStorage.removeItem("token");
-
+    localStorage.removeItem("user");
     localStorage.removeItem("member");
 
     setToken(null);
-
+    setUser(null);
     setMember(null);
 
   };
 
   /* ==========================================
-     REFRESH CURRENT MEMBER
+     REFRESH MEMBER
   ========================================== */
 
   const refreshMember = async () => {
@@ -118,15 +144,29 @@ export function AuthProvider({ children }) {
       const response =
         await authService.getCurrentMember();
 
-      const updatedMember =
-        response.data;
+      const data = response.data;
 
-      localStorage.setItem(
-        "member",
-        JSON.stringify(updatedMember)
-      );
+      if (data.user) {
 
-      setMember(updatedMember);
+        localStorage.setItem(
+          "user",
+          JSON.stringify(data.user)
+        );
+
+        setUser(data.user);
+
+      }
+
+      if (data.member) {
+
+        localStorage.setItem(
+          "member",
+          JSON.stringify(data.member)
+        );
+
+        setMember(data.member);
+
+      }
 
     } catch (error) {
 
@@ -137,17 +177,70 @@ export function AuthProvider({ children }) {
   };
 
   /* ==========================================
+     UPDATE USER
+  ========================================== */
+
+  const updateUser = (userData) => {
+
+    const updatedUser = {
+
+      ...user,
+
+      ...userData,
+
+    };
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(updatedUser)
+    );
+
+    setUser(updatedUser);
+
+  };
+
+  /* ==========================================
      UPDATE MEMBER
   ========================================== */
 
   const updateMember = (memberData) => {
 
+    const updatedMember = {
+
+      ...member,
+
+      ...memberData,
+
+    };
+
     localStorage.setItem(
       "member",
-      JSON.stringify(memberData)
+      JSON.stringify(updatedMember)
     );
 
-    setMember(memberData);
+    setMember(updatedMember);
+
+  };
+
+  /* ==========================================
+     PERMISSIONS
+  ========================================== */
+
+  const hasPermission = (permission) => {
+
+    if (!user?.role) {
+
+      return false;
+
+    }
+
+    return checkPermission(
+
+      user.role,
+
+      permission
+
+    );
 
   };
 
@@ -155,31 +248,98 @@ export function AuthProvider({ children }) {
      AUTH STATE
   ========================================== */
 
+  const role =
+    user?.role ?? "member";
+
   const isAuthenticated =
-    !!token;
+    Boolean(token) &&
+    Boolean(user);
+
+  const isAdmin =
+    role !== "member";
+
+  /* ==========================================
+     MEMBERSHIP STATE
+  ========================================== */
+
+  const membershipStatus =
+    member?.membershipStatus ||
+    "inactive";
+
+  const membershipType =
+    member?.membershipType ||
+    "ordinary";
+
+  const membershipNumber =
+    member?.memberNumber || "";
+
+  const membershipActive =
+    membershipStatus === "active";
+
+  const needsPayment =
+    membershipStatus === "pending_payment";
+
+  const membershipExpired =
+    membershipStatus === "expired";
+
+  const membershipInactive =
+    membershipStatus === "inactive";
+
+  const membershipFeePaid =
+    member?.membershipFeePaid ?? false;
+
+  /* ==========================================
+     PROVIDER
+  ========================================== */
 
   return (
 
     <AuthContext.Provider
+
       value={{
 
-        member,
+        /* Authentication */
 
         token,
+        user,
+        member,
 
         loading,
 
+        role,
+
         isAuthenticated,
+        isAdmin,
+
+        /* Membership */
+
+        membershipStatus,
+        membershipType,
+        membershipNumber,
+
+        membershipFeePaid,
+
+        membershipActive,
+        membershipInactive,
+        membershipExpired,
+        needsPayment,
+
+        /* Permissions */
+
+        hasPermission,
+
+        /* Actions */
 
         login,
-
         logout,
 
         refreshMember,
 
+        updateUser,
         updateMember,
 
       }}
+
     >
 
       {children}
@@ -190,6 +350,10 @@ export function AuthProvider({ children }) {
 
 }
 
+/* ==========================================================
+   USE AUTH
+========================================================== */
+
 export function useAuth() {
 
   const context =
@@ -198,7 +362,9 @@ export function useAuth() {
   if (!context) {
 
     throw new Error(
-      "useAuth must be used within an AuthProvider."
+
+      "useAuth must be used inside an AuthProvider."
+
     );
 
   }
@@ -206,3 +372,5 @@ export function useAuth() {
   return context;
 
 }
+
+export default AuthContext;

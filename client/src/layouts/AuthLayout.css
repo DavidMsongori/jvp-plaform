@@ -1,0 +1,293 @@
+/* ==========================================================
+   AUTH LAYOUT
+========================================================== */
+
+.auth-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f7fb;
+}
+
+/* ==========================================================
+   LEFT BRAND PANEL
+========================================================== */
+
+.auth-brand {
+  flex: 1;
+  background: linear-gradient(
+    135deg,
+    #0056b3 0%,
+    #0077cc 50%,
+    #0099e6 100%
+  );
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-brand::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  top: -120px;
+  right: -120px;
+}
+
+.auth-brand::after {
+  content: "";
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.05);
+  bottom: -120px;
+  left: -120px;
+}
+
+.brand-content {
+  max-width: 520px;
+  position: relative;
+  z-index: 2;
+}
+
+.brand-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 1.5rem;
+}
+
+.brand-content h1 {
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -.5px;
+}
+
+.brand-content h2 {
+  margin: .5rem 0 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  opacity: .95;
+}
+
+.brand-content p {
+  line-height: 1.9;
+  font-size: 1rem;
+  opacity: .92;
+  margin-bottom: 2.5rem;
+}
+
+/* ==========================================================
+   FEATURES
+========================================================== */
+
+.brand-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.brand-features div {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* ==========================================================
+   RIGHT PANEL
+========================================================== */
+
+.auth-card-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 540px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 3rem;
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.08);
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.auth-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.auth-header h2 {
+  margin: 0;
+  color: #1d3557;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.auth-header p {
+  margin-top: .75rem;
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+/* ==========================================================
+   BODY
+========================================================== */
+
+.auth-body {
+  width: 100%;
+}
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.auth-footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #edf1f5;
+  text-align: center;
+}
+
+.auth-footer p {
+  margin-bottom: .75rem;
+  color: #6b7280;
+  font-size: .9rem;
+}
+
+.auth-footer a {
+  color: #0056b3;
+  font-weight: 600;
+  text-decoration: none;
+  transition: .25s;
+}
+
+.auth-footer a:hover {
+  color: #003d82;
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1024px) {
+
+  .auth-layout {
+    flex-direction: column;
+  }
+
+  .auth-brand {
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .brand-content {
+    max-width: 700px;
+  }
+
+  .brand-logo {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .brand-features {
+    align-items: center;
+  }
+
+  .auth-card-container {
+    padding: 2rem;
+  }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+
+  .auth-brand {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .brand-logo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .brand-content h1 {
+    font-size: 2rem;
+  }
+
+  .brand-content h2 {
+    font-size: 1.1rem;
+  }
+
+  .brand-content p {
+    font-size: .95rem;
+  }
+
+  .auth-card-container {
+    padding: 1.25rem;
+  }
+
+  .auth-card {
+    padding: 2rem 1.5rem;
+    border-radius: 14px;
+  }
+
+  .auth-header h2 {
+    font-size: 1.6rem;
+  }
+
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+
+  .auth-brand {
+    padding: 2rem 1rem;
+  }
+
+  .brand-content h1 {
+    font-size: 1.75rem;
+  }
+
+  .brand-content h2 {
+    font-size: 1rem;
+  }
+
+  .brand-content p {
+    font-size: .9rem;
+    margin-bottom: 2rem;
+  }
+
+  .brand-features div {
+    font-size: .9rem;
+  }
+
+  .auth-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+}

@@ -1,76 +1,125 @@
-const express = require("express");
+import express from "express";
 
-const router = express.Router();
-
-const {
-  activateMembership,
+import {
+  register,
+  activateExistingMember,
   verifyOTP,
   resendOTP,
   createPassword,
   login,
   forgotPassword,
   resetPassword,
-  me,
-} = require("../controllers/auth.controller");
+  logout,
+  refreshToken,
+} from "../controllers/auth.controller.js";
 
-const {
-  protect,
-} = require("../middleware/auth.middleware");
+import validate from "../middleware/validate.js";
 
-/* =====================================================
-   PUBLIC AUTH ROUTES
-===================================================== */
+import {
+  registerValidator,
+  activateExistingMemberValidator,
+  verifyOTPValidator,
+  resendOTPValidator,
+  createPasswordValidator,
+  loginValidator,
+  forgotPasswordValidator,
+  resetPasswordValidator,
+} from "../utils/auth.validators.js";
 
-/**
- * Activate an existing (legacy) member account
- * POST /api/auth/activate
- */
-router.post("/activate", activateMembership);
+const router = express.Router();
 
-/**
- * Verify OTP
- * POST /api/auth/verify-otp
- */
-router.post("/verify-otp", verifyOTP);
+/* ==========================================================
+   MEMBER REGISTRATION
+========================================================== */
 
-/**
- * Resend OTP
- * POST /api/auth/resend-otp
- */
-router.post("/resend-otp", resendOTP);
+router.post(
+  "/register",
+  registerValidator,
+  validate,
+  register
+);
 
-/**
- * Create password after OTP verification
- * POST /api/auth/create-password
- */
-router.post("/create-password", createPassword);
+/* ==========================================================
+   IMPORTED MEMBER ACTIVATION
+========================================================== */
 
-/**
- * Member Login
- * POST /api/auth/login
- */
-router.post("/login", login);
+router.post(
+  "/activate",
+  activateExistingMemberValidator,
+  validate,
+  activateExistingMember
+);
 
-/**
- * Forgot Password
- * POST /api/auth/forgot-password
- */
-router.post("/forgot-password", forgotPassword);
+/* ==========================================================
+   OTP
+========================================================== */
 
-/**
- * Reset Password
- * POST /api/auth/reset-password
- */
-router.post("/reset-password", resetPassword);
+router.post(
+  "/verify-otp",
+  verifyOTPValidator,
+  validate,
+  verifyOTP
+);
 
-/* =====================================================
-   PROTECTED ROUTES
-===================================================== */
+router.post(
+  "/resend-otp",
+  resendOTPValidator,
+  validate,
+  resendOTP
+);
 
-/**
- * Get currently logged-in member
- * GET /api/auth/me
- */
-router.get("/me", protect, me);
+/* ==========================================================
+   PASSWORD CREATION
+========================================================== */
 
-module.exports = router;
+router.post(
+  "/create-password",
+  createPasswordValidator,
+  validate,
+  createPassword
+);
+
+/* ==========================================================
+   LOGIN
+========================================================== */
+
+router.post(
+  "/login",
+  loginValidator,
+  validate,
+  login
+);
+
+/* ==========================================================
+   PASSWORD RESET
+========================================================== */
+
+router.post(
+  "/forgot-password",
+  forgotPasswordValidator,
+  validate,
+  forgotPassword
+);
+
+router.post(
+  "/reset-password",
+  resetPasswordValidator,
+  validate,
+  resetPassword
+);
+
+/* ==========================================================
+   TOKEN MANAGEMENT
+========================================================== */
+
+router.post(
+  "/refresh-token",
+  refreshToken
+);
+
+router.post(
+  "/logout",
+  logout
+);
+
+export default router;

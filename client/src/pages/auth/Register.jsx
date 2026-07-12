@@ -1,26 +1,21 @@
-import PageLayout from "../../components/common/PageLayout";
-import PageHero from "../../components/common/PageHero";
-import PageSection from "../../components/common/PageSection";
+import AuthLayout from "../../layouts/AuthLayout";
+import RegisterForm from "../../components/auth/RegisterForm";
 
 function Register() {
-  return (
-    <PageLayout>
-      <PageHero
-        title="Register"
-        subtitle="Create your JVP Connect account."
-      />
 
-      <PageSection
-        title="Registration"
-        subtitle="Registration page coming soon."
-      >
-        <p>
-          This page will allow new members to register
-          and existing members to complete their profiles.
-        </p>
-      </PageSection>
-    </PageLayout>
+  return (
+
+    <AuthLayout
+      title="Create Your Account"
+      subtitle="Join Jumuiya ya Vijana wa Pwani."
+    >
+
+      <RegisterForm />
+
+    </AuthLayout>
+
   );
+
 }
 
 export default Register;

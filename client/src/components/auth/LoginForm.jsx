@@ -11,9 +11,11 @@ function LoginForm() {
 
   const { login } = useAuth();
 
-  const [identifier, setIdentifier] = useState("");
+  const [identifier, setIdentifier] =
+    useState("");
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] =
+    useState("");
 
   const [showPassword, setShowPassword] =
     useState(false);
@@ -24,6 +26,10 @@ function LoginForm() {
   const [error, setError] =
     useState("");
 
+  /* ==========================================
+     LOGIN
+  ========================================== */
+
   const handleSubmit = async (e) => {
 
     e.preventDefault();
@@ -33,14 +39,14 @@ function LoginForm() {
     if (!identifier.trim()) {
 
       setError(
-        "Please enter your phone number or email address."
+        "Please enter your email address or phone number."
       );
 
       return;
 
     }
 
-    if (!password) {
+    if (!password.trim()) {
 
       setError(
         "Please enter your password."
@@ -50,31 +56,50 @@ function LoginForm() {
 
     }
 
-    const credentials = {
-      password,
-    };
-
-    if (identifier.includes("@")) {
-
-      credentials.email =
-        identifier.trim().toLowerCase();
-
-    } else {
-
-      credentials.phone =
-        identifier.trim();
-
-    }
-
     try {
 
       setLoading(true);
 
-      await login(credentials);
+      const result = await login({
 
-      navigate("/dashboard", {
-        replace: true,
+        identifier: identifier.trim(),
+
+        password,
+
       });
+
+      const role =
+        result.user.role?.toLowerCase();
+
+      const adminRoles = [
+
+        "admin",
+
+        "super_admin",
+
+        "finance",
+
+        "events",
+
+      ];
+
+      if (adminRoles.includes(role)) {
+
+        navigate("/admin", {
+
+          replace: true,
+
+        });
+
+      } else {
+
+        navigate("/dashboard", {
+
+          replace: true,
+
+        });
+
+      }
 
     } catch (err) {
 
@@ -84,7 +109,7 @@ function LoginForm() {
 
         err.response?.data?.message ||
 
-        "Invalid email/phone or password."
+        "Invalid email/phone number or password."
 
       );
 
@@ -105,18 +130,20 @@ function LoginForm() {
         onSubmit={handleSubmit}
       >
 
+        {/* Identifier */}
+
         <div className="form-group">
 
           <label>
 
-            Phone Number or Email Address
+            Email Address or Phone Number
 
           </label>
 
           <input
             type="text"
-            placeholder="0794151842 or member@email.com"
             value={identifier}
+            placeholder="member@email.com or 0712345678"
             onChange={(e) =>
               setIdentifier(e.target.value)
             }
@@ -125,9 +152,15 @@ function LoginForm() {
 
         </div>
 
+        {/* Password */}
+
         <div className="form-group">
 
-          <label>Password</label>
+          <label>
+
+            Password
+
+          </label>
 
           <input
             type={
@@ -135,8 +168,8 @@ function LoginForm() {
                 ? "text"
                 : "password"
             }
-            placeholder="Enter your password"
             value={password}
+            placeholder="Enter your password"
             onChange={(e) =>
               setPassword(e.target.value)
             }
@@ -144,6 +177,8 @@ function LoginForm() {
           />
 
         </div>
+
+        {/* Show Password */}
 
         <div className="checkbox-row">
 
@@ -165,6 +200,8 @@ function LoginForm() {
 
         </div>
 
+        {/* Error */}
+
         {error && (
 
           <div className="form-error">
@@ -174,6 +211,8 @@ function LoginForm() {
           </div>
 
         )}
+
+        {/* Login Button */}
 
         <button
           type="submit"
@@ -188,6 +227,8 @@ function LoginForm() {
         </button>
 
       </form>
+
+      {/* Links */}
 
       <div className="login-links">
 

@@ -1,0 +1,36 @@
+.empty-state{
+    min-height:320px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:40px;
+}
+
+.empty-icon{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:#f3f4f6;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#9ca3af;
+    margin-bottom:20px;
+}
+
+.empty-state h4{
+    margin-bottom:10px;
+    font-weight:700;
+    color:#111827;
+}
+
+.empty-state p{
+    color:#6b7280;
+    max-width:420px;
+}
+
+.empty-action{
+    margin-top:25px;
+}

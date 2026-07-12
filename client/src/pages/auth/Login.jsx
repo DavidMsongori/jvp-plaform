@@ -1,17 +1,21 @@
-import AuthLayout from "../../components/auth/AuthLayout";
+import AuthLayout from "../../layouts/AuthLayout";
 import LoginForm from "../../components/auth/LoginForm";
 
 function Login() {
+
   return (
+
     <AuthLayout
-      title="Member Login"
-      subtitle="Sign in to your JVP Connect account to access your dashboard, membership card, events, programs, and more."
-      sectionTitle="Welcome Back"
-      sectionSubtitle="Enter your membership number, email address, or phone number together with your password."
+      title="Welcome Back"
+      subtitle="Sign in to your account."
     >
+
       <LoginForm />
+
     </AuthLayout>
+
   );
+
 }
 
 export default Login;

@@ -1,0 +1,73 @@
+.recent-payments{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.payment-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    padding:14px;
+
+    border:1px solid #edf2f7;
+
+    border-radius:12px;
+
+}
+
+.payment-icon{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:12px;
+
+    background:#e7f1ff;
+
+    color:#0d6efd;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.payment-info{
+
+    flex:1;
+
+}
+
+.payment-info h6{
+
+    margin:0;
+
+    font-weight:700;
+
+}
+
+.payment-info small{
+
+    color:#6b7280;
+
+}
+
+.payment-amount{
+
+    font-weight:700;
+
+    color:#198754;
+
+}

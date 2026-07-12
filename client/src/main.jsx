@@ -7,10 +7,12 @@ import "./styles/utilities.css";
 import "./styles/buttons.css";
 import "./styles/section.css";
 
-import { AuthProvider } from "./context/AuthContext";
-import { MemberProvider } from "./context/MemberContext";
-
 import App from "./App";
+
+import { AuthProvider } from "./context/AuthContext";
+import { DashboardProvider } from "./context/DashboardContext";
+import { ProfileProvider } from "./context/ProfileContext";
+import { PaymentProvider } from "./context/PaymentContext";
 
 ReactDOM.createRoot(
   document.getElementById("root")
@@ -20,11 +22,19 @@ ReactDOM.createRoot(
 
     <AuthProvider>
 
-      <MemberProvider>
+      <DashboardProvider>
 
-        <App />
+        <ProfileProvider>
 
-      </MemberProvider>
+          <PaymentProvider>
+
+            <App />
+
+          </PaymentProvider>
+
+        </ProfileProvider>
+
+      </DashboardProvider>
 
     </AuthProvider>
 

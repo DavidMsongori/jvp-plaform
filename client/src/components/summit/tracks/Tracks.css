@@ -1,0 +1,264 @@
+/* ==========================================================
+   COASTAL YOUTH SUMMIT
+   TRACKS SECTION
+========================================================== */
+
+/* ===========================
+   SECTION
+=========================== */
+
+.tracks {
+    padding: 120px 0;
+    background: #f8fafc;
+}
+
+.tracks-container {
+    width: min(92%, 1400px);
+    margin: 0 auto;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+.tracks-header {
+    max-width: 760px;
+    margin: 0 auto 70px;
+    text-align: center;
+}
+
+.section-tag {
+    display: inline-block;
+    color: #0099cc;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.tracks-header h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: #0f172a;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+.tracks-header p {
+    color: #64748b;
+    font-size: 1.1rem;
+    line-height: 1.9;
+}
+
+/* ===========================
+   SWIPER
+=========================== */
+
+.swiper {
+    padding: 10px 5px 70px;
+}
+
+.swiper-slide {
+    height: auto;
+    display: flex;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #0099cc;
+    transition: 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    transform: scale(1.1);
+}
+
+.swiper-pagination {
+    bottom: 10px !important;
+}
+
+.swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: #cbd5e1;
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background: #0099cc;
+}
+
+/* ===========================
+   CARD
+=========================== */
+
+.track-card {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 40px 35px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+    transition: all 0.35s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.track-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 0;
+    background: #0099cc;
+    transition: height 0.35s ease;
+}
+
+.track-card:hover::before {
+    height: 100%;
+}
+
+.track-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12);
+}
+
+/* ===========================
+   ICON
+=========================== */
+
+.track-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e6f7fc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0099cc;
+    margin-bottom: 25px;
+    transition: all 0.35s ease;
+}
+
+.track-card:hover .track-icon {
+    background: #0099cc;
+    color: #ffffff;
+    transform: rotate(-8deg) scale(1.08);
+}
+
+/* ===========================
+   TEXT
+=========================== */
+
+.track-card h3 {
+    font-size: 1.5rem;
+    color: #0f172a;
+    margin-bottom: 18px;
+    font-weight: 700;
+}
+
+.track-card p {
+    color: #64748b;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    flex-grow: 1;
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+
+.track-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #0099cc;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.track-btn:hover {
+    gap: 14px;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 992px) {
+
+    .tracks {
+        padding: 100px 0;
+    }
+
+    .tracks-header {
+        margin-bottom: 50px;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .tracks {
+        padding: 80px 0;
+    }
+
+    .tracks-header h2 {
+        font-size: 2.4rem;
+    }
+
+    .tracks-header p {
+        font-size: 1rem;
+    }
+
+    .track-card {
+        padding: 30px;
+    }
+
+    .track-icon {
+        width: 70px;
+        height: 70px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .tracks-container {
+        width: 94%;
+    }
+
+    .tracks-header h2 {
+        font-size: 2rem;
+    }
+
+    .track-card {
+        padding: 25px;
+    }
+
+}
+
+
+.track-footer{
+    margin-top:auto;
+    padding-top:25px;
+    border-top:1px solid #e5e7eb;
+}
+
+.track-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    color:#0099cc;
+    font-weight:600;
+    transition:.3s;
+}
+
+.track-btn:hover{
+    gap:18px;
+}

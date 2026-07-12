@@ -1,0 +1,171 @@
+/* ==========================================
+   REGISTER FORM
+========================================== */
+
+.register-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ==========================================
+   GRID
+========================================== */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* ==========================================
+   FORM GROUP
+========================================== */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1d3557;
+}
+
+/* ==========================================
+   INPUTS
+========================================== */
+
+.register-form input,
+.register-form select,
+.register-form textarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid #d9dee5;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #1d3557;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+
+.register-form input:focus,
+.register-form select:focus,
+.register-form textarea:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+}
+
+/* ==========================================
+   PLACEHOLDER
+========================================== */
+
+.register-form input::placeholder,
+.register-form textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+.register-form .btn-primary {
+  width: 100%;
+  padding: 0.95rem;
+  border: none;
+  border-radius: 10px;
+  background: #0066cc;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.register-form .btn-primary:hover:not(:disabled) {
+  background: #0052a3;
+  transform: translateY(-1px);
+}
+
+.register-form .btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   ERROR
+========================================== */
+
+.form-error {
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  background: #fdeaea;
+  color: #b42318;
+  font-size: 0.92rem;
+  border: 1px solid #f5c2c7;
+}
+
+/* ==========================================
+   SUCCESS (Future Use)
+========================================== */
+
+.form-success {
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  background: #e8f7ec;
+  color: #0f7b3d;
+  font-size: 0.92rem;
+  border: 1px solid #b7e4c7;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 992px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full-width {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .register-form {
+    gap: 1.25rem;
+  }
+
+  .register-form input,
+  .register-form select,
+  .register-form textarea {
+    padding: 0.85rem;
+    font-size: 0.95rem;
+  }
+
+  .register-form .btn-primary {
+    padding: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-form input,
+  .register-form select,
+  .register-form textarea {
+    font-size: 0.9rem;
+  }
+
+  .register-form .btn-primary {
+    font-size: 0.95rem;
+  }
+}

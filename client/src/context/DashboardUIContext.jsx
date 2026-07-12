@@ -5,82 +5,94 @@ import {
   useState,
 } from "react";
 
-const DashboardUIContext = createContext();
+/* ==========================================
+   CONTEXT
+========================================== */
 
-export function DashboardUIProvider({ children }) {
+const DashboardUIContext = createContext(null);
 
-  /* ==========================================
+/* ==========================================
+   PROVIDER
+========================================== */
+
+export function DashboardUIProvider({
+  children,
+}) {
+
+  /* ======================================
      SIDEBAR
-  ========================================== */
+  ====================================== */
 
-  const [sidebarOpen, setSidebarOpen] = useState(
-    window.innerWidth > 1200
+  const [sidebarOpen, setSidebarOpen] =
+    useState(() => window.innerWidth >= 1200);
+
+  /* ======================================
+     THEME
+  ====================================== */
+
+  const [theme, setTheme] = useState(() =>
+    localStorage.getItem("dashboard-theme") ||
+    "light"
   );
 
-  /* ==========================================
-     THEME
-  ========================================== */
-
-  const [theme, setTheme] = useState(() => {
-
-    return (
-      localStorage.getItem("dashboard-theme") ||
-      "light"
-    );
-
-  });
-
-  /* ==========================================
+  /* ======================================
      SEARCH
-  ========================================== */
+  ====================================== */
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] =
+    useState("");
 
-  /* ==========================================
-     NOTIFICATIONS PANEL
-  ========================================== */
+  /* ======================================
+     NOTIFICATIONS
+  ====================================== */
 
   const [
+
     notificationsOpen,
+
     setNotificationsOpen,
+
   ] = useState(false);
 
-  /* ==========================================
-     RESPONSIVE
-  ========================================== */
+  /* ======================================
+     RESPONSIVE SIDEBAR
+  ====================================== */
 
   useEffect(() => {
 
     const handleResize = () => {
 
-      if (window.innerWidth >= 1200) {
+      setSidebarOpen(
 
-        setSidebarOpen(true);
+        window.innerWidth >= 1200
 
-      } else {
-
-        setSidebarOpen(false);
-
-      }
+      );
 
     };
 
     window.addEventListener(
+
       "resize",
+
       handleResize
+
     );
 
     return () =>
+
       window.removeEventListener(
+
         "resize",
+
         handleResize
+
       );
 
   }, []);
 
-  /* ==========================================
+  /* ======================================
      APPLY THEME
-  ========================================== */
+  ====================================== */
 
   useEffect(() => {
 
@@ -102,29 +114,23 @@ export function DashboardUIProvider({ children }) {
 
   }, [theme]);
 
-  /* ==========================================
+  /* ======================================
      ACTIONS
-  ========================================== */
+  ====================================== */
 
-  const toggleSidebar = () => {
+  const toggleSidebar = () =>
 
     setSidebarOpen((prev) => !prev);
 
-  };
-
-  const closeSidebar = () => {
-
-    setSidebarOpen(false);
-
-  };
-
-  const openSidebar = () => {
+  const openSidebar = () =>
 
     setSidebarOpen(true);
 
-  };
+  const closeSidebar = () =>
 
-  const toggleTheme = () => {
+    setSidebarOpen(false);
+
+  const toggleTheme = () =>
 
     setTheme((prev) =>
 
@@ -136,9 +142,7 @@ export function DashboardUIProvider({ children }) {
 
     );
 
-  };
-
-  const toggleNotifications = () => {
+  const toggleNotifications = () =>
 
     setNotificationsOpen(
 
@@ -146,37 +150,47 @@ export function DashboardUIProvider({ children }) {
 
     );
 
+  /* ======================================
+     CONTEXT VALUE
+  ====================================== */
+
+  const value = {
+
+    /* Sidebar */
+
+    sidebarOpen,
+
+    toggleSidebar,
+
+    openSidebar,
+
+    closeSidebar,
+
+    /* Theme */
+
+    theme,
+
+    toggleTheme,
+
+    /* Search */
+
+    search,
+
+    setSearch,
+
+    /* Notifications */
+
+    notificationsOpen,
+
+    toggleNotifications,
+
   };
 
   return (
 
     <DashboardUIContext.Provider
 
-      value={{
-
-        /* Sidebar */
-
-        sidebarOpen,
-        openSidebar,
-        closeSidebar,
-        toggleSidebar,
-
-        /* Theme */
-
-        theme,
-        toggleTheme,
-
-        /* Search */
-
-        search,
-        setSearch,
-
-        /* Notifications */
-
-        notificationsOpen,
-        toggleNotifications,
-
-      }}
+      value={value}
 
     >
 
@@ -188,12 +202,32 @@ export function DashboardUIProvider({ children }) {
 
 }
 
+/* ==========================================
+   HOOK
+========================================== */
+
 export function useDashboardUI() {
 
-  return useContext(
+  const context =
 
-    DashboardUIContext
+    useContext(
 
-  );
+      DashboardUIContext
+
+    );
+
+  if (!context) {
+
+    throw new Error(
+
+      "useDashboardUI must be used inside DashboardUIProvider."
+
+    );
+
+  }
+
+  return context;
 
 }
+
+export default DashboardUIContext;

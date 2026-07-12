@@ -3,23 +3,30 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 
 import {
   getDashboard,
 } from "../services/member.service";
 
-const DashboardContext = createContext();
+/* ==========================================
+   CONTEXT
+========================================== */
+
+const DashboardContext = createContext(null);
+
+/* ==========================================
+   PROVIDER
+========================================== */
 
 export function DashboardProvider({
-
   children,
-
 }) {
 
-  /* ==========================================
+  /* ======================================
      STATE
-  ========================================== */
+  ====================================== */
 
   const [dashboard, setDashboard] =
     useState(null);
@@ -30,11 +37,11 @@ export function DashboardProvider({
   const [error, setError] =
     useState("");
 
-  /* ==========================================
+  /* ======================================
      LOAD DASHBOARD
-  ========================================== */
+  ====================================== */
 
-  const loadDashboard = async () => {
+  const loadDashboard = useCallback(async () => {
 
     try {
 
@@ -65,92 +72,76 @@ export function DashboardProvider({
 
     }
 
-  };
+  }, []);
 
-  /* ==========================================
+  /* ======================================
      INITIAL LOAD
-  ========================================== */
+  ====================================== */
 
   useEffect(() => {
 
     loadDashboard();
 
-  }, []);
+  }, [loadDashboard]);
 
-  /* ==========================================
+  /* ======================================
      DERIVED DATA
-  ========================================== */
+  ====================================== */
 
-  const member =
-    dashboard?.member || null;
-
-  const summary =
-    dashboard?.summary || {};
+  const profile =
+    dashboard?.profile || null;
 
   const statistics =
     dashboard?.statistics || {};
 
-  const completion =
-    dashboard?.completion || {};
+  const recentPayments =
+    dashboard?.recentPayments || [];
 
-  const events =
-    dashboard?.events || [];
+  const upcomingEvents =
+    dashboard?.upcomingEvents || [];
 
-  const notifications =
-    dashboard?.notifications || [];
+  /* ======================================
+     CONTEXT VALUE
+  ====================================== */
 
-  const news =
-    dashboard?.news || [];
+  const value = {
 
-  const recentActivity =
-    dashboard?.recentActivity || [];
+    /* Raw Dashboard */
 
-  /* ==========================================
-     CONTEXT
-  ========================================== */
+    dashboard,
+
+    /* Profile */
+
+    profile,
+
+    /* Statistics */
+
+    statistics,
+
+    /* Dashboard Data */
+
+    recentPayments,
+
+    upcomingEvents,
+
+    /* Status */
+
+    loading,
+
+    error,
+
+    /* Actions */
+
+    reloadDashboard:
+      loadDashboard,
+
+  };
 
   return (
 
     <DashboardContext.Provider
 
-      value={{
-
-        /* Raw */
-
-        dashboard,
-
-        /* Member */
-
-        member,
-
-        /* Dashboard */
-
-        summary,
-
-        statistics,
-
-        completion,
-
-        events,
-
-        notifications,
-
-        news,
-
-        recentActivity,
-
-        /* Status */
-
-        loading,
-
-        error,
-
-        /* Actions */
-
-        reloadDashboard:
-          loadDashboard,
-
-      }}
+      value={value}
 
     >
 
@@ -161,6 +152,10 @@ export function DashboardProvider({
   );
 
 }
+
+/* ==========================================
+   HOOK
+========================================== */
 
 export function useDashboard() {
 
@@ -180,3 +175,5 @@ export function useDashboard() {
   return context;
 
 }
+
+export default DashboardContext;

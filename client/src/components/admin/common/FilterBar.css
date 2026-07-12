@@ -1,0 +1,31 @@
+.filter-bar{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.filter-item{
+    min-width:220px;
+}
+
+.filter-item label{
+    display:block;
+    margin-bottom:8px;
+    font-size:.9rem;
+    color:#6b7280;
+}
+
+.filter-item select{
+    width:100%;
+    padding:11px 14px;
+    border:1px solid #dee2e6;
+    border-radius:10px;
+    background:#fff;
+}
+
+.filter-item select:focus{
+    outline:none;
+    border-color:#0d6efd;
+    box-shadow:0 0 0 .15rem rgba(13,110,253,.15);
+}

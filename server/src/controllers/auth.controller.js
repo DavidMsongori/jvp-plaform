@@ -1,294 +1,242 @@
-const authService = require("../services/auth.service");
+import * as authService from "../services/auth.service.js";
 
-/* =====================================================
-   ACTIVATE MEMBER
-===================================================== */
+/* ==========================================================
+   REGISTER NEW MEMBER
+========================================================== */
 
-const activateMembership = async (req, res) => {
+export const register = async (req, res, next) => {
   try {
-    const result = await authService.activate(req.body);
+    const result = await authService.register(req.body);
 
-    return res.status(200).json({
-      success: result.success,
-      message: result.message,
-      data: {
-        member: {
-          id: result.member._id,
-          firstName: result.member.firstName,
-          middleName: result.member.middleName,
-          lastName: result.member.lastName,
-          phone: result.member.phone,
-          email: result.member.email,
-          county: result.member.county,
-          constituency: result.member.constituency,
-          ward: result.member.ward,
-          role: result.member.role,
-          activationStatus: result.member.activationStatus,
-          membershipStatus: result.member.membershipStatus,
-        },
-      },
+    return res.status(201).json({
+      success: true,
+      message: "Registration completed successfully. An OTP has been sent to your email.",
+      data: result,
     });
-
   } catch (error) {
-
-    console.error("Activate Membership:", error.message);
-
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-      errors: [],
-    });
-
+    next(error);
   }
 };
 
-/* =====================================================
+/* ==========================================================
+   ACTIVATE IMPORTED MEMBER
+========================================================== */
+
+export const activateExistingMember = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const result = await authService.activateExistingMember(
+      req.body
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Membership verified. An OTP has been sent to your email.",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* ==========================================================
    VERIFY OTP
-===================================================== */
+========================================================== */
 
-const verifyOTP = async (req, res) => {
+export const verifyOTP = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const result = await authService.verifyOTP(req.body);
+    const result = await authService.verifyOTP(
+      req.body
+    );
 
     return res.status(200).json({
-      success: result.success,
-      message: result.message,
-      data: {
-        memberId: result.member._id,
-        activationStatus: result.member.activationStatus,
-        nextStep: "Create Password",
-      },
+      success: true,
+      message: "OTP verified successfully.",
+      data: result,
     });
   } catch (error) {
-    console.error("Verify OTP:", error.message);
-
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-      errors: [],
-    });
+    next(error);
   }
 };
 
-/* =====================================================
+/* ==========================================================
    RESEND OTP
-===================================================== */
+========================================================== */
 
-const resendOTP = async (req, res) => {
+export const resendOTP = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const result = await authService.resendOTP(req.body);
+    const result = await authService.resendOTP(
+      req.body
+    );
 
     return res.status(200).json({
-      success: result.success,
-      message: result.message,
+      success: true,
+      message: "A new OTP has been sent.",
+      data: result,
     });
-
   } catch (error) {
-
-    console.error("Resend OTP:", error.message);
-
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-      errors: [],
-    });
-
+    next(error);
   }
 };
 
-/* =====================================================
+/* ==========================================================
    CREATE PASSWORD
-===================================================== */
+========================================================== */
 
-const createPassword = async (req, res) => {
+export const createPassword = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const result = await authService.createPassword(req.body);
+    const result = await authService.createPassword(
+      req.body
+    );
 
     return res.status(200).json({
-      success: result.success,
-      message: result.message,
-
-      data: {
-        token: result.token,
-
-        member: {
-          id: result.member._id,
-          membershipNumber:
-            result.member.membershipNumber,
-          firstName: result.member.firstName,
-          middleName: result.member.middleName,
-          lastName: result.member.lastName,
-          phone: result.member.phone,
-          email: result.member.email,
-          county: result.member.county,
-          constituency: result.member.constituency,
-          ward: result.member.ward,
-          role: result.member.role,
-          activationStatus:
-            result.member.activationStatus,
-          membershipStatus:
-            result.member.membershipStatus,
-          memberSince:
-            result.member.memberSince,
-        },
-      },
+      success: true,
+      message: "Password created successfully.",
+      data: result,
     });
   } catch (error) {
-    console.error("Create Password:", error.message);
-
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-      errors: [],
-    });
+    next(error);
   }
 };
 
-/* =====================================================
+/* ==========================================================
    LOGIN
-===================================================== */
+========================================================== */
 
-const login = async (req, res) => {
+export const login = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const result = await authService.login(req.body);
+    const result = await authService.login(
+      req.body
+    );
 
     return res.status(200).json({
-      success: result.success,
-      message: result.message,
-
-      data: {
-        token: result.token,
-
-        member: {
-          id: result.member._id,
-          membershipNumber:
-            result.member.membershipNumber,
-          firstName: result.member.firstName,
-          middleName: result.member.middleName,
-          lastName: result.member.lastName,
-          phone: result.member.phone,
-          email: result.member.email,
-          county: result.member.county,
-          constituency: result.member.constituency,
-          ward: result.member.ward,
-          role: result.member.role,
-          activationStatus:
-            result.member.activationStatus,
-          membershipStatus:
-            result.member.membershipStatus,
-          profileCompleted:
-            result.member.profileCompleted,
-          profilePhoto:
-            result.member.profilePhoto,
-          lastLogin:
-            result.member.lastLogin,
-        },
-      },
+      success: true,
+      message: "Login successful.",
+      data: result,
     });
   } catch (error) {
-    console.error("Login:", error.message);
-
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-      errors: [],
-    });
+    next(error);
   }
 };
 
-/* =====================================================
-   CURRENT MEMBER
-===================================================== */
-
-const me = async (req, res) => {
-  try {
-    const result = await authService.me(req.member._id);
-
-    return res.status(200).json({
-      success: result.success,
-      message: result.message,
-      data: result.member,
-    });
-  } catch (error) {
-    console.error("Current Member:", error.message);
-
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-      errors: [],
-    });
-  }
-};
-
-/* =====================================================
+/* ==========================================================
    FORGOT PASSWORD
-===================================================== */
+========================================================== */
 
-const forgotPassword = async (req, res) => {
+export const forgotPassword = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const result = await authService.forgotPassword(req.body);
+    const result =
+      await authService.forgotPassword(
+        req.body
+      );
 
     return res.status(200).json({
-      success: result.success,
-      message: result.message,
+      success: true,
+      message:
+        "If the account exists, an OTP has been sent.",
+      data: result,
     });
-
   } catch (error) {
-
-    console.error("Forgot Password:", error.message);
-
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-      errors: [],
-    });
-
+    next(error);
   }
 };
 
-/* =====================================================
+/* ==========================================================
    RESET PASSWORD
-===================================================== */
+========================================================== */
 
-const resetPassword = async (req, res) => {
+export const resetPassword = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const result = await authService.resetPassword(req.body);
+    const result =
+      await authService.resetPassword(
+        req.body
+      );
 
     return res.status(200).json({
-      success: result.success,
-      message: result.message,
-
-      data: {
-        token: result.token,
-
-        member: {
-          id: result.member._id,
-          membershipNumber:
-            result.member.membershipNumber,
-          firstName: result.member.firstName,
-          lastName: result.member.lastName,
-          role: result.member.role,
-        },
-      },
+      success: true,
+      message:
+        "Password reset successfully.",
+      data: result,
     });
   } catch (error) {
-    console.error("Reset Password:", error.message);
-
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-      errors: [],
-    });
+    next(error);
   }
 };
 
-module.exports = {
-  activateMembership,
-  verifyOTP,
-  resendOTP,
-  createPassword,
-  login,
-  me,
-  forgotPassword,
-  resetPassword,
+/* ==========================================================
+   REFRESH TOKEN
+========================================================== */
+
+export const refreshToken = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const result =
+      await authService.refreshToken(
+        req.body
+      );
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Token refreshed successfully.",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* ==========================================================
+   LOGOUT
+========================================================== */
+
+export const logout = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const result =
+      await authService.logout(
+        req.body
+      );
+
+    return res.status(200).json({
+      success: true,
+      message: "Logout successful.",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };

@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 
 import {
   verifyOTP,
@@ -8,30 +12,63 @@ import {
 
 import "./OTPForm.css";
 
-function OTPForm({ member }) {
+function VerifyOTP() {
+
   const navigate = useNavigate();
 
-  const [otp, setOtp] = useState("");
+  const location = useLocation();
 
-  const [loading, setLoading] = useState(false);
+  const email = location.state?.email;
 
-  const [resending, setResending] = useState(false);
-
-  const [countdown, setCountdown] = useState(60);
-
-  const [error, setError] = useState("");
-
-  const [success, setSuccess] = useState("");
+  const purpose =
+    location.state?.purpose ||
+    "ACCOUNT_ACTIVATION";
 
   /* ==========================================
-     COUNTDOWN TIMER
+     REDIRECT IF NO EMAIL
+  ========================================== */
+
+  if (!email) {
+
+    return (
+      <Navigate
+        to="/register"
+        replace
+      />
+    );
+
+  }
+
+  const [code, setCode] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [resending, setResending] =
+    useState(false);
+
+  const [countdown, setCountdown] =
+    useState(60);
+
+  const [error, setError] =
+    useState("");
+
+  const [success, setSuccess] =
+    useState("");
+
+  /* ==========================================
+     COUNTDOWN
   ========================================== */
 
   useEffect(() => {
+
     if (countdown <= 0) return;
 
     const timer = setTimeout(() => {
+
       setCountdown((previous) => previous - 1);
+
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -43,47 +80,69 @@ function OTPForm({ member }) {
   ========================================== */
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     setError("");
+
     setSuccess("");
 
-    if (!otp.trim()) {
-      setError("Please enter the OTP.");
-      return;
-    }
+    if (code.length !== 6) {
 
-    if (otp.length !== 6) {
-      setError("OTP must contain exactly 6 digits.");
+      setError(
+        "Please enter the 6-digit verification code."
+      );
+
       return;
+
     }
 
     try {
 
       setLoading(true);
 
-      const response = await verifyOTP({
-        memberId: member.id,
-        otp,
-      });
+      const response =
+        await verifyOTP({
+
+          email,
+
+          code,
+
+          purpose,
+
+        });
 
       setSuccess(response.message);
 
       setTimeout(() => {
 
-        navigate("/create-password", {
-          state: {
-            member,
-          },
-        });
+        navigate(
+          "/create-password",
+          {
+
+            replace: true,
+
+            state: {
+
+              email,
+
+            },
+
+          }
+        );
 
       }, 1000);
 
     } catch (err) {
 
+      console.error(err);
+
       setError(
+
         err.response?.data?.message ||
+
         "OTP verification failed."
+
       );
 
     } finally {
@@ -91,13 +150,14 @@ function OTPForm({ member }) {
       setLoading(false);
 
     }
+
   };
 
   /* ==========================================
      RESEND OTP
   ========================================== */
 
-  const handleResendOTP = async () => {
+  const handleResend = async () => {
 
     try {
 
@@ -107,29 +167,30 @@ function OTPForm({ member }) {
 
       setSuccess("");
 
-      if (member.email) {
+      await resendOTP({
 
-        await resendOTP({
-          email: member.email,
-        });
+        email,
 
-      } else {
+        purpose,
 
-        await resendOTP({
-          phone: member.phone,
-        });
+      });
 
-      }
-
-      setSuccess("A new OTP has been sent.");
+      setSuccess(
+        "A new verification code has been sent."
+      );
 
       setCountdown(60);
 
     } catch (err) {
 
+      console.error(err);
+
       setError(
+
         err.response?.data?.message ||
+
         "Unable to resend OTP."
+
       );
 
     } finally {
@@ -137,6 +198,7 @@ function OTPForm({ member }) {
       setResending(false);
 
     }
+
   };
 
   return (
@@ -151,17 +213,22 @@ function OTPForm({ member }) {
         <div className="form-group">
 
           <label>
+
             Verification Code
+
           </label>
 
           <input
             type="text"
             maxLength={6}
-            value={otp}
-            placeholder="Enter OTP"
+            value={code}
+            placeholder="Enter 6-digit code"
             onChange={(e) =>
-              setOtp(
-                e.target.value.replace(/\D/g, "")
+              setCode(
+                e.target.value.replace(
+                  /\D/g,
+                  ""
+                )
               )
             }
           />
@@ -169,15 +236,23 @@ function OTPForm({ member }) {
         </div>
 
         {error && (
+
           <div className="form-error">
+
             {error}
+
           </div>
+
         )}
 
         {success && (
+
           <div className="form-success">
+
             {success}
+
           </div>
+
         )}
 
         <button
@@ -185,49 +260,75 @@ function OTPForm({ member }) {
           type="submit"
           disabled={loading}
         >
-          {loading
-            ? "Verifying..."
-            : "Verify OTP"}
+
+          {
+
+            loading
+
+              ? "Verifying..."
+
+              : "Verify OTP"
+
+          }
+
         </button>
 
       </form>
 
       <div className="otp-help">
 
-        {countdown > 0 ? (
-          <p>
+        {
 
-            Didn't receive your OTP?
+          countdown > 0 ? (
 
-            <br />
+            <p>
 
-            You can request another one in
+              Didn't receive the code?
 
-            <strong>
-              {" "}
-              {countdown}s
-            </strong>
+              <br />
 
-          </p>
-        ) : (
+              Request another in
 
-          <button
-            type="button"
-            onClick={handleResendOTP}
-            disabled={resending}
-          >
-            {resending
-              ? "Sending..."
-              : "Resend OTP"}
-          </button>
+              <strong>
 
-        )}
+                {" "}
+
+                {countdown}s
+
+              </strong>
+
+            </p>
+
+          ) : (
+
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={resending}
+            >
+
+              {
+
+                resending
+
+                  ? "Sending..."
+
+                  : "Resend OTP"
+
+              }
+
+            </button>
+
+          )
+
+        }
 
       </div>
 
     </div>
 
   );
+
 }
 
-export default OTPForm;
+export default VerifyOTP;

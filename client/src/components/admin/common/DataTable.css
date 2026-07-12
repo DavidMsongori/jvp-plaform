@@ -1,0 +1,59 @@
+.datatable{
+
+    background:#fff;
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.05);
+
+}
+
+.datatable table{
+
+    margin:0;
+
+}
+
+.datatable thead{
+
+    background:#f8fafc;
+
+}
+
+.datatable th{
+
+    padding:18px;
+
+    font-size:.85rem;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+    color:#6b7280;
+
+    border:none;
+
+}
+
+.datatable td{
+
+    padding:18px;
+
+    vertical-align:middle;
+
+}
+
+.datatable tbody tr{
+
+    transition:.2s;
+
+}
+
+.datatable tbody tr:hover{
+
+    background:#f9fbff;
+
+}
