@@ -50,7 +50,7 @@ export const generateMembershipNumber = async (
 
     {
 
-      new: true,
+      returnDocument: "after",
 
       upsert: true,
 

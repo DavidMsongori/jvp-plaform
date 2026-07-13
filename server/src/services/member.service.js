@@ -292,31 +292,31 @@ export const getDashboard = async (
 
     profile: {
 
-      id: member._id,
+  id: member._id,
 
-      memberNumber: member.memberNumber,
+  membershipNumber: member.membershipNumber,
 
-      firstName: member.firstName,
+  firstName: member.firstName,
 
-      middleName: member.middleName,
+  middleName: member.middleName,
 
-      lastName: member.lastName,
+  lastName: member.lastName,
 
-      county: member.county,
+  county: member.county,
 
-      membershipType: member.membershipType,
+  membershipType: member.membershipType,
 
-      membershipStatus: member.membershipStatus,
+  membershipStatus: member.membershipStatus,
 
-      profilePhoto: member.profilePhoto,
+  profilePhoto: member.profilePhoto,
 
-      joinedAt: member.joinedAt,
+  joinedAt: member.joinedAt,
 
-      email: member.user.email,
+  email: member.user.email,
 
-      role: member.user.role,
+  role: member.user.role,
 
-    },
+},
 
     statistics: {
 
