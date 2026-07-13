@@ -624,6 +624,10 @@ export const verifyOTP = async (data) => {
       purpose = OTP_PURPOSE.ACCOUNT_ACTIVATION,
     } = data;
 
+    console.log("Incoming request body:", data);
+console.log("Email:", email);
+console.log("Code:", code);
+
     const normalizedEmail = email.toLowerCase().trim();
 
     console.log("========== VERIFY OTP ==========");
