@@ -615,104 +615,87 @@ export const activateExistingMember = async (data) => {
 ========================================================== */
 
 export const verifyOTP = async (data) => {
-
   const session = await startTransaction();
 
   try {
-
     const {
       email,
       otp,
       purpose = OTP_PURPOSE.ACCOUNT_ACTIVATION,
     } = data;
 
-    const normalizedEmail = email
-      .toLowerCase()
-      .trim();
+    const normalizedEmail = email.toLowerCase().trim();
+
+    console.log("========== VERIFY OTP ==========");
+    console.log("Email:", normalizedEmail);
+    console.log("Purpose:", purpose);
 
     /* ----------------------------------------
        FIND USER
     ---------------------------------------- */
 
     const user = await User.findOne({
-
       email: normalizedEmail,
-
     }).session(session);
 
     if (!user) {
-
       throw new AppError(
-
         "Account not found.",
-
         404
-
       );
-
     }
+
+    console.log("✅ User found");
 
     /* ----------------------------------------
        VERIFY OTP
     ---------------------------------------- */
 
     await otpService.verifyOTP({
-
       user,
-
       purpose,
-
       code: otp,
-
-
     });
+
+    console.log("✅ OTP verified");
 
     /* ----------------------------------------
        ACCOUNT ACTIVATION
     ---------------------------------------- */
 
-    if (
-
-      purpose ===
-      OTP_PURPOSE.ACCOUNT_ACTIVATION
-
-    ) {
+    if (purpose === OTP_PURPOSE.ACCOUNT_ACTIVATION) {
 
       user.emailVerified = true;
 
       await user.save({ session });
 
-      const member =
-        await Member.findOne({
+      console.log("✅ User email verified");
 
-          user: user._id,
-
-        }).session(session);
+      const member = await Member.findOne({
+        user: user._id,
+      }).session(session);
 
       if (!member) {
-
         throw new AppError(
-
           "Member profile not found.",
-
           404
-
         );
-
       }
+
+      console.log("✅ Member found");
 
       member.accountActivated = true;
 
       await member.save({ session });
 
+      console.log("✅ Member activated");
+
       await emailService.sendWelcomeEmail({
-
         email: user.email,
-
         firstName: member.firstName,
-
       });
 
+      console.log("✅ Welcome email sent");
     }
 
     /* ----------------------------------------
@@ -720,18 +703,14 @@ export const verifyOTP = async (data) => {
     ---------------------------------------- */
 
     await logActivity(
-
       user._id,
-
       "Verified OTP",
-
       session,
-
       "auth",
-
       "OTP verification completed"
-
     );
+
+    console.log("✅ Activity logged");
 
     /* ----------------------------------------
        COMMIT
@@ -739,24 +718,22 @@ export const verifyOTP = async (data) => {
 
     await session.commitTransaction();
 
+    console.log("✅ Transaction committed");
+    console.log("========== OTP SUCCESS ==========");
+
     return {
-
       success: true,
-
       verified: true,
-
       nextStep:
-
-        purpose ===
-        OTP_PURPOSE.ACCOUNT_ACTIVATION
-
+        purpose === OTP_PURPOSE.ACCOUNT_ACTIVATION
           ? "create-password"
-
           : "reset-password",
-
     };
 
   } catch (error) {
+
+    console.error("❌ VERIFY OTP ERROR");
+    console.error(error);
 
     await session.abortTransaction();
 
@@ -767,7 +744,6 @@ export const verifyOTP = async (data) => {
     await session.endSession();
 
   }
-
 };
 
 /* ==========================================================
