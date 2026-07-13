@@ -655,7 +655,7 @@ console.log("Code:", code);
        VERIFY OTP
     ---------------------------------------- */
 
-    console.log("OTP entered by user:", otp);
+    console.log("OTP entered by user:", code);
     await otpService.verifyOTP({
       user,
       purpose,
