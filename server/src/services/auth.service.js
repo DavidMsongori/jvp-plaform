@@ -620,7 +620,7 @@ export const verifyOTP = async (data) => {
   try {
     const {
       email,
-      otp,
+      code,
       purpose = OTP_PURPOSE.ACCOUNT_ACTIVATION,
     } = data;
 
@@ -651,10 +651,11 @@ export const verifyOTP = async (data) => {
        VERIFY OTP
     ---------------------------------------- */
 
+    console.log("OTP entered by user:", otp);
     await otpService.verifyOTP({
       user,
       purpose,
-      code: otp,
+      code,
     });
 
     console.log("✅ OTP verified");
