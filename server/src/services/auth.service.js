@@ -413,29 +413,45 @@ export const activateExistingMember = async (data) => {
        CREATE OTP
     ---------------------------------------- */
 
-    const otp = await otpService.createOTP({
+   const otpResult = await otpService.createOTP({
 
-      user,
+  user,
 
-      email: user.email,
+  email: user.email,
 
-      purpose: OTP_PURPOSE.ACCOUNT_ACTIVATION,
+  purpose: OTP_PURPOSE.ACCOUNT_ACTIVATION,
 
-    });
+});
 
-    /* ----------------------------------------
-       SEND OTP EMAIL
-    ---------------------------------------- */
+/* ----------------------------------------
+   SEND OTP EMAIL
+---------------------------------------- */
 
-    await emailService.sendOTPEmail({
+await emailService.sendOTPEmail({
 
-      email: user.email,
+  email: user.email,
 
-      firstName: member.firstName,
+  firstName: member.firstName,
 
-      otp: otp.otp,
+  otp: otpResult.plainOtp,
 
-    });
+});
+
+/* ----------------------------------------
+   RESPONSE
+---------------------------------------- */
+
+return {
+
+  email: user.email,
+
+  nextStep: "verify-otp",
+
+  otpId: otpResult.otpRecord._id,
+
+  expiresAt: otpResult.otpRecord.expiresAt,
+
+};
 
     /* ----------------------------------------
        LOG ACTIVITY
