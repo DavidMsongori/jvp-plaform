@@ -1116,32 +1116,69 @@ return buildAuthResponse(
 export const login = async (data) => {
 
   const {
-    email,
+    identifier,
     password,
   } = data;
 
-  const normalizedEmail = email
-    .toLowerCase()
-    .trim();
+  if (!identifier?.trim()) {
+
+    throw new AppError(
+      "Email address or phone number is required.",
+      400
+    );
+
+  }
+
+  if (!password) {
+
+    throw new AppError(
+      "Password is required.",
+      400
+    );
+
+  }
+
+  const value = identifier.trim();
+
+  let user = null;
 
   /* ----------------------------------------
-     FIND USER
+     LOGIN USING EMAIL
   ---------------------------------------- */
 
-  const user = await User.findOne({
+  if (value.includes("@")) {
 
-    email: normalizedEmail,
+    user = await User.findOne({
+      email: value.toLowerCase(),
+    });
 
-  });
+  } else {
+
+    /* ----------------------------------------
+       LOGIN USING PHONE
+    ---------------------------------------- */
+
+    const member = await Member.findOne({
+      phone: value,
+    });
+
+    if (member) {
+
+      user = await User.findById(member.user);
+
+    }
+
+  }
+
+  /* ----------------------------------------
+     USER FOUND?
+  ---------------------------------------- */
 
   if (!user) {
 
     throw new AppError(
-
-      "Invalid email or password.",
-
+      "Invalid email/phone number or password.",
       401
-
     );
 
   }
@@ -1153,11 +1190,8 @@ export const login = async (data) => {
   if (!user.password) {
 
     throw new AppError(
-
       "Please complete account activation first.",
-
       400
-
     );
 
   }
@@ -1169,11 +1203,8 @@ export const login = async (data) => {
   if (!user.emailVerified) {
 
     throw new AppError(
-
       "Please verify your email first.",
-
       403
-
     );
 
   }
@@ -1185,11 +1216,8 @@ export const login = async (data) => {
   if (!user.isActive) {
 
     throw new AppError(
-
       "Your account has been deactivated.",
-
       403
-
     );
 
   }
@@ -1198,20 +1226,16 @@ export const login = async (data) => {
      VERIFY PASSWORD
   ---------------------------------------- */
 
-  const passwordMatches =
-    await comparePassword(
-      password,
-      user.password
-    );
+  const passwordMatches = await comparePassword(
+    password,
+    user.password
+  );
 
   if (!passwordMatches) {
 
     throw new AppError(
-
-      "Invalid email or password.",
-
+      "Invalid email/phone number or password.",
       401
-
     );
 
   }
@@ -1221,19 +1245,14 @@ export const login = async (data) => {
   ---------------------------------------- */
 
   const member = await Member.findOne({
-
     user: user._id,
-
   });
 
   if (!member) {
 
     throw new AppError(
-
       "Member profile not found.",
-
       404
-
     );
 
   }
@@ -1251,99 +1270,31 @@ export const login = async (data) => {
   ---------------------------------------- */
 
   await logActivity(
-
     user._id,
-
     "Logged in",
-
     null,
-
     "auth",
-
     "Member logged into JVP Connect"
-
   );
 
   /* ----------------------------------------
-     TOKENS
+     GENERATE TOKEN
   ---------------------------------------- */
 
- const token =
-  generateToken(user);
-
-return buildAuthResponse(
-  user,
-  member,
-  token
-);
+  const token = generateToken(user._id);
 
   /* ----------------------------------------
      RESPONSE
   ---------------------------------------- */
 
-  return {
-
-    token: accessToken,
-
-    refreshToken,
-
-    user: {
-
-      id: user._id,
-
-      email: user.email,
-
-      role: user.role,
-
-      isActive: user.isActive,
-
-      emailVerified:
-        user.emailVerified,
-
-      lastLogin:
-        user.lastLogin,
-
-    },
-
-    member: {
-
-      id: member._id,
-
-      membershipNumber:
-        member.membershipNumber,
-
-      firstName:
-        member.firstName,
-
-      middleName:
-        member.middleName,
-
-      lastName:
-        member.lastName,
-
-      county:
-        member.county,
-
-      membershipType:
-        member.membershipType,
-
-      membershipStatus:
-        member.membershipStatus,
-
-      membershipFeePaid:
-        member.membershipFeePaid,
-
-      profilePhoto:
-        member.profilePhoto,
-
-      joinedAt:
-        member.joinedAt,
-
-    },
-
-  };
+  return buildAuthResponse(
+    user,
+    member,
+    token
+  );
 
 };
+
 
 /* ==========================================================
    FORGOT PASSWORD
