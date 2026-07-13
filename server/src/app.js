@@ -38,6 +38,8 @@ const allowedOrigins = [
 
   "http://localhost:5173",
 
+  "https://jvp-platform.vercel.app",
+
   process.env.CLIENT_URL,
 
 ].filter(Boolean);
@@ -47,6 +49,8 @@ app.use(
   cors({
 
     origin(origin, callback) {
+
+      console.log("Incoming Origin:", origin);
 
       // Allow Postman and server-to-server requests
 
@@ -61,6 +65,8 @@ app.use(
         return callback(null, true);
 
       }
+
+      console.log("Blocked Origin:", origin);
 
       return callback(
 
