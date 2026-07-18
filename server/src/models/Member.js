@@ -36,6 +36,7 @@ const memberSchema = new mongoose.Schema(
       type: String,
       enum: ["ordinary","member", "leadership"],
       required: true,
+      default: "member",
     },
 
     membershipStatus: {

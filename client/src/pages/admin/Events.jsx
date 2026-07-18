@@ -9,7 +9,7 @@ import {
 
 import EventSummary from "../../components/admin/events/EventSummary";
 import EventFilters from "../../components/admin/events/EventFilters";
-import EventsTable from "../../components/admin/events/EventsTable";
+import EventsTable from "../../components/admin/events/EventTable";
 
 import "../../components/admin/events/Events.css";
 

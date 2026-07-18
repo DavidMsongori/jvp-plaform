@@ -13,6 +13,7 @@ import memberRoutes from "./routes/member.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import healthRoutes from "./routes/health.routes.js";
+import eventRoutes from "./routes/event.routes.js";
 
 const app = express();
 
@@ -159,6 +160,8 @@ app.use("/api/member", memberRoutes);
 app.use("/api/payments", paymentRoutes);
 
 app.use("/api/admin", adminRoutes);
+
+app.use("/api/events", eventRoutes);
 
 /* ==========================================================
    404

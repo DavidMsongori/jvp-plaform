@@ -75,8 +75,12 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import Members from "../pages/admin/Members";
 import MemberDetails from "../pages/admin/MemberDetails";
 import Payments from "../pages/admin/Payments";
-import AdminEvents from "../pages/admin/Events";
-import EventForm from "../pages/admin/EventForm";
+
+/* Events */
+import AdminEvents from "../pages/admin/events/Events";
+import CreateEvent from "../pages/admin/events/CreateEvent";
+import EditEvent from "../pages/admin/events/EditEvent";
+import ViewEvent from "../pages/admin/events/ViewEvent";
 
 /* ==========================================
    OTHER
@@ -85,11 +89,8 @@ import EventForm from "../pages/admin/EventForm";
 import NotFound from "../pages/NotFound";
 
 function AppRoutes() {
-
   return (
-
     <BrowserRouter>
-
       <Routes>
 
         {/* =====================================
@@ -180,7 +181,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         >
-
           <Route
             index
             element={<Dashboard />}
@@ -192,9 +192,9 @@ function AppRoutes() {
           />
 
           <Route
-  path="membership-card"
-  element={<MembershipCardPage />}
-/>
+            path="membership-card"
+            element={<MembershipCardPage />}
+          />
 
           <Route
             path="events"
@@ -220,7 +220,6 @@ function AppRoutes() {
             path="settings"
             element={<Settings />}
           />
-
         </Route>
 
         {/* =====================================
@@ -237,7 +236,6 @@ function AppRoutes() {
             </PermissionRoute>
           }
         >
-
           <Route
             index
             element={
@@ -248,6 +246,8 @@ function AppRoutes() {
               </PermissionRoute>
             }
           />
+
+          {/* Members */}
 
           <Route
             path="members"
@@ -271,6 +271,8 @@ function AppRoutes() {
             }
           />
 
+          {/* Payments */}
+
           <Route
             path="payments"
             element={
@@ -281,6 +283,8 @@ function AppRoutes() {
               </PermissionRoute>
             }
           />
+
+          {/* Events */}
 
           <Route
             path="events"
@@ -294,12 +298,23 @@ function AppRoutes() {
           />
 
           <Route
-            path="events/new"
+            path="events/create"
             element={
               <PermissionRoute
                 permission={PERMISSIONS.CREATE_EVENT}
               >
-                <EventForm />
+                <CreateEvent />
+              </PermissionRoute>
+            }
+          />
+
+          <Route
+            path="events/:id"
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.VIEW_EVENTS}
+              >
+                <ViewEvent />
               </PermissionRoute>
             }
           />
@@ -310,11 +325,10 @@ function AppRoutes() {
               <PermissionRoute
                 permission={PERMISSIONS.EDIT_EVENT}
               >
-                <EventForm />
+                <EditEvent />
               </PermissionRoute>
             }
           />
-
         </Route>
 
         {/* =====================================
@@ -325,13 +339,9 @@ function AppRoutes() {
           path="*"
           element={<NotFound />}
         />
-
       </Routes>
-
     </BrowserRouter>
-
   );
-
 }
 
 export default AppRoutes;

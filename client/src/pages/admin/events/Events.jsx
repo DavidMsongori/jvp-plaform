@@ -1,17 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import eventService from "../../services/event.service";
+import eventService from "../../../services/event.service";
 
-import Hero from "../../components/event/Hero";
-import Filters from "../../components/event/Filters";
-import Grid from "../../components/event/Grid";
-import Pagination from "../../components/event/Pagination";
+import EventStats from "../../../components/admin/events/EventStats";
+import EventToolbar from "../../../components/admin/events/EventToolbar";
+import EventTable from "../../../components/admin/events/EventTable";
+import EventPagination from "../../../components/admin/events/EventPagination";
 
-const Event = () => {
-  /* ==========================================
-     URL SEARCH PARAMS
-  ========================================== */
+const Events = () => {
+  const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,9 +23,17 @@ const Event = () => {
 
   const [error, setError] = useState("");
 
+  const [statistics, setStatistics] = useState({
+    totalEvents: 0,
+    upcomingEvents: 0,
+    ongoingEvents: 0,
+    completedEvents: 0,
+    featuredEvents: 0,
+  });
+
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 9,
+    limit: 10,
     total: 0,
     totalPages: 1,
     hasNextPage: false,
@@ -35,16 +41,16 @@ const Event = () => {
   });
 
   /* ==========================================
-     FILTERS FROM URL
+     FILTERS
   ========================================== */
 
   const filters = {
     search: searchParams.get("search") || "",
     category: searchParams.get("category") || "",
-    eventType: searchParams.get("eventType") || "",
+    status: searchParams.get("status") || "",
     featured: searchParams.get("featured") || "",
     page: Number(searchParams.get("page")) || 1,
-    limit: Number(searchParams.get("limit")) || 9,
+    limit: Number(searchParams.get("limit")) || 10,
   };
 
   /* ==========================================
@@ -56,28 +62,31 @@ const Event = () => {
       setLoading(true);
       setError("");
 
-      const response = await eventService.getEvents(filters);
+      const [eventsResponse, statsResponse] =
+        await Promise.all([
+          eventService.getEvents(filters),
+          eventService.getDashboardStatistics(),
+        ]);
 
-      const eventData =
-        response.data?.events ??
-        response.events ??
-        [];
+      setEvents(
+        eventsResponse.events ||
+          eventsResponse.data?.events ||
+          []
+      );
 
-      const paginationData =
-        response.data?.pagination ??
-        response.pagination ??
-        {};
+      setPagination(
+        eventsResponse.pagination ||
+          eventsResponse.data?.pagination ||
+          {}
+      );
 
-      setEvents(eventData);
-
-      setPagination((prev) => ({
-        ...prev,
-        ...paginationData,
-      }));
+      setStatistics(
+        statsResponse.statistics ||
+          statsResponse.data?.statistics ||
+          {}
+      );
     } catch (err) {
       console.error(err);
-
-      setEvents([]);
 
       setError(
         err.response?.data?.message ||
@@ -88,34 +97,25 @@ const Event = () => {
     }
   }, [searchParams]);
 
-  /* ==========================================
-     EFFECTS
-  ========================================== */
-
   useEffect(() => {
     loadEvents();
   }, [loadEvents]);
 
   /* ==========================================
-     FILTER CHANGES
+     FILTERS
   ========================================== */
 
   const handleFilterChange = (values) => {
     const params = new URLSearchParams(searchParams);
 
     Object.entries(values).forEach(([key, value]) => {
-      if (
-        value !== "" &&
-        value !== null &&
-        value !== undefined
-      ) {
+      if (value) {
         params.set(key, value);
       } else {
         params.delete(key);
       }
     });
 
-    // Reset to first page when filters change
     params.set("page", "1");
 
     setSearchParams(params);
@@ -128,22 +128,46 @@ const Event = () => {
   const handlePageChange = (page) => {
     const params = new URLSearchParams(searchParams);
 
-    params.set("page", page.toString());
+    params.set("page", page);
 
     setSearchParams(params);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
   };
 
   /* ==========================================
-     REFRESH
+     ACTIONS
   ========================================== */
 
-  const handleRefresh = () => {
-    loadEvents();
+  const handleCreate = () => {
+    navigate("/admin/events/create");
+  };
+
+  const handleView = (event) => {
+    navigate(`/admin/events/${event._id}`);
+  };
+
+  const handleEdit = (event) => {
+    navigate(`/admin/events/${event._id}/edit`);
+  };
+
+  const handleDelete = async (event) => {
+    if (
+      !window.confirm(
+        `Delete "${event.title}"?`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      await eventService.deleteEvent(event._id);
+
+      loadEvents();
+    } catch (err) {
+      alert(
+        err.response?.data?.message ||
+          "Failed to delete event."
+      );
+    }
   };
 
   /* ==========================================
@@ -151,27 +175,34 @@ const Event = () => {
   ========================================== */
 
   return (
-    <main className="event-page">
-      <Hero />
+    <div className="admin-events-page">
 
-      <Filters
-        filters={filters}
-        onChange={handleFilterChange}
+      <EventStats
+        statistics={statistics}
       />
 
-      <Grid
+      <EventToolbar
+        filters={filters}
+        onChange={handleFilterChange}
+        onCreate={handleCreate}
+      />
+
+      <EventTable
         events={events}
         loading={loading}
         error={error}
-        onRetry={handleRefresh}
+        onView={handleView}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
 
-      <Pagination
+      <EventPagination
         pagination={pagination}
         onPageChange={handlePageChange}
       />
-    </main>
+
+    </div>
   );
 };
 
-export default Event;
+export default Events;
