@@ -236,11 +236,37 @@ const eventSchema = new mongoose.Schema(
        VENUE
     ======================================================= */
 
-    venue: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Venue",
-      required: true,
-    },
+   venue: {
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
+  address: {
+    type: String,
+    trim: true,
+    default: "",
+  },
+
+  county: {
+    type: String,
+    trim: true,
+    default: "",
+  },
+
+  city: {
+    type: String,
+    trim: true,
+    default: "",
+  },
+
+  googleMapsLink: {
+    type: String,
+    trim: true,
+    default: "",
+  }
+},
 
     virtualLink: {
       type: String,
@@ -287,12 +313,14 @@ const eventSchema = new mongoose.Schema(
        PROGRAM
     ======================================================= */
 
-    speakers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Speaker",
-      },
-    ],
+   speakers: [
+  {
+    name: String,
+    title: String,
+    organization: String,
+    photo: cloudinaryImageSchema
+  }
+],
 
     sessions: [sessionSchema],
 
@@ -301,11 +329,12 @@ const eventSchema = new mongoose.Schema(
     ======================================================= */
 
     partners: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Partner",
-      },
-    ],
+  {
+    name: String,
+    logo: cloudinaryImageSchema,
+    website: String
+  }
+],
 
     /* =======================================================
        TAGS
@@ -593,8 +622,6 @@ eventSchema.pre("validate", function (next) {
       trim: true,
     });
   }
-
-  next();
 });
 
 eventSchema.pre("save", function (next) {
@@ -615,8 +642,6 @@ eventSchema.pre("save", function (next) {
       )
     );
   }
-
-  next();
 });
 
 /* ===========================================================

@@ -30,7 +30,6 @@ const eventRegistrationSchema = new mongoose.Schema(
       unique: true,
       uppercase: true,
       trim: true,
-      index: true,
     },
 
     registrationDate: {
@@ -48,7 +47,6 @@ const eventRegistrationSchema = new mongoose.Schema(
         "declined",
       ],
       default: "pending",
-      index: true,
     },
 
     /* ==========================================================
@@ -86,7 +84,6 @@ const eventRegistrationSchema = new mongoose.Schema(
         "refunded",
       ],
       default: "not_required",
-      index: true,
     },
 
     /* ==========================================================
@@ -124,7 +121,6 @@ const eventRegistrationSchema = new mongoose.Schema(
         "absent",
       ],
       default: "registered",
-      index: true,
     },
 
     checkedIn: {
@@ -250,10 +246,6 @@ eventRegistrationSchema.index(
 /* ==========================================================
    SEARCH INDEXES
 ========================================================== */
-
-eventRegistrationSchema.index({ registrationNumber: 1 });
-
-eventRegistrationSchema.index({ ticketNumber: 1 });
 
 eventRegistrationSchema.index({ attendanceStatus: 1 });
 

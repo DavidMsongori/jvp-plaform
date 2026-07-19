@@ -4,6 +4,7 @@ import * as eventController from "../controllers/event.controller.js";
 
 import auth from "../middleware/auth.js";
 import authorize from "../middleware/authorize.js";
+import { uploadEventImages } from "../middleware/upload.js";
 
 const router = express.Router();
 
@@ -19,7 +20,10 @@ router.get("/upcoming", eventController.getUpcomingEvents);
 
 router.get("/ongoing", eventController.getOngoingEvents);
 
-router.get("/statistics", eventController.getDashboardStatistics);
+router.get(
+  "/statistics",
+  eventController.getDashboardStatistics
+);
 
 router.get(
   "/category/:category",
@@ -31,86 +35,91 @@ router.get(
   eventController.getEventBySlug
 );
 
-router.get(
-  "/:id",
-  eventController.getEventById
-);
-
 /* ===========================================================
-   PROTECTED ROUTES
+   AUTHENTICATION
 =========================================================== */
 
 router.use(auth);
 
 /* ===========================================================
-   EVENT MANAGEMENT
+   MEMBER EVENT REGISTRATION
+=========================================================== */
+
+router.get(
+  "/my-registrations",
+  eventController.getMyRegistrations
+);
+
+router.post(
+  "/:id/register",
+  eventController.registerForEvent
+);
+
+router.get(
+  "/:id/registration",
+  eventController.getMyRegistration
+);
+
+router.delete(
+  "/:id/register",
+  eventController.cancelRegistration
+);
+
+/* ===========================================================
+   EVENT MANAGEMENT PERMISSIONS
+=========================================================== */
+
+const manageEvents = authorize(
+  "super_admin",
+  "admin",
+  "events",
+  "president"
+);
+
+/* ===========================================================
+   EVENT MANAGEMENT ROUTES
 =========================================================== */
 
 router.post(
   "/",
-  authorize(
-    "super_admin",
-    "admin",
-    "events",
-    "president"
-  ),
+  manageEvents,
+  uploadEventImages,
   eventController.createEvent
 );
 
 router.put(
   "/:id",
-  authorize(
-    "super_admin",
-    "admin",
-    "events",
-    "president"
-  ),
+  manageEvents,
+  uploadEventImages,
   eventController.updateEvent
-);
-
-router.delete(
-  "/:id",
-  authorize(
-    "super_admin",
-    "admin",
-    "events",
-    "president"
-  ),
-  eventController.deleteEvent
 );
 
 router.patch(
   "/:id/publish",
-  authorize(
-    "super_admin",
-    "admin",
-    "events",
-    "president"
-  ),
+  manageEvents,
   eventController.publishEvent
 );
 
 router.patch(
   "/:id/archive",
-  authorize(
-    "super_admin",
-    "admin",
-    "events",
-    "president"
-  ),
+  manageEvents,
   eventController.archiveEvent
 );
 
+router.delete(
+  "/:id",
+  manageEvents,
+  eventController.deleteEvent
+);
+
 /* ===========================================================
-   ANALYTICS
+   EVENT DETAILS
+   (KEEP THIS LAST)
 =========================================================== */
 
-router.patch("/:id/view", eventController.incrementViews);
-
-router.patch("/:id/share", eventController.incrementShares);
-
-router.patch("/:id/bookmark", eventController.incrementBookmarks);
-
-router.patch("/:id/impression", eventController.incrementImpressions);
+router.get(
+  "/:id",
+  eventController.getEventById
+);
 
 export default router;

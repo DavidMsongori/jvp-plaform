@@ -1,21 +1,16 @@
 import mongoose from "mongoose";
 
 const activityLogSchema = new mongoose.Schema(
-
   {
-
     /* ======================================
-       USER
+       ACTOR
     ====================================== */
 
     user: {
-
       type: mongoose.Schema.Types.ObjectId,
-
       ref: "User",
-
       required: true,
-
+      index: true,
     },
 
     /* ======================================
@@ -23,13 +18,10 @@ const activityLogSchema = new mongoose.Schema(
     ====================================== */
 
     action: {
-
       type: String,
-
       required: true,
-
       trim: true,
-
+      index: true,
     },
 
     /* ======================================
@@ -37,55 +29,91 @@ const activityLogSchema = new mongoose.Schema(
     ====================================== */
 
     module: {
-
       type: String,
-
       enum: [
-
         "auth",
-
         "members",
-
         "payments",
-
         "events",
-
-        "reports",
-
+        "registrations",
+        "venues",
+        "speakers",
+        "partners",
+        "news",
+        "blogs",
         "settings",
-
+        "reports",
         "system",
-
       ],
-
+      required: true,
       default: "system",
+      index: true,
+    },
 
+    /* ======================================
+       TARGET RESOURCE
+    ====================================== */
+
+    targetType: {
+      type: String,
+      enum: [
+        "User",
+        "Member",
+        "Payment",
+        "Event",
+        "EventRegistration",
+        "Venue",
+        "Speaker",
+        "Partner",
+        "News",
+        "Blog",
+        "Setting",
+        "Report",
+        "System",
+      ],
+      required: true,
+      default: "System",
+      index: true,
+    },
+
+    targetId: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null,
+      index: true,
     },
 
     /* ======================================
        DESCRIPTION
     ====================================== */
 
-    description: {
-
+    title: {
       type: String,
-
       trim: true,
+      maxlength: 150,
+      required: true,
+    },
 
+    description: {
+      type: String,
+      trim: true,
+      maxlength: 3000,
       default: "",
-
     },
 
     /* ======================================
-       TARGET RECORD
+       REQUEST DETAILS
     ====================================== */
 
-    targetId: {
-
-      type: mongoose.Schema.Types.ObjectId,
-
+    ipAddress: {
+      type: String,
+      trim: true,
       default: null,
+    },
 
+    userAgent: {
+      type: String,
+      trim: true,
+      default: null,
     },
 
     /* ======================================
@@ -93,11 +121,22 @@ const activityLogSchema = new mongoose.Schema(
     ====================================== */
 
     metadata: {
-
       type: mongoose.Schema.Types.Mixed,
-
       default: {},
+    },
 
+    /* ======================================
+       SUCCESS
+    ====================================== */
+
+    status: {
+      type: String,
+      enum: [
+        "success",
+        "warning",
+        "failed",
+      ],
+      default: "success",
     },
 
     /* ======================================
@@ -105,51 +144,44 @@ const activityLogSchema = new mongoose.Schema(
     ====================================== */
 
     date: {
-
       type: Date,
-
       default: Date.now,
-
+      index: true,
     },
-
   },
-
   {
-
     timestamps: true,
-
     versionKey: false,
-
   }
-
 );
 
+/* ======================================
+   INDEXES
+====================================== */
+
 activityLogSchema.index({
-
-  user: 1,
-
+  targetType: 1,
+  targetId: 1,
   createdAt: -1,
-
 });
 
 activityLogSchema.index({
-
   module: 1,
-
+  createdAt: -1,
 });
 
 activityLogSchema.index({
+  user: 1,
+  createdAt: -1,
+});
 
-  action: 1,
-
+activityLogSchema.index({
+  status: 1,
 });
 
 const ActivityLog = mongoose.model(
-
   "ActivityLog",
-
   activityLogSchema
-
 );
 
 export default ActivityLog;

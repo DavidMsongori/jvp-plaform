@@ -1,12 +1,12 @@
 import * as adminService from "../services/admin.service.js";
+import * as adminMemberService from "../services/adminMember.service.js";
 
-/* ==========================================
+/* ==========================================================
    ADMIN DASHBOARD
-========================================== */
+========================================================== */
 
 export const getDashboard = async (req, res, next) => {
   try {
-
     const dashboard =
       await adminService.getDashboard();
 
@@ -15,63 +15,69 @@ export const getDashboard = async (req, res, next) => {
       message: "Dashboard retrieved successfully.",
       data: dashboard,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-/* ==========================================
+/* ==========================================================
    MEMBER MANAGEMENT
-========================================== */
+========================================================== */
 
+/**
+ * GET /admin/members
+ */
 export const getMembers = async (req, res, next) => {
   try {
-
-    const members =
-      await adminService.getMembers(req.query);
+    const result =
+      await adminMemberService.getMembers(req.query);
 
     return res.status(200).json({
       success: true,
       message: "Members retrieved successfully.",
-      data: members,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const getMemberById = async (req, res, next) => {
+/**
+ * GET /admin/members/:id
+ */
+export const getMemberById = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const member =
-      await adminService.getMemberById(
+    const result =
+      await adminMemberService.getMemberProfile(
         req.params.id
       );
 
     return res.status(200).json({
       success: true,
-      message: "Member retrieved successfully.",
-      data: member,
+      message:
+        "Member profile retrieved successfully.",
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const updateMember = async (req, res, next) => {
+/**
+ * PUT /admin/members/:id
+ */
+export const updateMember = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const member =
-      await adminService.updateMember(
+    const result =
+      await adminMemberService.updateMember(
         req.params.id,
         req.body,
         req.user._id
@@ -80,21 +86,24 @@ export const updateMember = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Member updated successfully.",
-      data: member,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const activateMember = async (req, res, next) => {
+/**
+ * PATCH /admin/members/:id/activate
+ */
+export const activateMember = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const member =
-      await adminService.activateMember(
+    const result =
+      await adminMemberService.activateMember(
         req.params.id,
         req.user._id
       );
@@ -102,83 +111,100 @@ export const activateMember = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Member activated successfully.",
-      data: member,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const deactivateMember = async (req, res, next) => {
+/**
+ * PATCH /admin/members/:id/deactivate
+ */
+export const deactivateMember = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const member =
-      await adminService.deactivateMember(
+    const result =
+      await adminMemberService.deactivateMember(
         req.params.id,
         req.user._id
       );
 
     return res.status(200).json({
       success: true,
-      message: "Member deactivated successfully.",
-      data: member,
+      message:
+        "Member deactivated successfully.",
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const deleteMember = async (req, res, next) => {
+/**
+ * DELETE /admin/members/:id
+ */
+export const deleteMember = async (
+  req,
+  res,
+  next
+) => {
   try {
-
     const result =
-      await adminService.deleteMember(
+      await adminMemberService.deleteMember(
         req.params.id,
         req.user._id
       );
 
-    return res.status(200).json(result);
-
+    return res.status(200).json({
+      success: true,
+      message: result.message,
+      data: null,
+    });
   } catch (error) {
-
     next(error);
-
   }
 };
 
-/* ==========================================
+/* ==========================================================
    PAYMENT MANAGEMENT
-========================================== */
+========================================================== */
 
-export const getPayments = async (req, res, next) => {
+/**
+ * GET /admin/payments
+ */
+export const getPayments = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const payments =
+    const result =
       await adminService.getPayments(req.query);
 
     return res.status(200).json({
       success: true,
       message: "Payments retrieved successfully.",
-      data: payments,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const verifyPayment = async (req, res, next) => {
+/**
+ * PATCH /admin/payments/:id/verify
+ */
+export const verifyPayment = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const payment =
+    const result =
       await adminService.verifyPayment(
         req.params.id,
         req.user._id
@@ -187,43 +213,49 @@ export const verifyPayment = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Payment verified successfully.",
-      data: payment,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-/* ==========================================
+/* ==========================================================
    EVENT MANAGEMENT
-========================================== */
+========================================================== */
 
-export const getEvents = async (req, res, next) => {
+/**
+ * GET /admin/events
+ */
+export const getEvents = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const events =
+    const result =
       await adminService.getEvents(req.query);
 
     return res.status(200).json({
       success: true,
       message: "Events retrieved successfully.",
-      data: events,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const getEventById = async (req, res, next) => {
+/**
+ * GET /admin/events/:id
+ */
+export const getEventById = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const event =
+    const result =
       await adminService.getEventById(
         req.params.id
       );
@@ -231,20 +263,23 @@ export const getEventById = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Event retrieved successfully.",
-      data: event,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const createEvent = async (req, res, next) => {
+/**
+ * POST /admin/events
+ */
+export const createEvent = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const event =
+    const result =
       await adminService.createEvent(
         req.body,
         req.user._id
@@ -253,20 +288,23 @@ export const createEvent = async (req, res, next) => {
     return res.status(201).json({
       success: true,
       message: "Event created successfully.",
-      data: event,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const updateEvent = async (req, res, next) => {
+/**
+ * PUT /admin/events/:id
+ */
+export const updateEvent = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const event =
+    const result =
       await adminService.updateEvent(
         req.params.id,
         req.body,
@@ -276,82 +314,89 @@ export const updateEvent = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Event updated successfully.",
-      data: event,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-export const deleteEvent = async (req, res, next) => {
+/**
+ * DELETE /admin/events/:id
+ */
+export const deleteEvent = async (
+  req,
+  res,
+  next
+) => {
   try {
-
     const result =
       await adminService.deleteEvent(
         req.params.id,
         req.user._id
       );
 
-    return res.status(200).json(result);
-
+    return res.status(200).json({
+      success: true,
+      message: result.message,
+      data: null,
+    });
   } catch (error) {
-
     next(error);
-
   }
 };
 
-/* ==========================================
+/* ==========================================================
    REPORTS
-========================================== */
+========================================================== */
 
-export const getReports = async (req, res, next) => {
+/**
+ * GET /admin/reports
+ */
+export const getReports = async (
+  req,
+  res,
+  next
+) => {
   try {
-
-    const reports =
+    const result =
       await adminService.getReports();
 
     return res.status(200).json({
       success: true,
       message: "Reports generated successfully.",
-      data: reports,
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };
 
-/* ==========================================
+/* ==========================================================
    ACTIVITY LOGS
-========================================== */
+========================================================== */
 
+/**
+ * GET /admin/activity
+ */
 export const getActivityLogs = async (
   req,
   res,
   next
 ) => {
   try {
-
-    const logs =
+    const result =
       await adminService.getActivityLogs(
         req.query
       );
 
     return res.status(200).json({
       success: true,
-      message: "Activity logs retrieved successfully.",
-      data: logs,
+      message:
+        "Activity logs retrieved successfully.",
+      data: result,
     });
-
   } catch (error) {
-
     next(error);
-
   }
 };

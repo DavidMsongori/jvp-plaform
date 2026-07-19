@@ -5,6 +5,13 @@ import User from "../models/User.js";
 import Member from "../models/Member.js";
 import OTP from "../models/OTP.js";
 
+import {
+  logActivity,
+  ACTIVITY,
+  ACTIVITY_MODULES,
+  TARGET_TYPES,
+} from "../utils/activity.js";
+
 import AppError from "../utils/AppError.js";
 
 import * as otpService from "./otp.service.js";
@@ -75,47 +82,7 @@ const comparePassword = async (
 
 
 
-/* ==========================================================
-   LOG ACTIVITY
-========================================================== */
 
-const logActivity = async (
-  userId,
-  action,
-  session = null,
-  module = "auth",
-  description = "",
-  metadata = {}
-) => {
-
-  const payload = {
-
-    user: userId,
-
-    action,
-
-    module,
-
-    description,
-
-    metadata,
-
-  };
-
-  if (session) {
-
-    await ActivityLog.create(
-      [payload],
-      { session }
-    );
-
-    return;
-
-  }
-
-  await ActivityLog.create(payload);
-
-};
 
 /* ==========================================================
    BUILD AUTH RESPONSE
@@ -355,19 +322,26 @@ export const register = async (data) => {
        LOG ACTIVITY
     ---------------------------------------- */
 
-    await logActivity(
+    await logActivity({
+  user: user._id,
 
-      user._id,
+  action: ACTIVITY.AUTH.REGISTER,
 
-      "Registered account",
+  module: ACTIVITY_MODULES.AUTH,
 
-      session,
+  targetType: TARGET_TYPES.MEMBER,
 
-      "auth",
+  targetId: member._id,
 
-      "New member registration"
+  title: "Account Registered",
 
-    );
+  description:
+    "A new member account was successfully registered.",
+
+  status: "success",
+
+  session,
+});
 
     /* ----------------------------------------
        COMMIT
@@ -562,19 +536,26 @@ export const activateExistingMember = async (data) => {
        LOG ACTIVITY
     ---------------------------------------- */
 
-    await logActivity(
+   await logActivity({
+  user: user._id,
 
-      user._id,
+  action: ACTIVITY.AUTH.REGISTER,
 
-      "Activated imported membership",
+  module: ACTIVITY_MODULES.AUTH,
 
-      session,
+  targetType: TARGET_TYPES.MEMBER,
 
-      "auth",
+  targetId: member._id,
 
-      "Imported member activation"
+  title: "Imported Membership Activated",
 
-    );
+  description:
+    "Imported member successfully activated their account.",
+
+  status: "success",
+
+  session,
+});
 
     /* ----------------------------------------
        COMMIT
@@ -707,13 +688,26 @@ console.log("Code:", code);
        LOG ACTIVITY
     ---------------------------------------- */
 
-    await logActivity(
-      user._id,
-      "Verified OTP",
-      session,
-      "auth",
-      "OTP verification completed"
-    );
+   await logActivity({
+  user: user._id,
+
+  action: ACTIVITY.AUTH.OTP_VERIFIED,
+
+  module: ACTIVITY_MODULES.AUTH,
+
+  targetType: TARGET_TYPES.MEMBER,
+
+  targetId: member._id,
+
+  title: "OTP Verified",
+
+  description:
+    "Member successfully verified their OTP.",
+
+  status: "success",
+
+  session,
+});
 
     console.log("✅ Activity logged");
 
@@ -876,19 +870,23 @@ export const resendOTP = async (data) => {
      LOG ACTIVITY
   ---------------------------------------- */
 
-  await logActivity(
+  await logActivity({
+  user: user._id,
 
-    user._id,
+  action: ACTIVITY.AUTH.OTP_RESENT,
 
-    "Resent OTP",
+  module: ACTIVITY_MODULES.AUTH,
 
-    null,
+  targetType: TARGET_TYPES.MEMBER,
 
-    "auth",
+  targetId: member._id,
 
-    purpose
+  title: "OTP Resent",
 
-  );
+  description: purpose,
+
+  status: "success",
+});
 
   /* ----------------------------------------
      RESPONSE
@@ -1050,19 +1048,26 @@ export const createPassword = async (data) => {
        LOG ACTIVITY
     ---------------------------------------- */
 
-    await logActivity(
+    await logActivity({
+  user: user._id,
 
-      user._id,
+  action: ACTIVITY.AUTH.ACCOUNT_ACTIVATED,
 
-      "Completed account activation",
+  module: ACTIVITY_MODULES.AUTH,
 
-      session,
+  targetType: TARGET_TYPES.MEMBER,
 
-      "auth",
+  targetId: member._id,
 
-      "Password created and membership activated"
+  title: "Account Activated",
 
-    );
+  description:
+    "Member completed account activation and created a password.",
+
+  status: "success",
+
+  session,
+});
 
     /* ----------------------------------------
        COMMIT TRANSACTION
@@ -1271,13 +1276,24 @@ export const login = async (data) => {
      LOG ACTIVITY
   ---------------------------------------- */
 
-  await logActivity(
-    user._id,
-    "Logged in",
-    null,
-    "auth",
-    "Member logged into JVP Connect"
-  );
+ await logActivity({
+  user: user._id,
+
+  action: ACTIVITY.AUTH.LOGIN,
+
+  module: ACTIVITY_MODULES.AUTH,
+
+  targetType: TARGET_TYPES.USER,
+
+  targetId: user._id,
+
+  title: "Logged In",
+
+  description:
+    "Member logged into JVP Connect.",
+
+  status: "success",
+});
 
   /* ----------------------------------------
      GENERATE TOKEN
@@ -1411,19 +1427,24 @@ export const forgotPassword = async (data) => {
      LOG ACTIVITY
   ---------------------------------------- */
 
-  await logActivity(
+  await logActivity({
+  user: user._id,
 
-    user._id,
+  action: ACTIVITY.AUTH.PASSWORD_RESET_REQUESTED,
 
-    "Requested password reset",
+  module: ACTIVITY_MODULES.AUTH,
 
-    null,
+  targetType: TARGET_TYPES.USER,
 
-    "auth",
+  targetId: user._id,
 
-    "Password reset OTP sent"
+  title: "Password Reset Requested",
 
-  );
+  description:
+    "Password reset OTP was sent.",
+
+  status: "success",
+});
 
   /* ----------------------------------------
      RESPONSE
@@ -1542,19 +1563,26 @@ export const resetPassword = async (data) => {
        LOG ACTIVITY
     ---------------------------------------- */
 
-    await logActivity(
+   await logActivity({
+  user: user._id,
 
-      user._id,
+  action: ACTIVITY.AUTH.PASSWORD_RESET,
 
-      "Reset password",
+  module: ACTIVITY_MODULES.AUTH,
 
-      session,
+  targetType: TARGET_TYPES.USER,
 
-      "auth",
+  targetId: user._id,
 
-      "Password successfully reset"
+  title: "Password Reset",
 
-    );
+  description:
+    "Password successfully changed.",
+
+  status: "success",
+
+  session,
+});
 
     /* ----------------------------------------
        COMMIT
@@ -1656,20 +1684,24 @@ export const logout = async (data = {}) => {
 
   if (userId) {
 
-    await logActivity(
+    await logActivity({
+  user: userId,
 
-      userId,
+  action: ACTIVITY.AUTH.LOGOUT, 
 
-      "Logged out",
+  module: ACTIVITY_MODULES.AUTH,
 
-      null,
+  targetType: TARGET_TYPES.USER,
 
-      "auth",
+  targetId: userId,
 
-      "User logged out"
+  title: "Logged Out",
 
-    );
+  description:
+    "User logged out of JVP Connect.",
 
+  status: "success",
+});
   }
 
   return {

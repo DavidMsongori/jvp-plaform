@@ -32,7 +32,6 @@ import {
 
   /* Activity */
   getActivityLogs,
-
 } from "../controllers/admin.controller.js";
 
 import {
@@ -45,12 +44,17 @@ import {
 const router = express.Router();
 
 /* ==========================================================
-   ADMIN DASHBOARD
+   GLOBAL ADMIN AUTHENTICATION
+========================================================== */
+
+router.use(auth);
+
+/* ==========================================================
+   DASHBOARD
 ========================================================== */
 
 router.get(
   "/dashboard",
-  auth,
   authorize("admin", "super_admin"),
   getDashboard
 );
@@ -59,76 +63,59 @@ router.get(
    MEMBER MANAGEMENT
 ========================================================== */
 
-// Get all members
-router.get(
-  "/members",
-  auth,
-  authorize("admin", "super_admin"),
-  getMembers
-);
+router
+  .route("/members")
+  .get(
+    authorize("admin", "super_admin"),
+    getMembers
+  );
 
-// Get member
-router.get(
-  "/members/:id",
-  auth,
-  authorize("admin", "super_admin"),
-  getMemberById
-);
+router
+  .route("/members/:id")
+  .get(
+    authorize("admin", "super_admin"),
+    getMemberById
+  )
+  .put(
+    authorize("admin", "super_admin"),
+    updateMemberValidator,
+    validate,
+    updateMember
+  )
+  .delete(
+    authorize("super_admin"),
+    deleteMember
+  );
 
-// Update member
-router.put(
-  "/members/:id",
-  auth,
-  authorize("admin", "super_admin"),
-  updateMemberValidator,
-  validate,
-  updateMember
-);
-
-// Activate member
 router.patch(
   "/members/:id/activate",
-  auth,
   authorize("admin", "super_admin"),
   activateMember
 );
 
-// Deactivate member
 router.patch(
   "/members/:id/deactivate",
-  auth,
   authorize("admin", "super_admin"),
   deactivateMember
-);
-
-// Delete member
-router.delete(
-  "/members/:id",
-  auth,
-  authorize("super_admin"),
-  deleteMember
 );
 
 /* ==========================================================
    PAYMENT MANAGEMENT
 ========================================================== */
 
-// Get payments
-router.get(
-  "/payments",
-  auth,
-  authorize(
-    "finance",
-    "admin",
-    "super_admin"
-  ),
-  getPayments
-);
+router
+  .route("/payments")
+  .get(
+    authorize(
+      "finance",
+      "admin",
+      "super_admin"
+    ),
+    getPayments
+  );
 
-// Verify payment
 router.patch(
   "/payments/:id/verify",
-  auth,
   authorize(
     "finance",
     "admin",
@@ -143,68 +130,51 @@ router.patch(
    EVENT MANAGEMENT
 ========================================================== */
 
-// Get all events
-router.get(
-  "/events",
-  auth,
-  authorize(
-    "events",
-    "admin",
-    "super_admin"
-  ),
-  getEvents
-);
+router
+  .route("/events")
+  .get(
+    authorize(
+      "events",
+      "admin",
+      "super_admin"
+    ),
+    getEvents
+  )
+  .post(
+    authorize(
+      "events",
+      "admin",
+      "super_admin"
+    ),
+    createEventValidator,
+    validate,
+    createEvent
+  );
 
-// Get single event
-router.get(
-  "/events/:id",
-  auth,
-  authorize(
-    "events",
-    "admin",
-    "super_admin"
-  ),
-  getEventById
-);
-
-// Create event
-router.post(
-  "/events",
-  auth,
-  authorize(
-    "events",
-    "admin",
-    "super_admin"
-  ),
-  createEventValidator,
-  validate,
-  createEvent
-);
-
-// Update event
-router.put(
-  "/events/:id",
-  auth,
-  authorize(
-    "events",
-    "admin",
-    "super_admin"
-  ),
-  updateEventValidator,
-  validate,
-  updateEvent
-);
-
-// Delete event
-router.delete(
-  "/events/:id",
-  auth,
-  authorize(
-    "admin",
-    "super_admin"
-  ),
-  deleteEvent
-);
+router
+  .route("/events/:id")
+  .get(
+    authorize(
+      "events",
+      "admin",
+      "super_admin"
+    ),
+    getEventById
+  )
+  .put(
+    authorize(
+      "events",
+      "admin",
+      "super_admin"
+    ),
+    updateEventValidator,
+    validate,
+    updateEvent
+  )
+  .delete(
+    authorize("admin", "super_admin"),
+    deleteEvent
+  );
 
 /* ==========================================================
    REPORTS
@@ -212,11 +182,7 @@ router.delete(
 
 router.get(
   "/reports",
-  auth,
-  authorize(
-    "admin",
-    "super_admin"
-  ),
+  authorize("admin", "super_admin"),
   getReports
 );
 
@@ -226,11 +192,7 @@ router.get(
 
 router.get(
   "/activity-logs",
-  auth,
-  authorize(
-    "admin",
-    "super_admin"
-  ),
+  authorize("admin", "super_admin"),
   getActivityLogs
 );
 
