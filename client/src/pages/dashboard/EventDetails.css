@@ -1,0 +1,445 @@
+/* ===========================================================
+   PAGE
+=========================================================== */
+
+.event-details-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ===========================================================
+   LOADING / ERROR
+=========================================================== */
+
+.event-details-loading,
+.event-details-error {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.event-details-error svg {
+  color: #ef4444;
+}
+
+.event-details-error h2 {
+  font-size: 2rem;
+  color: #1e293b;
+}
+
+.event-details-error p {
+  color: #64748b;
+  max-width: 500px;
+}
+
+.event-details-error button {
+  padding: .9rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid #dbeafe;
+  border-top: 4px solid #2563eb;
+  animation: spin .9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===========================================================
+   BACK BUTTON
+=========================================================== */
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.back-button:hover {
+  color: #1d4ed8;
+}
+
+/* ===========================================================
+   HERO
+=========================================================== */
+
+.event-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2rem;
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, .08);
+}
+
+.event-hero-image {
+  position: relative;
+  min-height: 450px;
+  overflow: hidden;
+}
+
+.event-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+
+  background: #f59e0b;
+  color: #fff;
+
+  padding: .7rem 1rem;
+
+  border-radius: 999px;
+
+  font-weight: 700;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+}
+
+.event-hero-content {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.event-category {
+  display: inline-block;
+  align-self: flex-start;
+
+  background: #dbeafe;
+  color: #2563eb;
+
+  font-size: .8rem;
+  font-weight: 700;
+
+  padding: .45rem .9rem;
+
+  border-radius: 999px;
+
+  margin-bottom: 1rem;
+
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.event-hero-content h1 {
+  font-size: 3rem;
+  line-height: 1.15;
+  color: #0f172a;
+  margin-bottom: 1rem;
+}
+
+.event-hero-content p {
+  color: #64748b;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+/* ===========================================================
+   META
+=========================================================== */
+
+.event-meta {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 1rem;
+}
+
+.event-meta div {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+
+  background: #f8fafc;
+
+  padding: .9rem 1rem;
+
+  border-radius: 12px;
+
+  color: #334155;
+
+  font-weight: 500;
+}
+
+.event-meta svg {
+  color: #2563eb;
+}
+
+/* ===========================================================
+   GRID
+=========================================================== */
+
+.event-details-grid {
+  display: grid;
+  grid-template-columns: 2fr 380px;
+  gap: 2rem;
+  margin-top: 2rem;
+  align-items: start;
+}
+
+/* ===========================================================
+   CONTENT
+=========================================================== */
+
+.event-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.event-section {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(15,23,42,.05);
+}
+
+.event-section h2 {
+  color: #0f172a;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.event-description {
+  color: #475569;
+  line-height: 1.9;
+  white-space: pre-line;
+}
+
+/* ===========================================================
+   VENUE
+=========================================================== */
+
+.venue-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.venue-card svg {
+  color: #2563eb;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.venue-card h4 {
+  color: #0f172a;
+  margin-bottom: .4rem;
+}
+
+.venue-card p {
+  color: #64748b;
+  line-height: 1.7;
+}
+
+/* ===========================================================
+   SIDEBAR
+=========================================================== */
+
+.registration-sidebar {
+  position: sticky;
+  top: 100px;
+}
+
+.registration-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 12px 35px rgba(15,23,42,.08);
+}
+
+.registration-card h3 {
+  color: #0f172a;
+  margin-bottom: 1rem;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #16a34a;
+  margin-bottom: 1.5rem;
+}
+
+.registration-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.registration-info div {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  color: #475569;
+}
+
+.registration-info svg {
+  color: #2563eb;
+}
+
+/* ===========================================================
+   REGISTERED STATUS
+=========================================================== */
+
+.registered-status {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+
+  background: #ecfdf5;
+
+  border: 1px solid #bbf7d0;
+
+  border-radius: 14px;
+
+  padding: 1rem;
+
+  margin-bottom: 1.5rem;
+}
+
+.registered-status svg {
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.registered-status strong {
+  color: #166534;
+}
+
+.registered-status p {
+  margin-top: .35rem;
+  color: #166534;
+  text-transform: capitalize;
+}
+
+/* ===========================================================
+   BUTTONS
+=========================================================== */
+
+.register-button,
+.registered-button {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: .3s;
+}
+
+.register-button {
+  background: #2563eb;
+  color: #fff;
+}
+
+.register-button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.register-button:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.registered-button {
+  background: #16a34a;
+  color: white;
+  cursor: default;
+}
+
+/* ===========================================================
+   RESPONSIVE
+=========================================================== */
+
+@media (max-width:1200px){
+
+  .event-details-grid{
+    grid-template-columns:1fr;
+  }
+
+  .registration-sidebar{
+    position:static;
+  }
+
+}
+
+@media (max-width:992px){
+
+  .event-hero{
+    grid-template-columns:1fr;
+  }
+
+  .event-hero-image{
+    min-height:320px;
+  }
+
+  .event-hero-content{
+    padding:2rem;
+  }
+
+  .event-hero-content h1{
+    font-size:2.2rem;
+  }
+
+}
+
+@media (max-width:768px){
+
+  .event-details-page{
+    padding:1rem;
+  }
+
+  .event-meta{
+    grid-template-columns:1fr;
+  }
+
+  .event-section{
+    padding:1.5rem;
+  }
+
+  .registration-card{
+    padding:1.5rem;
+  }
+
+  .event-hero-content h1{
+    font-size:1.8rem;
+  }
+
+}

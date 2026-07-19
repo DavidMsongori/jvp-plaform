@@ -1,12 +1,19 @@
-import { MapPin, PlusCircle } from "lucide-react";
+import { MapPin, Globe } from "lucide-react";
 
 const VenueSection = ({
-  value,
-  venues = [],
-  loading = false,
-  onChange,
-  onCreateVenue,
+  venue,
+  virtualLink,
+  eventType,
+  onVenueChange,
+  onVirtualLinkChange,
 }) => {
+  const updateField = (field, value) => {
+    onVenueChange({
+      ...venue,
+      [field]: value,
+    });
+  };
+
   return (
     <section className="event-section">
 
@@ -17,187 +24,242 @@ const VenueSection = ({
       <div className="section-header">
 
         <div className="section-title">
-
           <MapPin size={20} />
 
           <div>
-
-            <h2>Venue</h2>
+            <h2>Venue Information</h2>
 
             <p>
-              Select the venue where this
-              event will take place.
+              Enter where this event will
+              take place.
             </p>
-
           </div>
-
         </div>
 
-        {onCreateVenue && (
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={onCreateVenue}
-          >
-            <PlusCircle size={16} />
-            New Venue
-          </button>
-        )}
-
       </div>
 
       {/* ==========================================
-          VENUE SELECT
+          PHYSICAL EVENT
       ========================================== */}
 
-      <div className="form-group">
+      {eventType === "physical" && (
+        <>
 
-        <label htmlFor="venue">
+          <div className="form-grid">
 
-          Venue
+            <div className="form-group">
+              <label>
+                Venue Name
+              </label>
 
-        </label>
+              <input
+                type="text"
+                value={venue.name}
+                placeholder="e.g. KICC"
+                onChange={(e) =>
+                  updateField(
+                    "name",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
 
-        <select
-          id="venue"
-          value={value || ""}
-          disabled={loading}
-          onChange={(e) =>
-            onChange(e.target.value)
-          }
-        >
+            <div className="form-group">
+              <label>
+                County
+              </label>
 
-          <option value="">
-
-            {loading
-              ? "Loading venues..."
-              : "Select a venue"}
-
-          </option>
-
-          {venues.map((venue) => (
-
-            <option
-              key={venue._id}
-              value={venue._id}
-            >
-              {venue.name}
-              {venue.city
-                ? ` • ${venue.city}`
-                : ""}
-              {venue.county
-                ? `, ${venue.county}`
-                : ""}
-            </option>
-
-          ))}
-
-        </select>
-
-      </div>
-
-      {/* ==========================================
-          EMPTY STATE
-      ========================================== */}
-
-      {!loading &&
-        venues.length === 0 && (
-
-          <div className="empty-state">
-
-            <MapPin size={42} />
-
-            <h4>
-              No venues available
-            </h4>
-
-            <p>
-              Create your first venue
-              before creating events.
-            </p>
-
-            {onCreateVenue && (
-
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={onCreateVenue}
-              >
-                <PlusCircle size={18} />
-
-                Create Venue
-
-              </button>
-
-            )}
+              <input
+                type="text"
+                value={venue.county}
+                placeholder="e.g. Nairobi"
+                onChange={(e) =>
+                  updateField(
+                    "county",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
 
           </div>
 
-        )}
+          <div className="form-grid">
 
-      {/* ==========================================
-          SELECTED VENUE
-      ========================================== */}
+            <div className="form-group">
+              <label>
+                City / Town
+              </label>
 
-      {!loading &&
-        value &&
-        venues.length > 0 && (() => {
-
-          const selectedVenue =
-            venues.find(
-              (v) => v._id === value
-            );
-
-          if (!selectedVenue)
-            return null;
-
-          return (
-
-            <div className="selected-venue-card">
-
-              <h4>
-
-                {selectedVenue.name}
-
-              </h4>
-
-              <p>
-
-                {selectedVenue.address}
-
-              </p>
-
-              <p>
-
-                {selectedVenue.city}
-                {selectedVenue.city &&
-                selectedVenue.county
-                  ? ", "
-                  : ""}
-                {
-                  selectedVenue.county
+              <input
+                type="text"
+                value={venue.city}
+                placeholder="e.g. Upper Hill"
+                onChange={(e) =>
+                  updateField(
+                    "city",
+                    e.target.value
+                  )
                 }
-
-              </p>
-
-              {selectedVenue.capacity && (
-
-                <p>
-
-                  Capacity:{" "}
-                  {
-                    selectedVenue.capacity
-                  }
-
-                </p>
-
-              )}
-
+              />
             </div>
 
-          );
+            <div className="form-group">
+              <label>
+                Google Maps Link
+              </label>
 
-        })()}
+              <input
+                type="url"
+                value={
+                  venue.googleMapsLink
+                }
+                placeholder="https://maps.google..."
+                onChange={(e) =>
+                  updateField(
+                    "googleMapsLink",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+
+          </div>
+
+          <div className="form-group">
+            <label>
+              Physical Address
+            </label>
+
+            <textarea
+              rows={3}
+              value={venue.address}
+              placeholder="Enter the venue address"
+              onChange={(e) =>
+                updateField(
+                  "address",
+                  e.target.value
+                )
+              }
+            />
+          </div>
+
+        </>
+      )}
+
+      {/* ==========================================
+          VIRTUAL EVENT
+      ========================================== */}
+
+      {eventType === "virtual" && (
+        <div className="form-group">
+
+          <label>
+            <Globe size={16} />
+            Virtual Meeting Link
+          </label>
+
+          <input
+            type="url"
+            value={virtualLink}
+            placeholder="https://zoom.us/..."
+            onChange={(e) =>
+              onVirtualLinkChange(
+                e.target.value
+              )
+            }
+          />
+
+        </div>
+      )}
+
+      {/* ==========================================
+          HYBRID EVENT
+      ========================================== */}
+
+      {eventType === "hybrid" && (
+        <>
+
+          <div className="form-grid">
+
+            <div className="form-group">
+              <label>
+                Venue Name
+              </label>
+
+              <input
+                type="text"
+                value={venue.name}
+                onChange={(e) =>
+                  updateField(
+                    "name",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+
+            <div className="form-group">
+              <label>
+                County
+              </label>
+
+              <input
+                type="text"
+                value={venue.county}
+                onChange={(e) =>
+                  updateField(
+                    "county",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+
+          </div>
+
+          <div className="form-group">
+
+            <label>
+              Physical Address
+            </label>
+
+            <textarea
+              rows={3}
+              value={venue.address}
+              onChange={(e) =>
+                updateField(
+                  "address",
+                  e.target.value
+                )
+              }
+            />
+
+          </div>
+
+          <div className="form-group">
+
+            <label>
+              <Globe size={16} />
+              Virtual Meeting Link
+            </label>
+
+            <input
+              type="url"
+              value={virtualLink}
+              placeholder="https://zoom.us/..."
+              onChange={(e) =>
+                onVirtualLinkChange(
+                  e.target.value
+                )
+              }
+            />
+
+          </div>
+
+        </>
+      )}
 
     </section>
   );

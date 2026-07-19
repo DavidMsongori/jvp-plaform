@@ -273,3 +273,302 @@
         grid-template-columns: 1fr;
     }
 }
+/* ==========================================
+   ACCOUNT BADGES
+========================================== */
+
+.info-badge.verified {
+    background: #DCFCE7;
+    color: #166534;
+}
+
+.info-badge.not-verified {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+/* ==========================================
+   PAYMENT HISTORY
+========================================== */
+
+.payment-table-wrapper {
+    overflow-x: auto;
+}
+
+.payment-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.payment-table th {
+    text-align: left;
+    padding: 0.85rem;
+    border-bottom: 2px solid #E2E8F0;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.payment-table td {
+    padding: 0.85rem;
+    border-bottom: 1px solid #F1F5F9;
+    color: #1E293B;
+}
+
+.payment-table tbody tr:hover {
+    background: #F8FAFC;
+}
+
+.empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 160px;
+    color: #64748B;
+    font-style: italic;
+}
+
+/* ==========================================
+   PAYMENT STATUS
+========================================== */
+
+.info-badge.payment-paid {
+    background: #DCFCE7;
+    color: #166534;
+}
+
+.info-badge.payment-pending {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.info-badge.payment-failed {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.info-badge.payment-refunded {
+    background: #DBEAFE;
+    color: #1D4ED8;
+}
+
+/* ==========================================
+   EVENT REGISTRATIONS
+========================================== */
+
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.event-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    transition: .2s ease;
+}
+
+.event-card:hover {
+    background: #F8FAFC;
+}
+
+.event-content h4 {
+    margin: 0 0 .35rem;
+    color: #1E293B;
+    font-size: 1rem;
+}
+
+.event-content p {
+    margin: 0;
+    color: #64748B;
+}
+
+.event-content small {
+    color: #94A3B8;
+}
+
+/* ==========================================
+   EVENT STATUS
+========================================== */
+
+.info-badge.registration-registered {
+    background: #DBEAFE;
+    color: #1D4ED8;
+}
+
+.info-badge.registration-attended {
+    background: #DCFCE7;
+    color: #166534;
+}
+
+.info-badge.registration-checked-in {
+    background: #ECFDF5;
+    color: #047857;
+}
+
+.info-badge.registration-cancelled {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.info-badge.registration-no-show {
+    background: #E2E8F0;
+    color: #475569;
+}
+
+/* ==========================================
+   ACTIVITY TIMELINE
+========================================== */
+
+.activity-card {
+    width: 100%;
+}
+
+.timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 22px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #E2E8F0;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 1.25rem;
+    position: relative;
+}
+
+.timeline-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #2563EB;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.timeline-content {
+    flex: 1;
+    background: #F8FAFC;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.timeline-content h4 {
+    margin: 0 0 .35rem;
+    color: #1E293B;
+}
+
+.timeline-content p {
+    margin: 0 0 .5rem;
+    color: #475569;
+}
+
+.timeline-content small {
+    color: #94A3B8;
+}
+
+.profile-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-item {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+}
+
+.summary-item span {
+  display: block;
+  color: #6b7280;
+  font-size: 0.82rem;
+  margin-bottom: 6px;
+}
+
+.summary-item strong {
+  font-size: 1.1rem;
+  color: #111827;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.timeline-header h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.timeline-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.timeline-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.timeline-item:last-child {
+  border-bottom: none;
+}
+
+.timeline-icon {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.timeline-content {
+  flex: 1;
+}
+
+.activity-card {
+  margin-top: 24px;
+}

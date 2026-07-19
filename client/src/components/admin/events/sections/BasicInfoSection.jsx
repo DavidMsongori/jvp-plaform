@@ -1,60 +1,76 @@
 import { FileText } from "lucide-react";
 
-const BasicInfoSection = ({
-  data,
-  onChange,
-}) => {
+const MAX_SUMMARY_LENGTH = 250;
+
+const BasicInfoSection = ({ data, onChange }) => {
   const generateSlug = (title) => {
     return title
       .toLowerCase()
       .trim()
       .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-");
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
   };
 
-  const handleTitle = (e) => {
+  const handleTitleChange = (e) => {
     const value = e.target.value;
 
     onChange("title", value);
 
-    if (!data.slug) {
+    // Auto-generate slug only if the slug hasn't been customized
+    if (
+      !data.slug ||
+      data.slug === generateSlug(data.title)
+    ) {
       onChange("slug", generateSlug(value));
     }
   };
 
   return (
-    <section className="form-section">
+    <section className="event-section">
+
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
       <div className="section-header">
 
-        <FileText size={20} />
+        <div className="section-title">
 
-        <div>
+          <FileText size={20} />
 
-          <h2>Basic Information</h2>
+          <div>
 
-          <p>
-            Enter the basic details for the
-            event.
-          </p>
+            <h2>Basic Information</h2>
+
+            <p>
+              Provide the essential information
+              visitors will see first.
+            </p>
+
+          </div>
 
         </div>
 
       </div>
+
+      {/* ==========================================
+          FORM
+      ========================================== */}
 
       <div className="form-grid">
 
         <div className="form-group full-width">
 
           <label>
-            Event Title *
+            Event Title <span className="required">*</span>
           </label>
 
           <input
             type="text"
             value={data.title}
-            onChange={handleTitle}
-            placeholder="Coastal Youth Summit 2026"
+            onChange={handleTitleChange}
+            placeholder="e.g. Coastal Youth Summit 2026"
             required
           />
 
@@ -63,24 +79,21 @@ const BasicInfoSection = ({
         <div className="form-group full-width">
 
           <label>
-            Event Slug *
+            URL Slug <span className="required">*</span>
           </label>
 
           <input
             type="text"
             value={data.slug}
             onChange={(e) =>
-              onChange(
-                "slug",
-                e.target.value
-              )
+              onChange("slug", e.target.value)
             }
             placeholder="coastal-youth-summit-2026"
             required
           />
 
           <small>
-            Used in the event URL.
+            This becomes part of the event URL.
           </small>
 
         </div>
@@ -88,26 +101,22 @@ const BasicInfoSection = ({
         <div className="form-group full-width">
 
           <label>
-            Short Description *
+            Event Summary <span className="required">*</span>
           </label>
 
           <textarea
-            rows="3"
-            maxLength={250}
-            value={data.shortDescription}
+            rows={4}
+            maxLength={MAX_SUMMARY_LENGTH}
+            value={data.summary}
             onChange={(e) =>
-              onChange(
-                "shortDescription",
-                e.target.value
-              )
+              onChange("summary", e.target.value)
             }
-            placeholder="Brief summary shown on event cards."
+            placeholder="Write a concise summary that will appear on event cards and search results."
             required
           />
 
           <small>
-            {data.shortDescription.length}/250
-            characters
+            {data.summary.length}/{MAX_SUMMARY_LENGTH} characters
           </small>
 
         </div>
@@ -115,21 +124,22 @@ const BasicInfoSection = ({
         <div className="form-group full-width">
 
           <label>
-            Full Description *
+            Full Description <span className="required">*</span>
           </label>
 
           <textarea
-            rows="8"
+            rows={10}
             value={data.description}
             onChange={(e) =>
-              onChange(
-                "description",
-                e.target.value
-              )
+              onChange("description", e.target.value)
             }
-            placeholder="Provide complete event details..."
+            placeholder="Provide the complete event description, agenda, objectives, speakers, and other relevant information."
             required
           />
+
+          <small>
+            This is the main content shown on the event details page.
+          </small>
 
         </div>
 

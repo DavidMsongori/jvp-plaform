@@ -56,6 +56,7 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import Profile from "../pages/profile/Profile";
 import MembershipCardPage from "../features/member-card/MembershipCardPage";
 import EventsDashboard from "../pages/dashboard/Events";
+import EventDetails from "../pages/dashboard/EventDetails";
 import ProgramsDashboard from "../pages/dashboard/Programs";
 import Certificates from "../pages/dashboard/Certificates";
 import Notifications from "../pages/dashboard/Notifications";
@@ -202,6 +203,11 @@ function AppRoutes() {
           />
 
           <Route
+  path="events/:id"
+  element={<EventDetails />}
+/>
+
+          <Route
             path="programs"
             element={<ProgramsDashboard />}
           />
@@ -284,7 +290,9 @@ function AppRoutes() {
             }
           />
 
-          {/* Events */}
+                    {/* =====================================
+              EVENTS
+          ====================================== */}
 
           <Route
             path="events"

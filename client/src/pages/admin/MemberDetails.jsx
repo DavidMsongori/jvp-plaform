@@ -11,6 +11,10 @@ import {
 import ProfileHeader from "../../components/admin/members/ProfileHeader";
 import PersonalInformation from "../../components/admin/members/PersonalInformation";
 import MembershipInformation from "../../components/admin/members/MembershipInformation";
+import AccountInformation from "../../components/admin/members/AccountInformation";
+import PaymentHistory from "../../components/admin/members/PaymentHistory";
+import EventRegistrations from "../../components/admin/members/EventRegistrations";
+import ActivityTimeline from "../../components/admin/members/ActivityTimeline";
 
 import "../../components/admin/members/MemberProfile.css";
 
@@ -18,14 +22,35 @@ function MemberDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [member, setMember] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState("");
+  /* ==========================================================
+     STATE
+  ========================================================== */
 
-  /* ==========================================
-     LOAD MEMBER
-  ========================================== */
+  const [member, setMember] = useState(null);
+  const [account, setAccount] = useState(null);
+
+  const [payments, setPayments] = useState([]);
+  const [paymentSummary, setPaymentSummary] = useState({});
+
+  const [registrations, setRegistrations] = useState([]);
+  const [eventSummary, setEventSummary] = useState({});
+
+  const [activities, setActivities] = useState([]);
+  const [memberSummary, setMemberSummary] =
+    useState({});
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [processing, setProcessing] =
+    useState(false);
+
+  const [error, setError] =
+    useState("");
+
+  /* ==========================================================
+     LOAD MEMBER PROFILE
+  ========================================================== */
 
   const loadMember = async () => {
     try {
@@ -33,14 +58,43 @@ function MemberDetails() {
 
       const response = await getMember(id);
 
-      setMember(response.data);
+      const profile = response.data;
+
+      setMember(profile.member);
+
+      setAccount(profile.account);
+
+      setPayments(
+        profile.payments?.items || []
+      );
+
+      setPaymentSummary(
+        profile.payments?.summary || {}
+      );
+
+      setRegistrations(
+        profile.events?.items || []
+      );
+
+      setEventSummary(
+        profile.events?.summary || {}
+      );
+
+      setActivities(
+        profile.activity?.items || []
+      );
+
+      setMemberSummary(
+        profile.summary || {}
+      );
+
       setError("");
     } catch (err) {
       console.error(err);
 
       setError(
         err.response?.data?.message ||
-          "Failed to load member."
+          "Failed to load member profile."
       );
     } finally {
       setLoading(false);
@@ -51,9 +105,9 @@ function MemberDetails() {
     loadMember();
   }, [id]);
 
-  /* ==========================================
+  /* ==========================================================
      ACTIVATE / DEACTIVATE
-  ========================================== */
+  ========================================================== */
 
   const handleToggleStatus = async () => {
     if (!member) return;
@@ -70,6 +124,7 @@ function MemberDetails() {
       await loadMember();
     } catch (err) {
       console.error(err);
+
       alert(
         err.response?.data?.message ||
           "Unable to update member."
@@ -79,31 +134,31 @@ function MemberDetails() {
     }
   };
 
-  /* ==========================================
+  /* ==========================================================
      EDIT
-  ========================================== */
+  ========================================================== */
 
   const handleEdit = () => {
     navigate(`/admin/members/${id}/edit`);
   };
 
-  /* ==========================================
+  /* ==========================================================
      LOADING
-  ========================================== */
+  ========================================================== */
 
   if (loading) {
     return (
       <div className="member-profile-page">
         <div className="profile-loading">
-          Loading member...
+          Loading member profile...
         </div>
       </div>
     );
   }
 
-  /* ==========================================
+  /* ==========================================================
      ERROR
-  ========================================== */
+  ========================================================== */
 
   if (error) {
     return (
@@ -125,12 +180,13 @@ function MemberDetails() {
     );
   }
 
-  /* ==========================================
+  /* ==========================================================
      PAGE
-  ========================================== */
+  ========================================================== */
 
   return (
     <div className="member-profile-page">
+
       <Link
         to="/admin/members"
         className="back-link"
@@ -141,16 +197,46 @@ function MemberDetails() {
 
       <ProfileHeader
         member={member}
+        account={account}
         onEdit={handleEdit}
-        onToggleStatus={handleToggleStatus}
+        onToggleStatus={
+          handleToggleStatus
+        }
         processing={processing}
       />
 
       <div className="member-details-grid">
-        <PersonalInformation member={member} />
 
-        <MembershipInformation member={member} />
+        <PersonalInformation
+          member={member}
+          account={account}
+        />
+
+        <MembershipInformation
+          member={member}
+          summary={memberSummary}
+        />
+
+        <AccountInformation
+          account={account}
+        />
+
+        <PaymentHistory
+          payments={payments}
+          summary={paymentSummary}
+        />
+
+        <EventRegistrations
+          registrations={registrations}
+          summary={eventSummary}
+        />
+
       </div>
+
+      <ActivityTimeline
+        activities={activities}
+      />
+
     </div>
   );
 }

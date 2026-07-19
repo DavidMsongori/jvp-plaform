@@ -52,6 +52,12 @@ function Members() {
       const response =
         await getMembers(filters);
 
+        console.log(response);
+
+console.log(response.data.members.length);
+
+console.log(response.data.members);
+
       setMembers(
         response.data.members
       );

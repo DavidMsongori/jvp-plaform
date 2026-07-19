@@ -386,7 +386,7 @@ function AdminDashboard() {
 
             <p>
 
-              📍 {event.venue}
+              <p>{event.venue?.name || "N/A"}</p>
 
             </p>
 

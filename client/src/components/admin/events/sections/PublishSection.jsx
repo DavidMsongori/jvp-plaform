@@ -7,68 +7,95 @@ import {
 const PublishSection = ({
   mode = "create",
   loading = false,
+  isPublished = false,
+  onPublishChange,
   onCancel,
-  onAction,
 }) => {
   return (
-    <section className="form-section">
+    <section className="event-section">
+
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
       <div className="section-header">
 
-        <Send size={20} />
+        <div className="section-title">
 
-        <div>
+          <Send size={20} />
 
-          <h2>Publish Event</h2>
+          <div>
 
-          <p>
-            Save this event as a draft or publish it immediately.
-          </p>
+            <h2>Publishing</h2>
+
+            <p>
+              Choose whether this event
+              should be published
+              immediately or saved as a
+              draft.
+            </p>
+
+          </div>
 
         </div>
 
       </div>
+
+      {/* ==========================================
+          PUBLISH SWITCH
+      ========================================== */}
+
+      <div className="publish-card">
+
+        <div>
+
+          <h4>Publish Event</h4>
+
+          <p>
+            Turn this on if you want the
+            event to be visible on the
+            public website immediately.
+          </p>
+
+        </div>
+
+        <label className="switch">
+
+          <input
+            type="checkbox"
+            checked={isPublished}
+            onChange={(e) =>
+              onPublishChange(
+                e.target.checked
+              )
+            }
+          />
+
+          <span className="slider"></span>
+
+        </label>
+
+      </div>
+
+      {/* ==========================================
+          ACTIONS
+      ========================================== */}
 
       <div className="publish-actions">
 
         <button
           type="button"
           className="cancel-btn"
-          onClick={onCancel}
           disabled={loading}
+          onClick={onCancel}
         >
           Cancel
         </button>
 
         <button
           type="submit"
-          className="draft-btn"
-          disabled={loading}
-          onClick={() => onAction("draft")}
-        >
-          {loading ? (
-            <>
-              <Loader2
-                size={18}
-                className="spinner"
-              />
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save size={18} />
-              {mode === "create"
-                ? "Save Draft"
-                : "Save Changes"}
-            </>
-          )}
-        </button>
-
-        <button
-          type="submit"
           className="publish-btn"
           disabled={loading}
-          onClick={() => onAction("publish")}
         >
           {loading ? (
             <>
@@ -76,14 +103,29 @@ const PublishSection = ({
                 size={18}
                 className="spinner"
               />
-              Publishing...
+
+              Saving...
+
             </>
           ) : (
             <>
-              <Send size={18} />
-              {mode === "create"
-                ? "Publish Event"
-                : "Update & Publish"}
+              {isPublished ? (
+                <>
+                  <Send size={18} />
+
+                  {mode === "create"
+                    ? "Create & Publish"
+                    : "Update & Publish"}
+                </>
+              ) : (
+                <>
+                  <Save size={18} />
+
+                  {mode === "create"
+                    ? "Save Draft"
+                    : "Save Changes"}
+                </>
+              )}
             </>
           )}
         </button>

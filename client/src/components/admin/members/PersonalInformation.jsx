@@ -1,12 +1,15 @@
 import "./MemberProfile.css";
 
-function PersonalInformation({ member }) {
+function PersonalInformation({
+  member,
+  account,
+}) {
   if (!member) return null;
 
   const rows = [
     {
       label: "Email",
-      value: member.user?.email,
+      value: account?.email,
     },
     {
       label: "Phone",
@@ -18,7 +21,10 @@ function PersonalInformation({ member }) {
     },
     {
       label: "Gender",
-      value: member.gender,
+      value: member.gender
+        ? member.gender.charAt(0).toUpperCase() +
+          member.gender.slice(1)
+        : "-",
     },
     {
       label: "Date of Birth",
@@ -34,40 +40,59 @@ function PersonalInformation({ member }) {
     },
     {
       label: "Sub County",
-      value: member.subCounty,
+      value:
+        member.subCounty || "-",
     },
     {
       label: "Ward",
-      value: member.ward,
+      value:
+        member.ward || "-",
     },
     {
       label: "Occupation",
-      value: member.occupation,
+      value:
+        member.occupation || "-",
+    },
+    {
+      label: "Institution",
+      value:
+        member.institution || "-",
     },
     {
       label: "Address",
-      value: member.address,
+      value:
+        member.address || "-",
     },
   ];
 
   return (
     <div className="profile-card">
+
       <div className="card-header">
-        <h3>Personal Information</h3>
+        <h3>
+          Personal Information
+        </h3>
       </div>
 
       <div className="info-grid">
+
         {rows.map((row) => (
           <div
             key={row.label}
             className="info-item"
           >
-            <label>{row.label}</label>
+            <label>
+              {row.label}
+            </label>
 
-            <span>{row.value || "-"}</span>
+            <span>
+              {row.value || "-"}
+            </span>
           </div>
         ))}
+
       </div>
+
     </div>
   );
 }

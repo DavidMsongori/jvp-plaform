@@ -155,7 +155,7 @@ const EventTable = ({
 
               <td>
 
-                {event.featured ? (
+                {event.isFeatured ? (
                   <Star
                     size={18}
                     fill="gold"

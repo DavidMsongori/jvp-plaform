@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -6,73 +6,49 @@ import {
 } from "lucide-react";
 
 import EventForm from "../../../components/admin/events/EventForm";
-
 import eventService from "../../../services/event.service";
-import venueService from "../../../services/venue.service";
 
 const CreateEvent = () => {
   const navigate = useNavigate();
 
-  const [venues, setVenues] = useState([]);
-
   const [loading, setLoading] = useState(false);
-
-  const [loadingVenues, setLoadingVenues] =
-    useState(true);
-
   const [error, setError] = useState("");
-
-  /* =====================================================
-     LOAD VENUES
-  ===================================================== */
-
-  useEffect(() => {
-    loadVenues();
-  }, []);
-
-  const loadVenues = async () => {
-    try {
-      setLoadingVenues(true);
-
-      const response =
-        await venueService.getAllVenues();
-
-      setVenues(response.venues || []);
-    } catch (err) {
-      console.error(err);
-
-      setError(
-        err.response?.data?.message ||
-          "Unable to load venues."
-      );
-    } finally {
-      setLoadingVenues(false);
-    }
-  };
 
   /* =====================================================
      CREATE EVENT
   ===================================================== */
 
-  const handleCreate = async (
-    eventData
-  ) => {
+  const handleCreate = async (eventData) => {
     try {
       setLoading(true);
-
       setError("");
 
       const response =
-        await eventService.createEvent(
-          eventData
-        );
+        await eventService.createEvent(eventData);
 
+      /*
+       * Supports both:
+       * {
+       *   success: true,
+       *   data: {...}
+       * }
+       *
+       * and
+       *
+       * {...event}
+       */
       const createdEvent =
-        response.event || response;
+        response?.data || response;
 
-      navigate(
-        `/admin/events/${createdEvent._id}`
-      );
+      // Redirect to event details if available,
+      // otherwise go back to the events list.
+      if (createdEvent?._id) {
+        navigate(
+          `/admin/events/${createdEvent._id}`
+        );
+      } else {
+        navigate("/admin/events");
+      }
     } catch (err) {
       console.error(err);
 
@@ -83,14 +59,6 @@ const CreateEvent = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  /* =====================================================
-     CREATE VENUE
-  ===================================================== */
-
-  const handleCreateVenue = () => {
-    navigate("/admin/venues/create");
   };
 
   return (
@@ -110,18 +78,14 @@ const CreateEvent = () => {
           }
         >
           <ArrowLeft size={18} />
-
           Back
         </button>
 
         <div>
 
-          <h1>
-
+          <h1 className="page-title">
             <CalendarPlus size={30} />
-
             Create Event
-
           </h1>
 
           <p>
@@ -134,7 +98,7 @@ const CreateEvent = () => {
       </div>
 
       {/* ==========================================
-          ERROR
+          ERROR MESSAGE
       ========================================== */}
 
       {error && (
@@ -144,20 +108,15 @@ const CreateEvent = () => {
       )}
 
       {/* ==========================================
-          FORM
+          EVENT FORM
       ========================================== */}
 
       <EventForm
         mode="create"
         loading={loading}
-        venues={venues}
-        loadingVenues={loadingVenues}
         onSubmit={handleCreate}
         onCancel={() =>
           navigate("/admin/events")
-        }
-        onCreateVenue={
-          handleCreateVenue
         }
       />
 

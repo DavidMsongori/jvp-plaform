@@ -4,7 +4,7 @@ import api from "./api";
    FORM DATA HELPER
 ========================================== */
 
-const buildEventFormData = (event) => {
+const buildEventFormData = (event = {}) => {
   const formData = new FormData();
 
   /* ==========================================
@@ -13,33 +13,24 @@ const buildEventFormData = (event) => {
 
   formData.append("title", event.title || "");
   formData.append("slug", event.slug || "");
-  formData.append(
-    "shortDescription",
-    event.shortDescription || ""
-  );
-  formData.append(
-    "description",
-    event.description || ""
-  );
+  formData.append("summary", event.summary || "");
+  formData.append("description", event.description || "");
 
   /* ==========================================
-     CLASSIFICATION
-  ========================================== */
+   CLASSIFICATION
+========================================== */
 
-  formData.append(
-    "category",
-    event.category || ""
-  );
+formData.append("category", event.category || "");
 
-  formData.append(
-    "eventType",
-    event.eventType || "physical"
-  );
+formData.append(
+  "eventType",
+  event.eventType || "physical"
+);
 
-  formData.append(
-    "featured",
-    event.featured
-  );
+formData.append(
+  "isFeatured",
+  event.isFeatured ?? false
+);
 
   /* ==========================================
      SCHEDULE
@@ -64,9 +55,15 @@ const buildEventFormData = (event) => {
      VENUE
   ========================================== */
 
-  if (event.venue) {
-    formData.append("venue", event.venue);
-  }
+  formData.append(
+    "venue",
+    JSON.stringify(event.venue || {})
+  );
+
+  formData.append(
+    "virtualLink",
+    event.virtualLink || ""
+  );
 
   /* ==========================================
      REGISTRATION
@@ -74,18 +71,16 @@ const buildEventFormData = (event) => {
 
   formData.append(
     "registration",
-    JSON.stringify(
-      event.registration || {}
-    )
+    JSON.stringify(event.registration || {})
   );
 
   /* ==========================================
-     STATUS
+     PUBLISHING
   ========================================== */
 
   formData.append(
-    "status",
-    event.status || "draft"
+    "isPublished",
+    event.isPublished ?? false
   );
 
   /* ==========================================
@@ -110,9 +105,7 @@ const buildEventFormData = (event) => {
      GALLERY
   ========================================== */
 
-  if (
-    Array.isArray(event.gallery)
-  ) {
+  if (Array.isArray(event.gallery)) {
     event.gallery.forEach((image) => {
       if (image.file) {
         formData.append(
@@ -127,23 +120,57 @@ const buildEventFormData = (event) => {
 };
 
 /* ==========================================
-   EVENTS
+   PUBLIC EVENTS
 ========================================== */
 
-export const getEvents = async (
+export const getEvents = async (params = {}) => {
+  const response = await api.get("/events", {
+    params,
+  });
+
+  return response.data;
+};
+
+/* ==========================================
+   SEARCH EVENTS
+========================================== */
+
+export const searchEvents = async (
+  search,
   params = {}
 ) => {
   const response = await api.get(
     "/events",
-    { params }
+    {
+      params: {
+        search,
+        ...params,
+      },
+    }
   );
 
   return response.data;
 };
 
-export const getEventById = async (
-  id
+/* ==========================================
+   FILTER EVENTS
+========================================== */
+
+export const filterEvents = async (
+  filters = {}
 ) => {
+  const response = await api.get(
+    "/events",
+    {
+      params: filters,
+    }
+  );
+
+  return response.data;
+};
+
+
+export const getEventById = async (id) => {
   const response = await api.get(
     `/events/${id}`
   );
@@ -151,14 +178,15 @@ export const getEventById = async (
   return response.data;
 };
 
-export const getEventBySlug =
-  async (slug) => {
-    const response = await api.get(
-      `/events/slug/${slug}`
-    );
+export const getEventBySlug = async (
+  slug
+) => {
+  const response = await api.get(
+    `/events/slug/${slug}`
+  );
 
-    return response.data;
-  };
+  return response.data;
+};
 
 export const getFeaturedEvents =
   async (limit = 6) => {
@@ -186,10 +214,9 @@ export const getUpcomingEvents =
 
 export const getOngoingEvents =
   async () => {
-    const response =
-      await api.get(
-        "/events/ongoing"
-      );
+    const response = await api.get(
+      "/events/ongoing"
+    );
 
     return response.data;
   };
@@ -213,80 +240,76 @@ export const getEventsByCategory =
    EVENT MANAGEMENT
 ========================================== */
 
-export const createEvent =
-  async (eventData) => {
-    const formData =
-      buildEventFormData(
-        eventData
-      );
+export const createEvent = async (
+  eventData
+) => {
+  const formData =
+    buildEventFormData(eventData);
 
-    const response = await api.post(
-      "/events",
-      formData,
-      {
-        headers: {
-          "Content-Type":
-            "multipart/form-data",
-        },
-      }
-    );
+  const response = await api.post(
+    "/events",
+    formData,
+    {
+      headers: {
+        "Content-Type":
+          "multipart/form-data",
+      },
+    }
+  );
 
-    return response.data;
-  };
+  return response.data;
+};
 
-export const updateEvent =
-  async (
-    id,
-    eventData
-  ) => {
-    const formData =
-      buildEventFormData(
-        eventData
-      );
+export const updateEvent = async (
+  id,
+  eventData
+) => {
+  const formData =
+    buildEventFormData(eventData);
 
-    const response = await api.put(
-      `/events/${id}`,
-      formData,
-      {
-        headers: {
-          "Content-Type":
-            "multipart/form-data",
-        },
-      }
-    );
+  const response = await api.put(
+    `/events/${id}`,
+    formData,
+    {
+      headers: {
+        "Content-Type":
+          "multipart/form-data",
+      },
+    }
+  );
 
-    return response.data;
-  };
+  return response.data;
+};
 
-export const deleteEvent =
-  async (id) => {
-    const response =
-      await api.delete(
-        `/events/${id}`
-      );
+export const deleteEvent = async (
+  id
+) => {
+  const response = await api.delete(
+    `/events/${id}`
+  );
 
-    return response.data;
-  };
+  return response.data;
+};
 
-export const publishEvent =
-  async (id) => {
-    const response =
-      await api.patch(
-        `/events/${id}/publish`
-      );
+export const publishEvent = async (
+  id
+) => {
+  const response = await api.patch(
+    `/events/${id}/publish`
+  );
 
-    return response.data;
-  };
+  return response.data;
+};
 
-export const archiveEvent =
-  async (id) => {
-    const response =
-      await api.patch(
-        `/events/${id}/archive`
-      );
+export const archiveEvent = async (
+  id
+) => {
+  const response = await api.patch(
+    `/events/${id}/archive`
+  );
 
-    return response.data;
-  };
+  return response.data;
+};
 
 /* ==========================================
    DASHBOARD
@@ -294,54 +317,62 @@ export const archiveEvent =
 
 export const getDashboardStatistics =
   async () => {
-    const response =
-      await api.get(
-        "/events/statistics"
-      );
+    const response = await api.get(
+      "/events/statistics"
+    );
 
     return response.data;
   };
 
 /* ==========================================
-   ANALYTICS
+   MEMBER REGISTRATIONS
 ========================================== */
 
-export const recordView =
-  async (id) => {
-    const response =
-      await api.patch(
-        `/events/${id}/view`
-      );
+export const registerForEvent = async (
+  eventId,
+  registrationData = {}
+) => {
+  const response = await api.post(
+    `/events/${eventId}/register`,
+    registrationData
+  );
+
+  return response.data;
+};
+
+export const cancelRegistration = async (
+  eventId,
+  reason = ""
+) => {
+  const response = await api.delete(
+    `/events/${eventId}/register`,
+    {
+      data: {
+        reason,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const getMyRegistrations =
+  async (params = {}) => {
+    const response = await api.get(
+      "/events/my-registrations",
+      {
+        params,
+      }
+    );
 
     return response.data;
   };
 
-export const recordShare =
-  async (id) => {
-    const response =
-      await api.patch(
-        `/events/${id}/share`
-      );
-
-    return response.data;
-  };
-
-export const recordBookmark =
-  async (id) => {
-    const response =
-      await api.patch(
-        `/events/${id}/bookmark`
-      );
-
-    return response.data;
-  };
-
-export const recordImpression =
-  async (id) => {
-    const response =
-      await api.patch(
-        `/events/${id}/impression`
-      );
+export const getMyRegistration =
+  async (eventId) => {
+    const response = await api.get(
+      `/events/${eventId}/registration`
+    );
 
     return response.data;
   };
@@ -351,7 +382,10 @@ export const recordImpression =
 ========================================== */
 
 const eventService = {
+  // Public
   getEvents,
+  searchEvents,
+  filterEvents,
   getEventById,
   getEventBySlug,
   getFeaturedEvents,
@@ -359,18 +393,20 @@ const eventService = {
   getOngoingEvents,
   getEventsByCategory,
 
+  // Admin
   createEvent,
   updateEvent,
   deleteEvent,
   publishEvent,
   archiveEvent,
 
+  // Dashboard
   getDashboardStatistics,
 
-  recordView,
-  recordShare,
-  recordBookmark,
-  recordImpression,
+  // Member
+  registerForEvent,
+  cancelRegistration,
+  getMyRegistrations,
+  getMyRegistration,
 };
-
 export default eventService;

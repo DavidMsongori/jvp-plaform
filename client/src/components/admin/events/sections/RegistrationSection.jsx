@@ -1,7 +1,9 @@
 import {
-  CreditCard,
   Settings,
   Users,
+  CreditCard,
+  CalendarClock,
+  ShieldCheck,
 } from "lucide-react";
 
 const RegistrationSection = ({
@@ -18,28 +20,38 @@ const RegistrationSection = ({
   return (
     <section className="event-section">
 
+      {/* ==========================================
+          HEADER
+      ========================================== */}
+
       <div className="section-header">
 
-        <Settings size={20} />
+        <div className="section-title">
 
-        <div>
+          <Settings size={20} />
 
-          <h2>Registration</h2>
+          <div>
 
-          <p>
-            Configure how participants
-            register for this event.
-          </p>
+            <h2>Registration</h2>
+
+            <p>
+              Configure how participants
+              register for this event.
+            </p>
+
+          </div>
 
         </div>
 
       </div>
 
-      <div className="form-grid">
+      {/* ==========================================
+          GENERAL SETTINGS
+      ========================================== */}
 
-        {/* Registration Enabled */}
+      <div className="checkbox-grid">
 
-        <label className="checkbox-field">
+        <label className="checkbox-item">
 
           <input
             type="checkbox"
@@ -52,13 +64,22 @@ const RegistrationSection = ({
             }
           />
 
-          Enable Registration
+          <div>
+
+            <strong>
+              Enable Registration
+            </strong>
+
+            <small>
+              Participants can register
+              online for this event.
+            </small>
+
+          </div>
 
         </label>
 
-        {/* Membership */}
-
-        <label className="checkbox-field">
+        <label className="checkbox-item">
 
           <input
             type="checkbox"
@@ -73,260 +94,350 @@ const RegistrationSection = ({
             }
           />
 
-          Members Only
+          <div>
 
-        </label>
+            <strong>
+              Members Only
+            </strong>
 
-        {/* Payment */}
+            <small>
+              Restrict registration to JVP
+              members.
+            </small>
 
-        <label className="checkbox-field">
-
-          <input
-            type="checkbox"
-            checked={
-              registration.paymentRequired
-            }
-            onChange={(e) =>
-              update(
-                "paymentRequired",
-                e.target.checked
-              )
-            }
-          />
-
-          Payment Required
-
-        </label>
-
-        {/* Waitlist */}
-
-        <label className="checkbox-field">
-
-          <input
-            type="checkbox"
-            checked={
-              registration.allowWaitlist
-            }
-            onChange={(e) =>
-              update(
-                "allowWaitlist",
-                e.target.checked
-              )
-            }
-          />
-
-          Allow Waitlist
-
-        </label>
-
-        {/* Approval */}
-
-        <label className="checkbox-field">
-
-          <input
-            type="checkbox"
-            checked={
-              registration.approvalRequired
-            }
-            onChange={(e) =>
-              update(
-                "approvalRequired",
-                e.target.checked
-              )
-            }
-          />
-
-          Require Approval
+          </div>
 
         </label>
 
       </div>
 
-      <div className="form-grid">
+      {/* ==========================================
+          SHOW EVERYTHING ONLY IF ENABLED
+      ========================================== */}
 
-        <div className="form-group">
+      {registration.enabled && (
+        <>
 
-          <label>
+          {/* ======================================
+              PARTICIPATION RULES
+          ====================================== */}
 
-            <Users size={16} />
+          <div className="checkbox-grid">
 
-            Capacity
+            <label className="checkbox-item">
 
-          </label>
+              <input
+                type="checkbox"
+                checked={
+                  registration.allowWaitlist
+                }
+                onChange={(e) =>
+                  update(
+                    "allowWaitlist",
+                    e.target.checked
+                  )
+                }
+              />
 
-          <input
-            type="number"
-            min="0"
-            value={registration.capacity}
-            onChange={(e) =>
-              update(
-                "capacity",
-                Number(e.target.value)
-              )
-            }
-          />
+              <div>
 
-        </div>
+                <strong>
+                  Allow Waitlist
+                </strong>
 
-        <div className="form-group">
+                <small>
+                  Accept additional
+                  participants after the
+                  event reaches capacity.
+                </small>
 
-          <label>
+              </div>
 
-            <CreditCard size={16} />
+            </label>
 
-            Registration Fee
+            <label className="checkbox-item">
 
-          </label>
+              <input
+                type="checkbox"
+                checked={
+                  registration.approvalRequired
+                }
+                onChange={(e) =>
+                  update(
+                    "approvalRequired",
+                    e.target.checked
+                  )
+                }
+              />
 
-          <input
-            type="number"
-            min="0"
-            value={
-              registration.registrationFee
-            }
-            onChange={(e) =>
-              update(
-                "registrationFee",
-                Number(e.target.value)
-              )
-            }
-          />
+              <div>
 
-        </div>
+                <strong>
+                  Manual Approval
+                </strong>
 
-        <div className="form-group">
+                <small>
+                  Registrations require
+                  administrator approval.
+                </small>
 
-          <label>
+              </div>
 
-            Currency
+            </label>
 
-          </label>
+          </div>
 
-          <select
-            value={registration.currency}
-            onChange={(e) =>
-              update(
-                "currency",
-                e.target.value
-              )
-            }
-          >
+          {/* ======================================
+              CAPACITY & AGES
+          ====================================== */}
 
-            <option value="KES">
-              Kenyan Shilling (KES)
-            </option>
+          <div className="form-grid">
 
-            <option value="USD">
-              US Dollar (USD)
-            </option>
+            <div className="form-group">
 
-            <option value="EUR">
-              Euro (EUR)
-            </option>
+              <label>
 
-          </select>
+                <Users size={16} />
 
-        </div>
+                Capacity
 
-      </div>
+              </label>
 
-      <div className="form-grid">
+              <input
+                type="number"
+                min="0"
+                value={registration.capacity}
+                onChange={(e) =>
+                  update(
+                    "capacity",
+                    Number(
+                      e.target.value
+                    )
+                  )
+                }
+              />
 
-        <div className="form-group">
+              <small>
+                Leave 0 for unlimited.
+              </small>
 
-          <label>
+            </div>
 
-            Minimum Age
+            <div className="form-group">
 
-          </label>
+              <label>
 
-          <input
-            type="number"
-            min="0"
-            value={
-              registration.minimumAge
-            }
-            onChange={(e) =>
-              update(
-                "minimumAge",
-                e.target.value
-              )
-            }
-          />
+                Minimum Age
 
-        </div>
+              </label>
 
-        <div className="form-group">
+              <input
+                type="number"
+                min="0"
+                value={
+                  registration.minimumAge
+                }
+                onChange={(e) =>
+                  update(
+                    "minimumAge",
+                    e.target.value
+                  )
+                }
+              />
 
-          <label>
+            </div>
 
-            Maximum Age
+            <div className="form-group">
 
-          </label>
+              <label>
 
-          <input
-            type="number"
-            min="0"
-            value={
-              registration.maximumAge
-            }
-            onChange={(e) =>
-              update(
-                "maximumAge",
-                e.target.value
-              )
-            }
-          />
+                Maximum Age
 
-        </div>
+              </label>
 
-      </div>
+              <input
+                type="number"
+                min="0"
+                value={
+                  registration.maximumAge
+                }
+                onChange={(e) =>
+                  update(
+                    "maximumAge",
+                    e.target.value
+                  )
+                }
+              />
 
-      <div className="form-grid">
+            </div>
 
-        <div className="form-group">
+          </div>
 
-          <label>
+          {/* ======================================
+              PAYMENT
+          ====================================== */}
 
-            Registration Opens
+          <div className="checkbox-grid">
 
-          </label>
+            <label className="checkbox-item">
 
-          <input
-            type="datetime-local"
-            value={registration.opensAt}
-            onChange={(e) =>
-              update(
-                "opensAt",
-                e.target.value
-              )
-            }
-          />
+              <input
+                type="checkbox"
+                checked={
+                  registration.paymentRequired
+                }
+                onChange={(e) =>
+                  update(
+                    "paymentRequired",
+                    e.target.checked
+                  )
+                }
+              />
 
-        </div>
+              <div>
 
-        <div className="form-group">
+                <strong>
+                  Paid Registration
+                </strong>
 
-          <label>
+                <small>
+                  Charge participants when
+                  registering.
+                </small>
 
-            Registration Closes
+              </div>
 
-          </label>
+            </label>
 
-          <input
-            type="datetime-local"
-            value={registration.closesAt}
-            onChange={(e) =>
-              update(
-                "closesAt",
-                e.target.value
-              )
-            }
-          />
+          </div>
 
-        </div>
+          {registration.paymentRequired && (
+            <div className="form-grid">
 
-      </div>
+              <div className="form-group">
+
+                <label>
+
+                  <CreditCard size={16} />
+
+                  Registration Fee
+
+                </label>
+
+                <input
+                  type="number"
+                  min="0"
+                  value={
+                    registration.registrationFee
+                  }
+                  onChange={(e) =>
+                    update(
+                      "registrationFee",
+                      Number(
+                        e.target.value
+                      )
+                    )
+                  }
+                />
+
+              </div>
+
+              <div className="form-group">
+
+                <label>
+                  Currency
+                </label>
+
+                <select
+                  value={
+                    registration.currency
+                  }
+                  onChange={(e) =>
+                    update(
+                      "currency",
+                      e.target.value
+                    )
+                  }
+                >
+                  <option value="KES">
+                    Kenyan Shilling (KES)
+                  </option>
+
+                  <option value="USD">
+                    US Dollar (USD)
+                  </option>
+
+                  <option value="EUR">
+                    Euro (EUR)
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+          )}
+
+          {/* ======================================
+              REGISTRATION WINDOW
+          ====================================== */}
+
+          <div className="form-grid">
+
+            <div className="form-group">
+
+              <label>
+
+                <CalendarClock size={16} />
+
+                Registration Opens
+
+              </label>
+
+              <input
+                type="datetime-local"
+                value={
+                  registration.opensAt
+                }
+                onChange={(e) =>
+                  update(
+                    "opensAt",
+                    e.target.value
+                  )
+                }
+              />
+
+            </div>
+
+            <div className="form-group">
+
+              <label>
+
+                <ShieldCheck size={16} />
+
+                Registration Closes
+
+              </label>
+
+              <input
+                type="datetime-local"
+                value={
+                  registration.closesAt
+                }
+                onChange={(e) =>
+                  update(
+                    "closesAt",
+                    e.target.value
+                  )
+                }
+              />
+
+            </div>
+
+          </div>
+
+        </>
+      )}
 
     </section>
   );

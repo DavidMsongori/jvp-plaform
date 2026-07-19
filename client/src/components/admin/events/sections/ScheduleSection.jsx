@@ -1,37 +1,71 @@
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, Clock } from "lucide-react";
+
+const timezones = [
+  {
+    value: "Africa/Nairobi",
+    label: "Africa/Nairobi (EAT)",
+  },
+  {
+    value: "Africa/Dar_es_Salaam",
+    label: "Africa/Dar es Salaam (EAT)",
+  },
+  {
+    value: "UTC",
+    label: "UTC",
+  },
+];
 
 const ScheduleSection = ({
   data,
   onChange,
 }) => {
   return (
-    <section className="form-section">
+    <section className="event-section">
+
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
       <div className="section-header">
 
-        <CalendarDays size={20} />
+        <div className="section-title">
 
-        <div>
+          <CalendarDays size={20} />
 
-          <h2>Schedule</h2>
+          <div>
 
-          <p>
-            Define when the event takes place and when registration closes.
-          </p>
+            <h2>Schedule</h2>
+
+            <p>
+              Specify when the event starts,
+              ends and the timezone it will
+              follow.
+            </p>
+
+          </div>
 
         </div>
 
       </div>
 
+      {/* ==========================================
+          DATE & TIME
+      ========================================== */}
+
       <div className="form-grid">
 
         <div className="form-group">
 
-          <label>Start Date *</label>
+          <label>
+            Start Date & Time
+            <span className="required">
+              *
+            </span>
+          </label>
 
           <input
             type="datetime-local"
-            value={data.startDate || ""}
+            value={data.startDate}
             onChange={(e) =>
               onChange(
                 "startDate",
@@ -45,11 +79,16 @@ const ScheduleSection = ({
 
         <div className="form-group">
 
-          <label>End Date *</label>
+          <label>
+            End Date & Time
+            <span className="required">
+              *
+            </span>
+          </label>
 
           <input
             type="datetime-local"
-            value={data.endDate || ""}
+            value={data.endDate}
             onChange={(e) =>
               onChange(
                 "endDate",
@@ -61,79 +100,68 @@ const ScheduleSection = ({
 
         </div>
 
-        <div className="form-group">
+      </div>
 
-          <label>
-            Registration Opens
-          </label>
+      {/* ==========================================
+          TIMEZONE
+      ========================================== */}
 
-          <input
-            type="datetime-local"
-            value={
-              data.registrationStart ||
-              ""
-            }
-            onChange={(e) =>
-              onChange(
-                "registrationStart",
-                e.target.value
-              )
-            }
-          />
+      <div className="form-group">
 
-        </div>
+        <label>
 
-        <div className="form-group">
+          <Clock size={16} />
 
-          <label>
-            Registration Closes
-          </label>
+          Timezone
 
-          <input
-            type="datetime-local"
-            value={
-              data.registrationDeadline ||
-              ""
-            }
-            onChange={(e) =>
-              onChange(
-                "registrationDeadline",
-                e.target.value
-              )
-            }
-          />
+        </label>
 
-        </div>
-
-        <div className="form-group full-width">
-
-          <label>Timezone</label>
-
-          <select
-            value={
-              data.timezone ||
-              "Africa/Nairobi"
-            }
-            onChange={(e) =>
-              onChange(
-                "timezone",
-                e.target.value
-              )
-            }
-          >
-            <option value="Africa/Nairobi">
-              Africa/Nairobi (EAT)
+        <select
+          value={data.timezone}
+          onChange={(e) =>
+            onChange(
+              "timezone",
+              e.target.value
+            )
+          }
+        >
+          {timezones.map((timezone) => (
+            <option
+              key={timezone.value}
+              value={timezone.value}
+            >
+              {timezone.label}
             </option>
+          ))}
+        </select>
 
-            <option value="UTC">
-              UTC
-            </option>
+        <small>
+          All event dates and times will be
+          displayed using this timezone.
+        </small>
 
-            <option value="Africa/Dar_es_Salaam">
-              Africa/Dar es Salaam
-            </option>
+      </div>
 
-          </select>
+      {/* ==========================================
+          INFORMATION
+      ========================================== */}
+
+      <div className="info-card">
+
+        <CalendarDays size={18} />
+
+        <div>
+
+          <strong>
+            Registration Schedule
+          </strong>
+
+          <p>
+            Registration opening and closing
+            dates are configured in the
+            <strong> Registration</strong>
+            {" "}section below.
+          </p>
 
         </div>
 

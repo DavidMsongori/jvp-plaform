@@ -15,15 +15,14 @@ const EditEvent = () => {
   const { id } = useParams();
 
   const [event, setEvent] = useState(null);
-
   const [loading, setLoading] = useState(true);
-
   const [saving, setSaving] = useState(false);
-
   const [error, setError] = useState("");
 
   useEffect(() => {
-    loadEvent();
+    if (id) {
+      loadEvent();
+    }
   }, [id]);
 
   const loadEvent = async () => {
@@ -34,29 +33,27 @@ const EditEvent = () => {
       const response =
         await eventService.getEventById(id);
 
-      setEvent(response.data);
+      const eventData =
+        response?.data || response;
 
+      setEvent(eventData);
     } catch (err) {
-
       console.error(err);
 
       setError(
         err.response?.data?.message ||
-          "Unable to load the event."
+          "Unable to load event."
       );
-
     } finally {
-
       setLoading(false);
-
     }
   };
 
-  const handleSubmit = async (formData) => {
+  const handleSubmit = async (
+    formData
+  ) => {
     try {
-
       setSaving(true);
-
       setError("");
 
       await eventService.updateEvent(
@@ -64,72 +61,78 @@ const EditEvent = () => {
         formData
       );
 
-      navigate(`/admin/events/${id}`);
-
+      navigate("/admin/events");
     } catch (err) {
-
       console.error(err);
 
       setError(
         err.response?.data?.message ||
           "Failed to update event."
       );
-
     } finally {
-
       setSaving(false);
-
     }
   };
 
   if (loading) {
     return (
-      <div className="admin-create-event-page">
+      <div className="loading-state">
 
-        <div className="loading-state">
+        <Loader2
+          size={40}
+          className="spinner"
+        />
 
-          <Loader2
-            size={40}
-            className="spinner"
-          />
+        <h2>
+          Loading Event...
+        </h2>
 
-          <h2>Loading Event...</h2>
+      </div>
+    );
+  }
 
-        </div>
+  if (!event) {
+    return (
+      <div className="loading-state">
+
+        <AlertTriangle size={40} />
+
+        <h2>
+          Event not found.
+        </h2>
 
       </div>
     );
   }
 
   return (
-    <div className="admin-create-event-page">
+    <div className="create-event-page">
 
       <div className="page-header">
 
-        <div>
+        <button
+          className="back-button"
+          onClick={() =>
+            navigate("/admin/events")
+          }
+        >
+          <ArrowLeft size={18} />
+          Back
+        </button>
 
-          <button
-            className="back-button"
-            onClick={() =>
-              navigate("/admin/events")
-            }
-          >
-            <ArrowLeft size={18} />
-            Back to Events
-          </button>
+        <div>
 
           <h1>
 
-            <Pencil size={28} />
+            <Pencil size={30} />
 
             Edit Event
 
           </h1>
 
           <p>
-            Update event information,
-            speakers, venue, registration
-            and publishing settings.
+            Update the event
+            information.
           </p>
 
         </div>
@@ -137,15 +140,9 @@ const EditEvent = () => {
       </div>
 
       {error && (
-
-        <div className="form-alert error">
-
-          <AlertTriangle size={18} />
-
-          <span>{error}</span>
-
+        <div className="alert alert-error">
+          {error}
         </div>
-
       )}
 
       <EventForm
@@ -154,7 +151,7 @@ const EditEvent = () => {
         loading={saving}
         onSubmit={handleSubmit}
         onCancel={() =>
-          navigate(`/admin/events/${id}`)
+          navigate("/admin/events")
         }
       />
 

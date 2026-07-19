@@ -1,32 +1,69 @@
 import { Tag } from "lucide-react";
 
 const categories = [
-  "Leadership",
-  "Conference",
-  "Summit",
-  "Workshop",
-  "Training",
-  "Community",
-  "Sports",
-  "Networking",
-  "Innovation",
-  "Environment",
-  "Entrepreneurship",
+  {
+    value: "leadership",
+    label: "Leadership",
+  },
+  {
+    value: "conference",
+    label: "Conference",
+  },
+  {
+    value: "summit",
+    label: "Summit",
+  },
+  {
+    value: "workshop",
+    label: "Workshop",
+  },
+  {
+    value: "training",
+    label: "Training",
+  },
+  {
+    value: "community",
+    label: "Community",
+  },
+  {
+    value: "networking",
+    label: "Networking",
+  },
+  {
+    value: "innovation",
+    label: "Innovation",
+  },
+  {
+    value: "entrepreneurship",
+    label: "Entrepreneurship",
+  },
+  {
+    value: "environment",
+    label: "Environment",
+  },
+  {
+    value: "sports",
+    label: "Sports",
+  },
+  {
+    value: "other",
+    label: "Other",
+  },
 ];
 
 const eventTypes = [
-  "Physical",
-  "Virtual",
-  "Hybrid",
-];
-
-const statuses = [
-  "draft",
-  "published",
-  "ongoing",
-  "completed",
-  "cancelled",
-  "archived",
+  {
+    value: "physical",
+    label: "Physical",
+  },
+  {
+    value: "virtual",
+    label: "Virtual",
+  },
+  {
+    value: "hybrid",
+    label: "Hybrid",
+  },
 ];
 
 const ClassificationSection = ({
@@ -34,135 +71,106 @@ const ClassificationSection = ({
   onChange,
 }) => {
   return (
-    <section className="form-section">
+    <section className="event-section">
+
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
       <div className="section-header">
 
-        <Tag size={20} />
+        <div className="section-title">
 
-        <div>
+          <Tag size={20} />
 
-          <h2>Classification</h2>
+          <div>
 
-          <p>
-            Configure how this event is categorized and displayed.
-          </p>
+            <h2>Classification</h2>
+
+            <p>
+              Categorize your event to help
+              participants discover it.
+            </p>
+
+          </div>
 
         </div>
 
       </div>
+
+      {/* ==========================================
+          FORM
+      ========================================== */}
 
       <div className="form-grid">
 
         <div className="form-group">
 
-          <label>Category *</label>
+          <label>
+            Category
+            <span className="required">
+              *
+            </span>
+          </label>
 
           <select
-            value={data.category || ""}
-            onChange={(e) =>
-              onChange("category", e.target.value)
-            }
-            required
-          >
-            <option value="">
-              Select Category
-            </option>
-
-            {categories.map((category) => (
-              <option
-                key={category}
-                value={category}
-              >
-                {category}
-              </option>
-            ))}
-
-          </select>
-
-        </div>
-
-        <div className="form-group">
-
-          <label>Event Type *</label>
-
-          <select
-            value={data.eventType || ""}
-            onChange={(e) =>
-              onChange("eventType", e.target.value)
-            }
-            required
-          >
-            <option value="">
-              Select Event Type
-            </option>
-
-            {eventTypes.map((type) => (
-              <option
-                key={type}
-                value={type}
-              >
-                {type}
-              </option>
-            ))}
-
-          </select>
-
-        </div>
-
-        <div className="form-group">
-
-          <label>Status *</label>
-
-          <select
-            value={data.status || "draft"}
-            onChange={(e) =>
-              onChange("status", e.target.value)
-            }
-          >
-            {statuses.map((status) => (
-              <option
-                key={status}
-                value={status}
-              >
-                {status.charAt(0).toUpperCase() +
-                  status.slice(1)}
-              </option>
-            ))}
-          </select>
-
-        </div>
-
-        <div className="form-group">
-
-          <label>Visibility</label>
-
-          <select
-            value={data.visibility || "public"}
+            value={data.category}
             onChange={(e) =>
               onChange(
-                "visibility",
+                "category",
                 e.target.value
               )
             }
+            required
           >
-            <option value="public">
-              Public
-            </option>
+            {categories.map((category) => (
+              <option
+                key={category.value}
+                value={category.value}
+              >
+                {category.label}
+              </option>
+            ))}
+          </select>
 
-            <option value="members">
-              Members Only
-            </option>
+        </div>
 
-            <option value="private">
-              Private
-            </option>
+        <div className="form-group">
 
+          <label>
+            Event Type
+            <span className="required">
+              *
+            </span>
+          </label>
+
+          <select
+            value={data.eventType}
+            onChange={(e) =>
+              onChange(
+                "eventType",
+                e.target.value
+              )
+            }
+            required
+          >
+            {eventTypes.map((type) => (
+              <option
+                key={type.value}
+                value={type.value}
+              >
+                {type.label}
+              </option>
+            ))}
           </select>
 
         </div>
 
       </div>
+
+      {/* ==========================================
+          FEATURED EVENT
+      ========================================== */}
 
       <div className="checkbox-grid">
 
@@ -170,7 +178,7 @@ const ClassificationSection = ({
 
           <input
             type="checkbox"
-            checked={data.featured || false}
+            checked={data.featured}
             onChange={(e) =>
               onChange(
                 "featured",
@@ -179,29 +187,19 @@ const ClassificationSection = ({
             }
           />
 
-          <span>Featured Event</span>
+          <div>
 
-        </label>
+            <strong>
+              Featured Event
+            </strong>
 
-        <label className="checkbox-item">
+            <small>
+              Featured events appear on the
+              homepage and are highlighted
+              across the platform.
+            </small>
 
-          <input
-            type="checkbox"
-            checked={
-              data.registrationRequired ??
-              true
-            }
-            onChange={(e) =>
-              onChange(
-                "registrationRequired",
-                e.target.checked
-              )
-            }
-          />
-
-          <span>
-            Registration Required
-          </span>
+          </div>
 
         </label>
 

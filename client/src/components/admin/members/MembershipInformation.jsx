@@ -1,47 +1,43 @@
 import "./MemberProfile.css";
 
-function MembershipInformation({ member }) {
+function MembershipInformation({
+  member,
+  summary,
+}) {
   if (!member) return null;
 
-  const membershipStatus = member.membershipStatus
-    ? member.membershipStatus
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (char) => char.toUpperCase())
-    : "Unknown";
+  const formatText = (value) => {
+    if (!value) return "-";
 
-  const registrationSource = member.source
-    ? member.source.charAt(0).toUpperCase() +
-      member.source.slice(1)
-    : "-";
-
-  const joinedDate = member.createdAt
-    ? new Date(member.createdAt).toLocaleDateString()
-    : "-";
-
-  const expiryDate = member.membershipExpiry
-    ? new Date(
-        member.membershipExpiry
-      ).toLocaleDateString()
-    : "Not Set";
+    return value
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) =>
+        char.toUpperCase()
+      );
+  };
 
   const rows = [
     {
       label: "Member Number",
       value:
         member.memberNumber ||
-        member.membershipNumber ||
         "Not Assigned",
     },
     {
       label: "Membership Type",
-      value: member.membershipType || "-",
+      value: formatText(
+        member.membershipType
+      ),
     },
     {
       label: "Membership Status",
-      value: membershipStatus,
+      value: formatText(
+        member.membershipStatus
+      ),
       badge: true,
       className:
-        member.membershipStatus || "unknown",
+        member.membershipStatus ||
+        "unknown",
     },
     {
       label: "Membership Fee Paid",
@@ -49,9 +45,10 @@ function MembershipInformation({ member }) {
         ? "Yes"
         : "No",
       badge: true,
-      className: member.membershipFeePaid
-        ? "paid"
-        : "unpaid",
+      className:
+        member.membershipFeePaid
+          ? "paid"
+          : "unpaid",
     },
     {
       label: "Account Activated",
@@ -59,28 +56,44 @@ function MembershipInformation({ member }) {
         ? "Yes"
         : "No",
       badge: true,
-      className: member.accountActivated
-        ? "activated"
-        : "pending",
+      className:
+        member.accountActivated
+          ? "activated"
+          : "pending",
     },
     {
       label: "Registration Source",
-      value: registrationSource,
+      value: formatText(member.source),
     },
     {
-      label: "Joined Date",
-      value: joinedDate,
+      label: "Member Since",
+      value: summary?.memberSince
+        ? new Date(
+            summary.memberSince
+          ).toLocaleDateString()
+        : member.createdAt
+        ? new Date(
+            member.createdAt
+          ).toLocaleDateString()
+        : "-",
     },
     {
       label: "Membership Expiry",
-      value: expiryDate,
+      value:
+        member.membershipExpiry
+          ? new Date(
+              member.membershipExpiry
+            ).toLocaleDateString()
+          : "Not Set",
     },
   ];
 
   return (
     <div className="profile-card">
       <div className="card-header">
-        <h3>Membership Information</h3>
+        <h3>
+          Membership Information
+        </h3>
       </div>
 
       <div className="info-grid">

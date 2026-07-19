@@ -67,7 +67,7 @@ const EventHero = ({
               {event.status}
             </span>
 
-            {event.featured && (
+            {event.isFeatured && (
 
               <span className="featured-badge">
 
