@@ -1,0 +1,201 @@
+/* =====================================================
+   EVENT REGISTRATION
+===================================================== */
+
+.event-registration{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.registration-header h2{
+    font-size:1.8rem;
+    color:#0f172a;
+}
+
+.registration-card{
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 6px 18px rgba(15,23,42,.05);
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.registration-status{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.status-badge,
+.registered-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:.85rem;
+    font-weight:600;
+}
+
+.status-badge.open{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.status-badge.closed{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.registered-badge{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+/* =====================================================
+   INFO
+===================================================== */
+
+.registration-info{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.registration-info div{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.registration-info svg{
+    color:#2563eb;
+}
+
+.registration-info span{
+    flex:1;
+    color:#64748b;
+}
+
+.registration-info strong{
+    color:#0f172a;
+}
+
+/* =====================================================
+   PROGRESS
+===================================================== */
+
+.capacity-progress{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.progress-bar{
+    width:100%;
+    height:10px;
+    background:#e2e8f0;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    background:#2563eb;
+    transition:width .4s ease;
+}
+
+.capacity-progress small{
+    color:#64748b;
+}
+
+/* =====================================================
+   NOTICES
+===================================================== */
+
+.registration-notice,
+.registration-warning{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:14px;
+    border-radius:12px;
+}
+
+.registration-notice{
+    background:#eff6ff;
+    color:#1d4ed8;
+}
+
+.registration-warning{
+    background:#fff7ed;
+    color:#c2410c;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.registration-actions{
+    display:flex;
+}
+
+.registration-btn{
+    width:100%;
+    border:none;
+    border-radius:10px;
+    padding:14px;
+    font-size:.95rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.registration-btn.primary{
+    background:#2563eb;
+    color:#fff;
+}
+
+.registration-btn.primary:hover{
+    background:#1d4ed8;
+}
+
+.registration-btn.secondary{
+    background:#e2e8f0;
+    color:#475569;
+}
+
+.registration-btn.danger{
+    background:#dc2626;
+    color:#fff;
+}
+
+.registration-btn.danger:hover{
+    background:#b91c1c;
+}
+
+.registration-btn.disabled{
+    background:#cbd5e1;
+    color:#64748b;
+    cursor:not-allowed;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width:768px){
+
+    .registration-card{
+        padding:20px;
+    }
+
+}

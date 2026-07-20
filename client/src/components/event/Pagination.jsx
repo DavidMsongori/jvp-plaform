@@ -1,4 +1,8 @@
-import "./Event.css";
+import {
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+} from "lucide-react";
 
 const Pagination = ({
   pagination,
@@ -12,131 +16,124 @@ const Pagination = ({
   }
 
   const {
-    page,
-    totalPages,
-    total,
-    limit,
+    page = 1,
+    totalPages = 1,
+    total = 0,
+    limit = 9,
+    hasPrevPage = false,
+    hasNextPage = false,
   } = pagination;
 
-  const pages = [];
+  const startItem =
+    total === 0
+      ? 0
+      : (page - 1) * limit + 1;
 
-  const start = Math.max(1, page - 2);
-  const end = Math.min(
-    totalPages,
-    page + 2
-  );
-
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
-  }
-
-  const firstResult =
-    (page - 1) * limit + 1;
-
-  const lastResult = Math.min(
+  const endItem = Math.min(
     page * limit,
     total
   );
 
-  return (
-    <section className="event-pagination-wrapper">
+  /* ==========================================
+     PAGE NUMBERS
+  ========================================== */
 
-      <div className="pagination-info">
-        Showing {firstResult} - {lastResult}
-        {" "}of {total} events
+  const pages = [];
+
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    pages.push(1);
+
+    if (page > 3) {
+      pages.push("...");
+    }
+
+    const start = Math.max(2, page - 1);
+    const end = Math.min(
+      totalPages - 1,
+      page + 1
+    );
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (page < totalPages - 2) {
+      pages.push("...");
+    }
+
+    pages.push(totalPages);
+  }
+
+  return (
+    <section className="events-pagination">
+
+      <div className="events-pagination__info">
+        Showing{" "}
+        <strong>{startItem}</strong>
+        {" - "}
+        <strong>{endItem}</strong>
+        {" of "}
+        <strong>{total}</strong> events
       </div>
 
-      <div className="event-pagination">
-
+      <nav
+        className="events-pagination__controls"
+        aria-label="Pagination"
+      >
         <button
-          disabled={page === 1}
-          onClick={() =>
-            onPageChange(1)
-          }
-        >
-          First
-        </button>
-
-        <button
-          disabled={page === 1}
+          type="button"
+          className="events-pagination__button"
+          disabled={!hasPrevPage}
           onClick={() =>
             onPageChange(page - 1)
           }
         >
+          <ChevronLeft size={18} />
           Previous
         </button>
 
-        {start > 1 && (
-          <>
+        {pages.map((item, index) =>
+          item === "..." ? (
+            <span
+              key={`ellipsis-${index}`}
+              className="events-pagination__ellipsis"
+            >
+              <MoreHorizontal size={18} />
+            </span>
+          ) : (
             <button
+              key={item}
+              type="button"
+              className={`events-pagination__page ${
+                page === item
+                  ? "active"
+                  : ""
+              }`}
               onClick={() =>
-                onPageChange(1)
+                onPageChange(item)
               }
             >
-              1
+              {item}
             </button>
-
-            {start > 2 && (
-              <span className="pagination-dots">
-                ...
-              </span>
-            )}
-          </>
-        )}
-
-        {pages.map((number) => (
-          <button
-            key={number}
-            className={
-              page === number
-                ? "active"
-                : ""
-            }
-            onClick={() =>
-              onPageChange(number)
-            }
-          >
-            {number}
-          </button>
-        ))}
-
-        {end < totalPages && (
-          <>
-            {end < totalPages - 1 && (
-              <span className="pagination-dots">
-                ...
-              </span>
-            )}
-
-            <button
-              onClick={() =>
-                onPageChange(totalPages)
-              }
-            >
-              {totalPages}
-            </button>
-          </>
+          )
         )}
 
         <button
-          disabled={page === totalPages}
+          type="button"
+          className="events-pagination__button"
+          disabled={!hasNextPage}
           onClick={() =>
             onPageChange(page + 1)
           }
         >
           Next
+          <ChevronRight size={18} />
         </button>
-
-        <button
-          disabled={page === totalPages}
-          onClick={() =>
-            onPageChange(totalPages)
-          }
-        >
-          Last
-        </button>
-
-      </div>
+      </nav>
 
     </section>
   );

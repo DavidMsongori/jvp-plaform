@@ -257,7 +257,7 @@ eventRegistrationSchema.index({ registrationStatus: 1 });
    MIDDLEWARE
 ========================================================== */
 
-eventRegistrationSchema.pre("save", function (next) {
+eventRegistrationSchema.pre("save", async function () {
   if (!this.registrationNumber) {
     this.registrationNumber =
       "REG-" +
@@ -275,8 +275,6 @@ eventRegistrationSchema.pre("save", function (next) {
   if (!this.qrCode) {
     this.qrCode = crypto.randomUUID();
   }
-
-  next();
 });
 
 /* ==========================================================

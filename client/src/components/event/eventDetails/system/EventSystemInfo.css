@@ -1,0 +1,165 @@
+/*=====================================================
+  SYSTEM INFO
+======================================================*/
+
+.system-info{
+    display:flex;
+    flex-direction:column;
+    gap:36px;
+}
+
+/*=====================================================
+  HEADER
+======================================================*/
+
+.system-header{
+    text-align:center;
+    max-width:720px;
+    margin:0 auto;
+}
+
+.system-header h2{
+    font-size:2rem;
+    color:#0f172a;
+    margin-bottom:12px;
+}
+
+.system-header p{
+    color:#64748b;
+    line-height:1.8;
+}
+
+/*=====================================================
+  GRID
+======================================================*/
+
+.system-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+}
+
+/*=====================================================
+  ITEM
+======================================================*/
+
+.system-item{
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+
+    padding:20px;
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:18px;
+
+    transition:.3s;
+}
+
+.system-item:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 30px rgba(15,23,42,.08);
+}
+
+.system-item svg{
+    color:#2563eb;
+    flex-shrink:0;
+    margin-top:2px;
+}
+
+.system-item span{
+    display:block;
+    font-size:.8rem;
+    color:#64748b;
+    margin-bottom:6px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+
+.system-item strong{
+    color:#0f172a;
+    font-size:.95rem;
+    word-break:break-word;
+}
+
+/*=====================================================
+  SECTIONS
+======================================================*/
+
+.system-section{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.system-section h3{
+    color:#0f172a;
+    font-size:1.2rem;
+}
+
+/*=====================================================
+  TAGS
+======================================================*/
+
+.system-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.system-tags span{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:.9rem;
+
+    font-weight:600;
+}
+
+/*=====================================================
+  NOTES
+======================================================*/
+
+.system-notes{
+    padding:24px;
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:18px;
+
+    color:#475569;
+
+    line-height:1.8;
+
+    white-space:pre-wrap;
+}
+
+/*=====================================================
+  MOBILE
+======================================================*/
+
+@media (max-width:768px){
+
+    .system-info{
+        gap:28px;
+    }
+
+    .system-grid{
+        grid-template-columns:1fr;
+    }
+
+}

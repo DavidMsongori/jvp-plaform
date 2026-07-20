@@ -1,0 +1,192 @@
+/* ======================================================
+   EVENT VENUE
+====================================================== */
+
+.event-venue{
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.venue-header h2{
+    font-size:2rem;
+    color:#0f172a;
+    margin-bottom:8px;
+}
+
+.venue-header p{
+    color:#64748b;
+    line-height:1.7;
+}
+
+/* ======================================================
+   GRID
+====================================================== */
+
+.venue-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:24px;
+}
+
+/* ======================================================
+   CARD
+====================================================== */
+
+.venue-card{
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:18px;
+
+    padding:28px;
+
+    box-shadow:0 6px 18px rgba(15,23,42,.05);
+}
+
+.venue-title{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin-bottom:20px;
+}
+
+.venue-title h3{
+    margin:0;
+    color:#0f172a;
+}
+
+.venue-title svg{
+    color:#2563eb;
+}
+
+.venue-description{
+
+    color:#475569;
+
+    line-height:1.8;
+
+    margin-bottom:24px;
+}
+
+/* ======================================================
+   DETAILS
+====================================================== */
+
+.venue-details{
+
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.venue-details div{
+
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+
+    color:#475569;
+
+    line-height:1.6;
+}
+
+.venue-details svg{
+    color:#2563eb;
+    flex-shrink:0;
+    margin-top:2px;
+}
+
+/* ======================================================
+   MAP BUTTON
+====================================================== */
+
+.venue-map-btn{
+
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    margin-top:28px;
+
+    padding:12px 20px;
+
+    background:#2563eb;
+    color:#fff;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.venue-map-btn:hover{
+
+    background:#1d4ed8;
+}
+
+/* ======================================================
+   EVENT FORMAT
+====================================================== */
+
+.event-format{
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.format-badge{
+
+    align-self:flex-start;
+
+    background:#eff6ff;
+
+    color:#1d4ed8;
+
+    padding:8px 18px;
+
+    border-radius:999px;
+
+    font-weight:600;
+
+    text-transform:capitalize;
+}
+
+.event-format p{
+
+    color:#475569;
+
+    line-height:1.8;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width:900px){
+
+    .venue-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .venue-card{
+        padding:22px;
+    }
+
+}

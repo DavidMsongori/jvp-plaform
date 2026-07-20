@@ -124,8 +124,17 @@ formData.append(
 ========================================== */
 
 export const getEvents = async (params = {}) => {
+  const cleanParams = Object.fromEntries(
+    Object.entries(params).filter(
+      ([, value]) =>
+        value !== "" &&
+        value !== null &&
+        value !== undefined
+    )
+  );
+
   const response = await api.get("/events", {
-    params,
+    params: cleanParams,
   });
 
   return response.data;

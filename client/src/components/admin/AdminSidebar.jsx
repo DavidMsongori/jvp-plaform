@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import {
   FaChartPie,
   FaUsers,
+  FaUserTie,
   FaMoneyBillWave,
   FaCalendarAlt,
   FaClipboardList,
@@ -51,6 +52,13 @@ function AdminSidebar({
       name: "Members",
       icon: <FaUsers />,
       path: "/admin/members",
+      permission: PERMISSIONS.VIEW_MEMBERS,
+    },
+
+    {
+      name: "Leadership",
+      icon: <FaUserTie />,
+      path: "/admin/leadership",
       permission: PERMISSIONS.VIEW_MEMBERS,
     },
 
@@ -116,7 +124,9 @@ function AdminSidebar({
       }`}
     >
 
-      {/* Header */}
+      {/* ======================================
+          HEADER
+      ======================================= */}
 
       <div className="sidebar-header">
 
@@ -139,7 +149,9 @@ function AdminSidebar({
 
       </div>
 
-      {/* Navigation */}
+      {/* ======================================
+          NAVIGATION
+      ======================================= */}
 
       <nav className="sidebar-nav">
 
@@ -191,7 +203,9 @@ function AdminSidebar({
 
       </nav>
 
-      {/* Footer */}
+      {/* ======================================
+          FOOTER
+      ======================================= */}
 
       <div className="sidebar-footer">
 

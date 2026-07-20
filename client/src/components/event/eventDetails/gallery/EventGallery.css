@@ -1,0 +1,315 @@
+/*=====================================================
+  EVENT GALLERY
+======================================================*/
+
+.event-gallery{
+
+    display:flex;
+    flex-direction:column;
+
+    gap:40px;
+}
+
+/*=====================================================
+  HEADER
+======================================================*/
+
+.gallery-header{
+
+    text-align:center;
+
+    max-width:700px;
+
+    margin:0 auto;
+}
+
+.gallery-header h2{
+
+    font-size:2rem;
+
+    color:#0f172a;
+
+    margin-bottom:12px;
+}
+
+.gallery-header p{
+
+    color:#64748b;
+
+    line-height:1.8;
+}
+
+/*=====================================================
+  GRID
+======================================================*/
+
+.gallery-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(260px,1fr));
+
+    gap:24px;
+}
+
+/*=====================================================
+  ITEM
+======================================================*/
+
+.gallery-item{
+
+    position:relative;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    aspect-ratio:4/3;
+
+    background:#e2e8f0;
+}
+
+.gallery-item img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:.45s;
+}
+
+.gallery-item:hover img{
+
+    transform:scale(1.08);
+}
+
+/*=====================================================
+  FEATURED
+======================================================*/
+
+.gallery-featured{
+
+    position:absolute;
+
+    top:16px;
+
+    left:16px;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.75rem;
+
+    font-weight:600;
+
+    z-index:5;
+}
+
+/*=====================================================
+  OVERLAY
+======================================================*/
+
+.gallery-overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    padding:24px;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            transparent,
+            rgba(0,0,0,.82)
+        );
+
+    opacity:0;
+
+    transition:.35s;
+}
+
+.gallery-item:hover .gallery-overlay{
+
+    opacity:1;
+}
+
+.gallery-overlay h4{
+
+    margin-bottom:6px;
+}
+
+.gallery-overlay p{
+
+    color:rgba(255,255,255,.88);
+
+    font-size:.9rem;
+}
+
+/*=====================================================
+  LIGHTBOX
+======================================================*/
+
+.gallery-lightbox{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.9);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    z-index:9999;
+
+    padding:30px;
+}
+
+.gallery-preview{
+
+    max-width:1200px;
+
+    width:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+}
+
+.gallery-preview img{
+
+    width:100%;
+
+    max-height:80vh;
+
+    object-fit:contain;
+}
+
+.gallery-preview-info{
+
+    color:#fff;
+
+    text-align:center;
+}
+
+.gallery-preview-info p{
+
+    margin-top:10px;
+
+    color:#cbd5e1;
+}
+
+/*=====================================================
+  BUTTONS
+======================================================*/
+
+.gallery-close,
+.gallery-nav{
+
+    position:absolute;
+
+    border:none;
+
+    background:rgba(255,255,255,.12);
+
+    color:#fff;
+
+    cursor:pointer;
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:.3s;
+}
+
+.gallery-close{
+
+    top:25px;
+
+    right:25px;
+}
+
+.gallery-nav{
+
+    top:50%;
+
+    transform:translateY(-50%);
+}
+
+.gallery-nav.left{
+
+    left:25px;
+}
+
+.gallery-nav.right{
+
+    right:25px;
+}
+
+.gallery-close:hover,
+.gallery-nav:hover{
+
+    background:#2563eb;
+}
+
+/*=====================================================
+  MOBILE
+======================================================*/
+
+@media(max-width:768px){
+
+    .event-gallery{
+
+        gap:30px;
+    }
+
+    .gallery-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .gallery-lightbox{
+
+        padding:16px;
+    }
+
+    .gallery-nav{
+
+        display:none;
+    }
+
+}

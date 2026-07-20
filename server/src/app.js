@@ -14,6 +14,7 @@ import paymentRoutes from "./routes/payment.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import eventRoutes from "./routes/event.routes.js";
+import leaderRoutes from "./routes/leader.routes.js";
 
 const app = express();
 
@@ -22,7 +23,6 @@ const app = express();
 ========================================================== */
 
 const __filename = fileURLToPath(import.meta.url);
-
 const __dirname = path.dirname(__filename);
 
 /* ==========================================================
@@ -36,51 +36,32 @@ app.use(helmet());
 ========================================================== */
 
 const allowedOrigins = [
-
   "http://localhost:5173",
-
   "https://jvp-platform.vercel.app",
-
   process.env.CLIENT_URL,
-
 ].filter(Boolean);
 
 app.use(
-
   cors({
-
     origin(origin, callback) {
-
       console.log("Incoming Origin:", origin);
 
       // Allow Postman and server-to-server requests
-
       if (!origin) {
-
         return callback(null, true);
-
       }
 
       if (allowedOrigins.includes(origin)) {
-
         return callback(null, true);
-
       }
 
       console.log("Blocked Origin:", origin);
 
-      return callback(
-
-        new Error("Not allowed by CORS")
-
-      );
-
+      return callback(new Error("Not allowed by CORS"));
     },
 
     credentials: true,
-
   })
-
 );
 
 /* ==========================================================
@@ -88,9 +69,7 @@ app.use(
 ========================================================== */
 
 if (process.env.NODE_ENV !== "test") {
-
   app.use(morgan("dev"));
-
 }
 
 /* ==========================================================
@@ -100,13 +79,9 @@ if (process.env.NODE_ENV !== "test") {
 app.use(express.json());
 
 app.use(
-
   express.urlencoded({
-
     extended: true,
-
   })
-
 );
 
 app.use(cookieParser());
@@ -116,15 +91,8 @@ app.use(cookieParser());
 ========================================================== */
 
 app.use(
-
   "/uploads",
-
-  express.static(
-
-    path.join(__dirname, "uploads")
-
-  )
-
+  express.static(path.join(__dirname, "uploads"))
 );
 
 /* ==========================================================
@@ -132,19 +100,12 @@ app.use(
 ========================================================== */
 
 app.get("/", (req, res) => {
-
   res.status(200).json({
-
     success: true,
-
     message: "JVP Connect API is running.",
-
     version: "1.0.0",
-
     environment: process.env.NODE_ENV,
-
   });
-
 });
 
 /* ==========================================================
@@ -163,20 +124,17 @@ app.use("/api/admin", adminRoutes);
 
 app.use("/api/events", eventRoutes);
 
+app.use("/api/leaders", leaderRoutes);
+
 /* ==========================================================
    404
 ========================================================== */
 
 app.use((req, res) => {
-
   res.status(404).json({
-
     success: false,
-
     message: "Route not found.",
-
   });
-
 });
 
 /* ==========================================================

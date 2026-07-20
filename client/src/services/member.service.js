@@ -47,6 +47,25 @@ export const uploadProfilePhoto = async (file) => {
 };
 
 /* ==========================================
+   MEMBER SEARCH
+========================================== */
+
+export const searchMembers = async (query) => {
+
+  const response = await api.get(
+    "/member/search",
+    {
+      params: {
+        q: query,
+      },
+    }
+  );
+
+  return response.data;
+
+};
+
+/* ==========================================
    MEMBER DASHBOARD
 ========================================== */
 
@@ -127,6 +146,8 @@ export default {
   updateMyProfile,
 
   uploadProfilePhoto,
+
+  searchMembers,
 
   getDashboard,
 

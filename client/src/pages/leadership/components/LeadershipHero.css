@@ -1,0 +1,182 @@
+/* ==========================================================
+   HERO
+========================================================== */
+
+.leadership-hero {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 120px 20px 100px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 40, 80, .90),
+      rgba(0, 102, 170, .82)
+    ),
+    url("/images/leadership-hero.jpg");
+
+  background-size: cover;
+  background-position: center;
+
+  color: white;
+}
+
+.leadership-hero-overlay {
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(255,255,255,.08),
+      transparent 45%
+    );
+}
+
+.leadership-hero-content {
+  position: relative;
+
+  max-width: 1180px;
+
+  margin: auto;
+
+  text-align: center;
+
+  z-index: 2;
+}
+
+/* ==========================================================
+   BADGE
+========================================================== */
+
+.leadership-badge {
+  display: inline-block;
+
+  padding: 10px 18px;
+
+  border-radius: 50px;
+
+  background: rgba(255,255,255,.12);
+
+  backdrop-filter: blur(8px);
+
+  border: 1px solid rgba(255,255,255,.2);
+
+  font-size: .8rem;
+
+  font-weight: 700;
+
+  letter-spacing: .08em;
+
+  text-transform: uppercase;
+}
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.leadership-hero h1 {
+  margin: 24px auto 20px;
+
+  max-width: 900px;
+
+  font-size: clamp(2.8rem, 6vw, 4.8rem);
+
+  line-height: 1.1;
+
+  font-weight: 800;
+}
+
+.leadership-hero h1 span {
+  color: #ffd54f;
+}
+
+.leadership-hero p {
+  max-width: 760px;
+
+  margin: auto;
+
+  font-size: 1.1rem;
+
+  line-height: 1.8;
+
+  color: rgba(255,255,255,.9);
+}
+
+/* ==========================================================
+   STATS
+========================================================== */
+
+.leadership-hero-stats {
+  display: flex;
+
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 24px;
+
+  margin-top: 60px;
+}
+
+.hero-stat {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  min-width: 220px;
+
+  padding: 18px 22px;
+
+  border-radius: 18px;
+
+  background: rgba(255,255,255,.12);
+
+  backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+.hero-stat svg {
+  color: #ffd54f;
+
+  flex-shrink: 0;
+}
+
+.hero-stat strong {
+  display: block;
+
+  font-size: 1.5rem;
+
+  font-weight: 800;
+}
+
+.hero-stat span {
+  color: rgba(255,255,255,.8);
+
+  font-size: .95rem;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+
+  .leadership-hero {
+    padding: 90px 20px 70px;
+  }
+
+  .hero-stat {
+    width: 100%;
+  }
+
+  .leadership-hero p {
+    font-size: 1rem;
+  }
+
+}

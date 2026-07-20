@@ -1,191 +1,213 @@
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
+
 import {
   CalendarDays,
+  Clock,
   MapPin,
   Users,
-  Clock3,
   ArrowRight,
+  CheckCircle2,
+  Star,
   Tag,
-  Monitor,
-  Globe,
 } from "lucide-react";
 
 import "./EventCard.css";
 
-/* ===========================================================
-   HELPERS
-=========================================================== */
-
-const formatDate = (date) => {
-  if (!date) return "";
-
-  return new Date(date).toLocaleDateString("en-KE", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-};
-
-const getEventTypeIcon = (type) => {
-  switch (type) {
-    case "virtual":
-      return <Monitor size={16} />;
-
-    case "hybrid":
-      return <Globe size={16} />;
-
-    default:
-      return <MapPin size={16} />;
-  }
-};
-
-/* ===========================================================
-   COMPONENT
-=========================================================== */
-
-const EventCard = ({ event }) => {
+const EventCard = ({
+  event,
+  registration = null,
+}) => {
   if (!event) return null;
 
-  const registration = event.registration || {};
+  const {
+    title,
+    slug,
+    category,
+    featured,
+    coverImage,
+    venue,
+    startDate,
+    endDate,
+    registration: registrationSettings = {},
+  } = event;
 
-  const isFree =
-    !registration.fee ||
-    Number(registration.fee) === 0;
+  const image =
+    coverImage?.url ||
+    "https://placehold.co/600x400?text=JVP+Connect";
 
-  const remainingSeats =
-    registration.capacity
-      ? Math.max(
-          registration.capacity -
-            (registration.totalRegistrations || 0),
-          0
-        )
+  const capacity =
+    registrationSettings.capacity || 0;
+
+  const registered =
+    registrationSettings.registeredCount || 0;
+
+  const available =
+    capacity > 0
+      ? Math.max(capacity - registered, 0)
       : null;
 
-  const registrationOpen =
-    registration.enabled &&
-    (!registration.opensAt ||
-      new Date(registration.opensAt) <= new Date()) &&
-    (!registration.closesAt ||
-      new Date(registration.closesAt) >= new Date());
+  const progress =
+    capacity > 0
+      ? Math.min(
+          (registered / capacity) * 100,
+          100
+        )
+      : 0;
+
+  const countdown = useMemo(() => {
+    if (!startDate) return null;
+
+    const now = new Date();
+
+    const start = new Date(startDate);
+
+    const diff =
+      start.getTime() - now.getTime();
+
+    if (diff <= 0)
+      return "Event Started";
+
+    const days = Math.ceil(
+      diff / (1000 * 60 * 60 * 24)
+    );
+
+    return `Starts in ${days} day${
+      days !== 1 ? "s" : ""
+    }`;
+  }, [startDate]);
+
+  const formatDate = (date) =>
+    date
+      ? new Date(date).toLocaleDateString(
+          undefined,
+          {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }
+        )
+      : "TBA";
+
+  const formatTime = (date) =>
+    date
+      ? new Date(date).toLocaleTimeString(
+          [],
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+          }
+        )
+      : "--";
+
+  const registrationStatus =
+    registration?.registrationStatus;
 
   return (
-    <article className="event-card">
-      {/* ==========================================
-          COVER IMAGE
-      ========================================== */}
+    <article className="dashboard-event-card">
 
-      <div className="event-card-image">
+      <div className="event-image">
+
         <img
-          src={
-            event.coverImage?.secureUrl ||
-            "/placeholder-event.jpg"
-          }
-          alt={
-            event.coverImage?.alt ||
-            event.title
-          }
+          src={image}
+          alt={title}
+          loading="lazy"
         />
 
-        <span className="event-category">
-          {event.category}
-        </span>
-
-        {event.isFeatured && (
-          <span className="event-featured">
+        {featured && (
+          <span className="featured-ribbon">
+            <Star size={14} />
             Featured
           </span>
         )}
+
       </div>
 
-      {/* ==========================================
-          BODY
-      ========================================== */}
+      <div className="event-body">
 
-      <div className="event-card-body">
-        <h3>{event.title}</h3>
+        <div className="event-category">
+          <Tag size={15} />
+          {category}
+        </div>
 
-        <p>{event.summary}</p>
+        <h3>{title}</h3>
+
+        <div className="event-countdown">
+          {countdown}
+        </div>
 
         <div className="event-meta">
-          <div>
-            <CalendarDays size={16} />
+
+          <span>
+            <CalendarDays size={15} />
+            {formatDate(startDate)}
+          </span>
+
+          <span>
+            <Clock size={15} />
+            {formatTime(startDate)}
+            {endDate &&
+              ` - ${formatTime(endDate)}`}
+          </span>
+
+          {venue?.name && (
             <span>
-              {formatDate(event.startDate)}
+              <MapPin size={15} />
+              {venue.name}
             </span>
-          </div>
+          )}
 
-          <div>
-            {getEventTypeIcon(
-              event.eventType
-            )}
-
-            <span
-              style={{
-                textTransform:
-                  "capitalize",
-              }}
-            >
-              {event.eventType}
-            </span>
-          </div>
-
-          <div>
-            <MapPin size={16} />
-
-            <span>
-              {event.venue?.name ||
-                "Venue TBA"}
-            </span>
-          </div>
-
-          <div>
-            <Users size={16} />
-
-            <span>
-              {registration.capacity
-                ? `${remainingSeats} / ${registration.capacity} Seats Left`
-                : "Unlimited Seats"}
-            </span>
-          </div>
         </div>
-      </div>
 
-      {/* ==========================================
-          FOOTER
-      ========================================== */}
-
-      <div className="event-card-footer">
-        <div className="event-price">
-          {isFree ? (
-            <span className="free">
-              FREE
-            </span>
-          ) : (
-            <>
-              <Tag size={16} />
+        {capacity > 0 && (
+          <>
+            <div className="capacity-row">
 
               <span>
-                KES{" "}
-                {Number(
-                  registration.fee
-                ).toLocaleString()}
+                <Users size={15} />
+                {registered}/{capacity}
               </span>
-            </>
-          )}
+
+              <span>
+                {available} seats left
+              </span>
+
+            </div>
+
+            <div className="capacity-bar">
+              <div
+                className="capacity-fill"
+                style={{
+                  width: `${progress}%`,
+                }}
+              />
+            </div>
+          </>
+        )}
+
+        {registrationStatus && (
+          <div
+            className={`registration-status ${registrationStatus}`}
+          >
+            <CheckCircle2 size={15} />
+            {registrationStatus}
+          </div>
+        )}
+
+        <div className="event-actions">
+
+          <Link
+            to={`/events/${slug}`}
+            className="btn-primary"
+          >
+            View Details
+            <ArrowRight size={18} />
+          </Link>
+
         </div>
 
-        <Link
-          to={`/dashboard/events/${event._id}`}
-          className="event-button"
-        >
-          {registrationOpen
-            ? "View Event"
-            : "View Details"}
-
-          <ArrowRight size={16} />
-        </Link>
       </div>
+
     </article>
   );
 };

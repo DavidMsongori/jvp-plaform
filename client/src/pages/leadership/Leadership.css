@@ -1,0 +1,142 @@
+/* ==========================================================
+   PAGE
+========================================================== */
+
+.leadership-page {
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+.container {
+  width: min(1200px, 92%);
+  margin: 0 auto;
+}
+
+/* ==========================================================
+   HERO
+========================================================== */
+
+.leadership-hero {
+  padding: 100px 0 70px;
+  text-align: center;
+
+  background: linear-gradient(
+    135deg,
+    #004b8d,
+    #0077b6
+  );
+
+  color: #fff;
+}
+
+.section-badge {
+  display: inline-block;
+
+  padding: 8px 18px;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.15);
+
+  font-size: .85rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.leadership-hero h1 {
+  margin: 22px 0 18px;
+
+  font-size: clamp(2.3rem,5vw,4rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.leadership-hero p {
+  max-width: 760px;
+  margin: 0 auto;
+
+  font-size: 1.05rem;
+  line-height: 1.8;
+
+  color: rgba(255,255,255,.9);
+}
+
+/* ==========================================================
+   SECTIONS
+========================================================== */
+
+.leadership-section {
+  margin: 80px 0;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.section-heading h2 {
+  font-size: 2rem;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+.section-heading p {
+  max-width: 700px;
+  margin: auto;
+
+  color: #64748b;
+  line-height: 1.8;
+}
+
+/* ==========================================================
+   GRID
+========================================================== */
+
+.leader-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(260px,1fr)
+  );
+  gap: 28px;
+}
+
+.leader-grid.single {
+  max-width: 360px;
+  margin: auto;
+}
+
+/* ==========================================================
+   STATES
+========================================================== */
+
+.leadership-message {
+  padding: 70px 20px;
+  text-align: center;
+  color: #475569;
+}
+
+.leadership-message.error {
+  color: #dc2626;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width:768px){
+
+  .leadership-hero{
+    padding:80px 0 60px;
+  }
+
+  .leadership-section{
+    margin:60px 0;
+  }
+
+}

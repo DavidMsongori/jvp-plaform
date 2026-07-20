@@ -13,11 +13,12 @@ import { AuthProvider } from "./context/AuthContext";
 import { DashboardProvider } from "./context/DashboardContext";
 import { ProfileProvider } from "./context/ProfileContext";
 import { PaymentProvider } from "./context/PaymentContext";
+import { EventProvider } from "./context/EventContext";
+import { LeaderProvider } from "./context/LeaderContext";
 
 ReactDOM.createRoot(
   document.getElementById("root")
 ).render(
-
   <React.StrictMode>
 
     <AuthProvider>
@@ -28,7 +29,15 @@ ReactDOM.createRoot(
 
           <PaymentProvider>
 
-            <App />
+            <EventProvider>
+
+              <LeaderProvider>
+
+              <App />
+
+              </LeaderProvider>
+
+            </EventProvider>
 
           </PaymentProvider>
 
@@ -39,5 +48,4 @@ ReactDOM.createRoot(
     </AuthProvider>
 
   </React.StrictMode>
-
 );

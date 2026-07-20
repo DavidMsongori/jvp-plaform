@@ -474,3 +474,119 @@ export const uploadProfilePhoto = async (
   );
 
 };
+
+/* ==========================================================
+   SEARCH MEMBERS
+========================================================== */
+
+export const searchMembers = async (query = "") => {
+
+  const search = query.trim();
+
+  /* ==========================================
+     EMPTY SEARCH
+  ========================================== */
+
+  if (!search) {
+
+    return [];
+
+  }
+
+  /* ==========================================
+     ESCAPE SPECIAL REGEX CHARACTERS
+  ========================================== */
+
+  const escapedSearch = search.replace(
+
+    /[.*+?^${}()|[\]\\]/g,
+
+    "\\$&"
+
+  );
+
+  const regex = new RegExp(
+
+    escapedSearch,
+
+    "i"
+
+  );
+
+  /* ==========================================
+     SEARCH ACTIVE MEMBERS
+  ========================================== */
+
+  const members = await Member.find({
+
+    membershipStatus: "active",
+
+    $or: [
+
+      {
+
+        memberNumber: regex,
+
+      },
+
+      {
+
+        firstName: regex,
+
+      },
+
+      {
+
+        middleName: regex,
+
+      },
+
+      {
+
+        lastName: regex,
+
+      },
+
+      {
+
+        phone: regex,
+
+      },
+
+    ],
+
+  })
+
+    .select({
+
+      memberNumber: 1,
+
+      firstName: 1,
+
+      middleName: 1,
+
+      lastName: 1,
+
+      county: 1,
+
+      profilePhoto: 1,
+
+      membershipStatus: 1,
+
+    })
+
+    .sort({
+
+      firstName: 1,
+
+      lastName: 1,
+
+    })
+
+    .limit(15)
+
+    .lean();
+
+  return members;
+
+};

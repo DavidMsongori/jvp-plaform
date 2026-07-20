@@ -1,212 +1,365 @@
-/* ===========================================================
-   EVENT CARD
-=========================================================== */
-
-.event-card {
+.dashboard-event-card {
   display: flex;
   flex-direction: column;
-
   background: #ffffff;
-
-  border-radius: 18px;
-
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
   overflow: hidden;
-
-  border: 1px solid #e2e8f0;
-
-  transition: .25s ease;
-
-  box-shadow: 0 8px 18px rgba(15,23,42,.05);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+  transition: all 0.3s ease;
+  height: 100%;
 }
 
-.event-card:hover {
+.dashboard-event-card:hover {
   transform: translateY(-6px);
-
-  box-shadow: 0 20px 40px rgba(15,23,42,.10);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
 }
 
-/* ===========================================================
+/* ===================================================
    IMAGE
-=========================================================== */
+=================================================== */
 
-.event-card-image {
+.event-image {
   position: relative;
-}
-
-.event-card-image img {
   width: 100%;
-
   height: 220px;
-
-  object-fit: cover;
-
-  display: block;
-}
-
-.event-category {
-  position: absolute;
-
-  top: 15px;
-
-  left: 15px;
-
-  background: rgba(37,99,235,.95);
-
-  color: white;
-
-  padding: .45rem .85rem;
-
-  border-radius: 999px;
-
-  font-size: .75rem;
-
-  font-weight: 600;
-
-  text-transform: uppercase;
-}
-
-/* ===========================================================
-   BODY
-=========================================================== */
-
-.event-card-body {
-  padding: 1.5rem;
-
-  flex: 1;
-}
-
-.event-card-body h3 {
-  margin: 0;
-
-  color: #0f172a;
-
-  font-size: 1.25rem;
-
-  line-height: 1.3;
-}
-
-.event-card-body p {
-  margin: 1rem 0 1.5rem;
-
-  color: #64748b;
-
-  line-height: 1.7;
-
-  display: -webkit-box;
-
-  -webkit-line-clamp: 3;
-
-  -webkit-box-orient: vertical;
-
   overflow: hidden;
-}
-
-/* ===========================================================
-   META
-=========================================================== */
-
-.event-meta {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: .9rem;
-}
-
-.event-meta div {
-  display: flex;
-
-  align-items: center;
-
-  gap: .65rem;
-
-  color: #475569;
-
-  font-size: .92rem;
-}
-
-.event-meta svg {
-  color: #2563eb;
-
-  flex-shrink: 0;
-}
-
-/* ===========================================================
-   FOOTER
-=========================================================== */
-
-.event-card-footer {
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  padding: 1.2rem 1.5rem;
-
-  border-top: 1px solid #e2e8f0;
-
   background: #f8fafc;
 }
 
-.event-price {
-  font-weight: 700;
-
-  color: #0f172a;
+.event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
 }
 
-.event-price .free {
-  color: #16a34a;
+.dashboard-event-card:hover .event-image img {
+  transform: scale(1.05);
 }
 
-.event-button {
+/* ===================================================
+   FEATURED RIBBON
+=================================================== */
+
+.featured-ribbon {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+
   display: inline-flex;
-
   align-items: center;
+  gap: 6px;
 
-  gap: .45rem;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
 
-  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 999px;
 
-  background: #2563eb;
-
-  color: white;
-
-  padding: .75rem 1.2rem;
-
-  border-radius: 10px;
-
+  font-size: 0.8rem;
   font-weight: 600;
 
-  transition: .25s ease;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
 }
 
-.event-button:hover {
-  background: #1d4ed8;
+/* ===================================================
+   BODY
+=================================================== */
+
+.event-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+  flex: 1;
 }
 
-/* ===========================================================
+.event-body h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.4;
+}
+
+/* ===================================================
+   CATEGORY
+=================================================== */
+
+.event-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  width: fit-content;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  background: #eff6ff;
+  color: #2563eb;
+
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* ===================================================
+   COUNTDOWN
+=================================================== */
+
+.event-countdown {
+  display: inline-flex;
+  align-items: center;
+
+  width: fit-content;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  background: #ecfdf5;
+  color: #16a34a;
+
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* ===================================================
+   META
+=================================================== */
+
+.event-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.event-meta span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #64748b;
+  font-size: 0.92rem;
+}
+
+.event-meta svg {
+  flex-shrink: 0;
+}
+
+/* ===================================================
+   CAPACITY
+=================================================== */
+
+.capacity-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.capacity-row span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.capacity-bar {
+  width: 100%;
+  height: 8px;
+
+  background: #e2e8f0;
+
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.capacity-fill {
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #38bdf8
+  );
+
+  border-radius: inherit;
+
+  transition: width 0.5s ease;
+}
+
+/* ===================================================
+   REGISTRATION STATUS
+=================================================== */
+
+.registration-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  width: fit-content;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  font-size: 0.82rem;
+  font-weight: 600;
+
+  text-transform: capitalize;
+}
+
+.registration-status.registered,
+.registration-status.confirmed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.registration-status.pending {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+.registration-status.waitlisted {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.registration-status.cancelled {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.registration-status.attended {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+/* ===================================================
+   ACTIONS
+=================================================== */
+
+.event-actions {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+
+  padding: 13px 18px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+
+  color: #ffffff;
+  text-decoration: none;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    #1d4ed8,
+    #1e40af
+  );
+
+  transform: translateY(-2px);
+}
+
+.btn-primary svg {
+  transition: transform 0.25s ease;
+}
+
+.btn-primary:hover svg {
+  transform: translateX(4px);
+}
+
+/* ===================================================
    RESPONSIVE
-=========================================================== */
+=================================================== */
 
-@media (max-width:768px){
-
-  .event-card-image img{
-    height:200px;
+@media (max-width: 992px) {
+  .event-image {
+    height: 200px;
   }
 
+  .event-body {
+    padding: 20px;
+  }
 }
 
-@media (max-width:576px){
-
-  .event-card-footer{
-    flex-direction:column;
-    gap:1rem;
-    align-items:stretch;
+@media (max-width: 768px) {
+  .dashboard-event-card {
+    border-radius: 16px;
   }
 
-  .event-button{
-    justify-content:center;
+  .event-image {
+    height: 190px;
   }
 
+  .event-body {
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .event-body h3 {
+    font-size: 1.1rem;
+  }
+
+  .capacity-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-image {
+    height: 170px;
+  }
+
+  .featured-ribbon {
+    top: 12px;
+    left: 12px;
+    font-size: 0.75rem;
+  }
+
+  .event-category,
+  .event-countdown,
+  .registration-status {
+    font-size: 0.75rem;
+  }
+
+  .event-meta span {
+    font-size: 0.85rem;
+  }
+
+  .btn-primary {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
 }

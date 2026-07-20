@@ -1,0 +1,187 @@
+/* =====================================================
+   EVENT OVERVIEW
+===================================================== */
+
+.event-overview{
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+}
+
+/* =====================================================
+   SECTION HEADER
+===================================================== */
+
+.section-header h2{
+    font-size:2rem;
+    color:#0f172a;
+    margin-bottom:8px;
+}
+
+.section-header p{
+    color:#64748b;
+    line-height:1.7;
+}
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.overview-card{
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:18px;
+
+    padding:28px;
+
+    box-shadow:0 6px 18px rgba(15,23,42,.04);
+}
+
+.overview-card h3{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    margin-bottom:18px;
+
+    color:#1e293b;
+
+    font-size:1.2rem;
+}
+
+.overview-card p{
+
+    color:#475569;
+
+    line-height:1.9;
+}
+
+.overview-card ul{
+
+    margin:0;
+    padding-left:20px;
+}
+
+.overview-card li{
+
+    margin-bottom:10px;
+
+    color:#475569;
+
+    line-height:1.8;
+}
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.overview-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+
+    gap:24px;
+}
+
+/* =====================================================
+   QUICK FACTS
+===================================================== */
+
+.quick-facts{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+    gap:20px;
+}
+
+.quick-facts div{
+
+    background:#f8fafc;
+
+    border-radius:14px;
+
+    padding:18px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.quick-facts svg{
+
+    color:#2563eb;
+}
+
+.quick-facts span{
+
+    font-size:.85rem;
+
+    color:#64748b;
+}
+
+.quick-facts strong{
+
+    color:#0f172a;
+
+    font-size:1rem;
+}
+
+/* =====================================================
+   TAGS
+===================================================== */
+
+.overview-tags{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+}
+
+.overview-tags span{
+
+    padding:8px 16px;
+
+    background:#eff6ff;
+
+    color:#1d4ed8;
+
+    border-radius:999px;
+
+    font-size:.9rem;
+
+    font-weight:600;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width:768px){
+
+    .overview-card{
+
+        padding:22px;
+    }
+
+    .overview-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .quick-facts{
+
+        grid-template-columns:1fr;
+    }
+
+}

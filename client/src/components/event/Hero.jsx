@@ -1,45 +1,81 @@
-import "./Event.css";
+import { Search, CalendarDays, MapPin, Users } from "lucide-react";
 
-const Hero = () => {
+const Hero = ({
+  search = "",
+  statistics = {},
+  onSearch,
+}) => {
+  const {
+    totalEvents = 0,
+    upcomingEvents = 0,
+    featuredEvents = 0,
+  } = statistics;
+
   return (
-    <section className="event-hero">
-      <div className="event-hero-overlay">
+    <section className="events-hero">
+      <div className="events-hero__overlay"></div>
 
-        <div className="event-hero-content">
+      <div className="events-hero__content">
 
-          <span className="event-badge">
-            JVP Connect Events
-          </span>
+        <span className="events-hero__eyebrow">
+          JVP CONNECT EVENTS
+        </span>
 
-          <h1>
-            Discover Events That Inspire, Connect
-            and Empower Youth
-          </h1>
+        <h1 className="events-hero__title">
+          Discover Events That Inspire,
+          Connect and Transform.
+        </h1>
 
-          <p>
-            Explore conferences, leadership forums,
-            trainings, workshops, networking sessions
-            and community activities happening across
-            the Coast Region and beyond.
-          </p>
+        <p className="events-hero__description">
+          Explore conferences, summits, trainings,
+          workshops, networking sessions and community
+          initiatives organized by Jumuiya ya Vijana wa
+          Pwani and our partners.
+        </p>
 
-          <div className="event-hero-stats">
+        <div className="events-search">
 
-            <div className="hero-stat">
-              <h2>100+</h2>
+          <Search
+            size={20}
+            className="events-search__icon"
+          />
+
+          <input
+            type="text"
+            placeholder="Search events..."
+            value={search}
+            onChange={(e) =>
+              onSearch(e.target.value)
+            }
+            className="events-search__input"
+          />
+
+        </div>
+
+        <div className="events-hero__stats">
+
+          <div className="events-stat-card">
+            <CalendarDays size={22} />
+            <div>
+              <h3>{totalEvents}</h3>
               <span>Events</span>
             </div>
+          </div>
 
-            <div className="hero-stat">
-              <h2>10K+</h2>
-              <span>Participants</span>
+          <div className="events-stat-card">
+            <Users size={22} />
+            <div>
+              <h3>{upcomingEvents}</h3>
+              <span>Upcoming</span>
             </div>
+          </div>
 
-            <div className="hero-stat">
-              <h2>6</h2>
-              <span>Counties</span>
+          <div className="events-stat-card">
+            <MapPin size={22} />
+            <div>
+              <h3>{featuredEvents}</h3>
+              <span>Featured</span>
             </div>
-
           </div>
 
         </div>

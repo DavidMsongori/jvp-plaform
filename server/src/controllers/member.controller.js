@@ -225,3 +225,41 @@ export const getDashboard = async (
   }
 
 };
+
+/* ==========================================================
+   SEARCH MEMBERS
+========================================================== */
+
+export const searchMembers = async (
+
+  req,
+
+  res,
+
+  next
+
+) => {
+
+  try {
+
+    const { q = "" } = req.query;
+
+    const members = await memberService.searchMembers(q);
+
+    return res.status(200).json({
+
+      success: true,
+
+      message: "Members retrieved successfully.",
+
+      data: members,
+
+    });
+
+  } catch (error) {
+
+    next(error);
+
+  }
+
+};

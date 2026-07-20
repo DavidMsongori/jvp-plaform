@@ -12,6 +12,7 @@ import {
   updateMyProfile,
   uploadProfilePhoto,
   getDashboard,
+  searchMembers,
 } from "../controllers/member.controller.js";
 
 import {
@@ -28,6 +29,16 @@ router.get(
   "/dashboard",
   auth,
   getDashboard
+);
+
+/* ==========================================
+   SEARCH MEMBERS
+========================================== */
+
+router.get(
+  "/search",
+  auth,
+  searchMembers
 );
 
 /* ==========================================

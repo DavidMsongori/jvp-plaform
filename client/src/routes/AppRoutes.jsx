@@ -17,10 +17,12 @@ import Home from "../pages/Home";
 import About from "../pages/about/About";
 import Programs from "../pages/programs/Programs";
 import Events from "../pages/events/Events";
+import Event from "../pages/events/Event";
 import News from "../pages/news/News";
 import Membership from "../pages/membership/Membership";
 import Summit from "../pages/summit/SummitPage";
 import Contact from "../pages/contact/Contact";
+import Leadership from "../pages/leadership/Leadership";
 
 /* ==========================================
    AUTHENTICATION
@@ -76,6 +78,7 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import Members from "../pages/admin/Members";
 import MemberDetails from "../pages/admin/MemberDetails";
 import Payments from "../pages/admin/Payments";
+import LeadershipPage from "../pages/admin/leadership/LeadershipPage";
 
 /* Events */
 import AdminEvents from "../pages/admin/events/Events";
@@ -102,10 +105,19 @@ function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/programs" element={<Programs />} />
         <Route path="/events" element={<Events />} />
+        <Route
+  path="/events/:slug"
+  element={<Event />}
+/>
         <Route path="/news" element={<News />} />
         <Route path="/membership" element={<Membership />} />
+        <Route
+  path="/leadership"
+  element={<Leadership />}
+/>
         <Route path="/summit" element={<Summit />} />
         <Route path="/contact" element={<Contact />} />
+
 
         {/* =====================================
             AUTHENTICATION
@@ -276,6 +288,17 @@ function AppRoutes() {
               </PermissionRoute>
             }
           />
+
+          <Route
+  path="leadership"
+  element={
+    <PermissionRoute
+      permission={PERMISSIONS.VIEW_MEMBERS}
+    >
+      <LeadershipPage />
+    </PermissionRoute>
+  }
+/>
 
           {/* Payments */}
 

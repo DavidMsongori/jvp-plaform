@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { Search, CalendarDays } from "lucide-react";
 
-import eventService from "../../services/event.service";
+import { useEvent } from "../../context/EventContext";
 
+import EventStatistics from "../../components/dashboard/events/EventStatistics";
 import FeaturedEvent from "../../components/dashboard/events/FeaturedEvent";
 import EventCard from "../../components/dashboard/events/EventCard";
 import RegistrationCard from "../../components/dashboard/events/RegistrationCard";
@@ -10,54 +11,42 @@ import RegistrationCard from "../../components/dashboard/events/RegistrationCard
 import "./Events.css";
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
-  const [registrations, setRegistrations] = useState([]);
+  const {
+    events = [],
+    registrations = [],
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+    loading,
+    error,
+
+    loadEvents,
+    loadMyRegistrations,
+  } = useEvent();
 
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    loadEvents();
-  }, []);
-
   /* ===========================================================
-     LOAD EVENTS
+     LOAD PAGE DATA
   =========================================================== */
 
-  const loadEvents = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        await Promise.all([
+          loadEvents({
+            isPublished: true,
+            limit: 100,
+          }),
+          loadMyRegistrations(),
+        ]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-      const [
-        eventsResponse,
-        registrationsResponse,
-      ] = await Promise.all([
-        eventService.getEvents({
-          isPublished: true,
-          limit: 100,
-        }),
-        eventService.getMyRegistrations(),
-      ]);
+    initialize();
 
-      setEvents(eventsResponse.data || []);
-
-      setRegistrations(
-        registrationsResponse.data || []
-      );
-    } catch (error) {
-      console.error(error);
-
-      setError(
-        error.response?.data?.message ||
-          "Unable to load events."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ===========================================================
      FEATURED EVENT
@@ -68,7 +57,8 @@ const Events = () => {
 
     return (
       events.find(
-        (event) => event.isFeatured
+        (event) =>
+          event.featured || event.isFeatured
       ) ||
       [...events].sort(
         (a, b) =>
@@ -95,6 +85,9 @@ const Events = () => {
           ?.toLowerCase()
           .includes(keyword) ||
         event.summary
+          ?.toLowerCase()
+          .includes(keyword) ||
+        event.description
           ?.toLowerCase()
           .includes(keyword) ||
         event.category
@@ -139,29 +132,38 @@ const Events = () => {
   if (error) {
     return (
       <div className="events-loading">
-        <h3>{error}</h3>
+        <h3>
+          {error?.response?.data?.message ||
+            error?.message ||
+            "Unable to load events."}
+        </h3>
       </div>
     );
   }
 
   return (
     <div className="member-events-page">
-      {/* Header */}
+
+      {/* =======================================================
+          HEADER
+      ======================================================= */}
 
       <div className="events-header">
         <div>
-          <h1>Events</h1>
+          <h1>My Events</h1>
 
           <p>
-            Discover upcoming events, register and
-            manage your participation.
+            Discover upcoming events, register,
+            and manage your participation.
           </p>
 
           <p className="events-summary">
             {events.length} event
-            {events.length !== 1 ? "s" : ""} available
+            {events.length !== 1 ? "s" : ""}
             {" • "}
-            {registrations.length} registration
+            {registrations.length}
+            {" "}
+            registration
             {registrations.length !== 1
               ? "s"
               : ""}
@@ -169,7 +171,18 @@ const Events = () => {
         </div>
       </div>
 
-      {/* Search */}
+      {/* =======================================================
+          STATISTICS
+      ======================================================= */}
+
+      <EventStatistics
+        events={events}
+        registrations={registrations}
+      />
+
+      {/* =======================================================
+          SEARCH
+      ======================================================= */}
 
       <div className="events-search">
         <Search size={20} />
@@ -184,7 +197,9 @@ const Events = () => {
         />
       </div>
 
-      {/* Featured Event */}
+      {/* =======================================================
+          FEATURED EVENT
+      ======================================================= */}
 
       {featuredEvent && (
         <FeaturedEvent
@@ -192,12 +207,14 @@ const Events = () => {
         />
       )}
 
-      {/* Upcoming Events */}
+      {/* =======================================================
+          UPCOMING EVENTS
+      ======================================================= */}
 
       <section className="events-section">
+
         <div className="section-title">
           <CalendarDays size={22} />
-
           <h2>Upcoming Events</h2>
         </div>
 
@@ -207,19 +224,36 @@ const Events = () => {
           </div>
         ) : (
           <div className="events-grid">
-            {sortedEvents.map((event) => (
-              <EventCard
-                key={event._id}
-                event={event}
-              />
-            ))}
+
+            {sortedEvents.map((event) => {
+              const registration =
+                registrations.find(
+                  (item) =>
+                    item.event?._id ===
+                      event._id ||
+                    item.event === event._id
+                );
+
+              return (
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  registration={registration}
+                />
+              );
+            })}
+
           </div>
         )}
+
       </section>
 
-      {/* My Registrations */}
+      {/* =======================================================
+          MY REGISTRATIONS
+      ======================================================= */}
 
       <section className="events-section">
+
         <div className="section-title">
           <h2>My Registrations</h2>
         </div>
@@ -227,23 +261,25 @@ const Events = () => {
         {registrations.length === 0 ? (
           <div className="empty-state">
             You haven't registered for any
-            event yet.
+            events yet.
           </div>
         ) : (
           <div className="registrations-list">
+
             {registrations.map(
               (registration) => (
                 <RegistrationCard
                   key={registration._id}
-                  registration={
-                    registration
-                  }
+                  registration={registration}
                 />
               )
             )}
+
           </div>
         )}
+
       </section>
+
     </div>
   );
 };

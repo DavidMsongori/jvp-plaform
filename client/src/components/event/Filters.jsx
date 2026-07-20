@@ -1,146 +1,195 @@
 import { useEffect, useState } from "react";
-import "./Event.css";
+import {
+  Search,
+  Filter,
+  RotateCcw,
+} from "lucide-react";
 
-const categories = [
-  "Leadership",
-  "Training",
-  "Conference",
-  "Summit",
-  "Workshop",
-  "Community",
-  "Sports",
-  "Networking",
+const CATEGORIES = [
+  { value: "", label: "All Categories" },
+  { value: "conference", label: "Conference" },
+  { value: "summit", label: "Summit" },
+  { value: "training", label: "Training" },
+  { value: "workshop", label: "Workshop" },
+  { value: "forum", label: "Forum" },
+  { value: "webinar", label: "Webinar" },
+  { value: "networking", label: "Networking" },
+  { value: "competition", label: "Competition" },
+  { value: "sports", label: "Sports" },
+  { value: "tree_planting", label: "Tree Planting" },
+  { value: "community_service", label: "Community Service" },
+  { value: "career_fair", label: "Career Fair" },
+  { value: "meeting", label: "Meeting" },
+  { value: "leadership", label: "Leadership" },
+  { value: "other", label: "Other" },
 ];
 
-const eventTypes = [
-  "Physical",
-  "Virtual",
-  "Hybrid",
+const EVENT_TYPES = [
+  { value: "", label: "All Types" },
+  { value: "physical", label: "Physical" },
+  { value: "virtual", label: "Virtual" },
+  { value: "hybrid", label: "Hybrid" },
 ];
 
-const Filters = ({ filters, onChange }) => {
-  const [search, setSearch] = useState(filters.search);
+const SORT_OPTIONS = [
+  { value: "", label: "Sort By" },
+  { value: "newest", label: "Newest" },
+  { value: "oldest", label: "Oldest" },
+  { value: "upcoming", label: "Upcoming" },
+  { value: "featured", label: "Featured" },
+];
 
-  /* ==========================================
-     DEBOUNCED SEARCH
-  ========================================== */
+const Filters = ({
+  filters,
+  onChange,
+}) => {
+  const [values, setValues] = useState(filters);
 
   useEffect(() => {
-    setSearch(filters.search);
-  }, [filters.search]);
+    setValues(filters);
+  }, [filters]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (search !== filters.search) {
-        onChange({ search });
-      }
-    }, 500);
+  const handleChange = (field, value) => {
+    const updated = {
+      ...values,
+      [field]: value,
+    };
 
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  /* ==========================================
-     SELECT CHANGE
-  ========================================== */
-
-  const handleSelect = (e) => {
-    onChange({
-      [e.target.name]: e.target.value,
-    });
+    setValues(updated);
+    onChange(updated);
   };
 
-  /* ==========================================
-     CLEAR FILTERS
-  ========================================== */
-
-  const clearFilters = () => {
-    setSearch("");
-
-    onChange({
+  const handleReset = () => {
+    const reset = {
       search: "",
       category: "",
       eventType: "",
       featured: "",
-    });
+      sort: "",
+    };
+
+    setValues(reset);
+    onChange(reset);
   };
 
   return (
     <section className="event-filters">
 
-      <div className="event-filter-container">
+      <div className="event-filters__header">
 
-        <input
-          type="search"
-          placeholder="Search events..."
-          value={search}
+        <div className="event-filters__title">
+          <Filter size={18} />
+          <span>Filter Events</span>
+        </div>
+
+        <button
+          type="button"
+          className="event-filters__reset"
+          onClick={handleReset}
+        >
+          <RotateCcw size={16} />
+          Reset
+        </button>
+
+      </div>
+
+      <div className="event-filters__grid">
+
+        <div className="event-filter">
+
+          <Search
+            size={18}
+            className="event-filter__icon"
+          />
+
+          <input
+            type="text"
+            placeholder="Search events..."
+            value={values.search}
+            onChange={(e) =>
+              handleChange(
+                "search",
+                e.target.value
+              )
+            }
+          />
+
+        </div>
+
+        <select
+          value={values.category}
           onChange={(e) =>
-            setSearch(e.target.value)
+            handleChange(
+              "category",
+              e.target.value
+            )
           }
-        />
-
-        <select
-          name="category"
-          value={filters.category}
-          onChange={handleSelect}
         >
-          <option value="">
-            All Categories
-          </option>
-
-          {categories.map((category) => (
+          {CATEGORIES.map((item) => (
             <option
-              key={category}
-              value={category}
+              key={item.value}
+              value={item.value}
             >
-              {category}
+              {item.label}
             </option>
           ))}
         </select>
 
         <select
-          name="eventType"
-          value={filters.eventType}
-          onChange={handleSelect}
+          value={values.eventType}
+          onChange={(e) =>
+            handleChange(
+              "eventType",
+              e.target.value
+            )
+          }
         >
-          <option value="">
-            All Types
-          </option>
-
-          {eventTypes.map((type) => (
+          {EVENT_TYPES.map((item) => (
             <option
-              key={type}
-              value={type}
+              key={item.value}
+              value={item.value}
             >
-              {type}
+              {item.label}
             </option>
           ))}
         </select>
 
         <select
-          name="featured"
-          value={filters.featured}
-          onChange={handleSelect}
+          value={values.featured}
+          onChange={(e) =>
+            handleChange(
+              "featured",
+              e.target.value
+            )
+          }
         >
           <option value="">
             All Events
           </option>
 
           <option value="true">
-            Featured
-          </option>
-
-          <option value="false">
-            Regular
+            Featured Only
           </option>
         </select>
 
-        <button
-          className="clear-filter-btn"
-          onClick={clearFilters}
-          type="button"
+        <select
+          value={values.sort || ""}
+          onChange={(e) =>
+            handleChange(
+              "sort",
+              e.target.value
+            )
+          }
         >
-          Clear Filters
-        </button>
+          {SORT_OPTIONS.map((item) => (
+            <option
+              key={item.value}
+              value={item.value}
+            >
+              {item.label}
+            </option>
+          ))}
+        </select>
 
       </div>
 

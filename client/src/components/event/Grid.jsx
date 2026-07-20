@@ -1,66 +1,105 @@
-import Card from "./Card";
-import "./Event.css";
+import EventCard from "./EventCard";
+import EmptyState from "./EmptyState";
+import Skeleton from "./Skeleton";
 
 const Grid = ({
-  events,
-  loading,
-  error,
+  events = [],
+  loading = false,
+  error = "",
+  onRetry,
 }) => {
+  /* ==========================================
+     LOADING
+  ========================================== */
 
   if (loading) {
     return (
-      <section className="event-grid">
-
-        <div className="event-loading">
-          Loading events...
+      <section className="events-grid-section">
+        <div className="events-grid">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Skeleton key={index} />
+          ))}
         </div>
-
       </section>
     );
   }
+
+  /* ==========================================
+     ERROR
+  ========================================== */
 
   if (error) {
     return (
-      <section className="event-grid">
+      <section className="events-grid-section">
 
-        <div className="event-error">
-          {error}
+        <div className="events-error">
+
+          <h3>
+            Unable to load events
+          </h3>
+
+          <p>{error}</p>
+
+          {onRetry && (
+            <button
+              type="button"
+              className="events-button"
+              onClick={onRetry}
+            >
+              Try Again
+            </button>
+          )}
+
         </div>
 
       </section>
     );
   }
+
+  /* ==========================================
+     EMPTY
+  ========================================== */
 
   if (!events.length) {
     return (
-      <section className="event-grid">
-
-        <div className="event-empty">
-
-          <h2>
-            No events found
-          </h2>
-
-          <p>
-            Try changing your search or
-            filters.
-          </p>
-
-        </div>
-
+      <section className="events-grid-section">
+        <EmptyState />
       </section>
     );
   }
 
-  return (
-    <section className="event-grid">
+  /* ==========================================
+     SUCCESS
+  ========================================== */
 
-      {events.map((event) => (
-        <Card
-          key={event._id}
-          event={event}
-        />
-      ))}
+  return (
+    <section className="events-grid-section">
+
+      <div className="events-grid-header">
+
+        <h2>
+          Upcoming Events
+        </h2>
+
+        <span>
+          {events.length}{" "}
+          {events.length === 1
+            ? "event"
+            : "events"}
+        </span>
+
+      </div>
+
+      <div className="events-grid">
+
+        {events.map((event) => (
+          <EventCard
+            key={event._id}
+            event={event}
+          />
+        ))}
+
+      </div>
 
     </section>
   );

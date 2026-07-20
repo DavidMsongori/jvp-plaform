@@ -555,10 +555,13 @@ export const getAllEvents = async (query = {}) => {
     filter.eventType = eventType;
   }
 
-  if (featured !== undefined) {
-    filter.featured =
-      featured === "true";
-  }
+  if (
+  featured !== undefined &&
+  featured !== null &&
+  featured !== ""
+) {
+  filter.featured = featured === "true";
+}
 
   if (published !== undefined) {
     filter.isPublished =
@@ -582,6 +585,16 @@ export const getAllEvents = async (query = {}) => {
 
   const skip =
     (currentPage - 1) * pageSize;
+
+  console.log("FILTER:", filter);
+
+const totalEvents = await Event.countDocuments({});
+console.log("TOTAL EVENTS:", totalEvents);
+
+const publishedEvents = await Event.countDocuments({
+    isPublished: true,
+});
+console.log("PUBLISHED EVENTS:", publishedEvents);  
 
   const [events, total] =
     await Promise.all([
@@ -1144,17 +1157,28 @@ export const registerForEvent = async (
       updatedBy: userId,
     });
 
-  /* ==========================================
-     UPDATE EVENT COUNTERS
-  ========================================== */
+ /* ==========================================
+   UPDATE EVENT COUNTERS
+========================================== */
 
-  await updateRegistrationCounters(
-    event._id,
-    {
-      totalRegistrations:
-        confirmedRegistrations + 1,
-    }
-  );
+const registeredParticipants =
+  await EventRegistration.countDocuments({
+    event: event._id,
+    registrationStatus: {
+      $in: [
+        "pending",
+        "confirmed",
+        "waitlisted",
+      ],
+    },
+  });
+
+await updateRegistrationCounters(
+  event._id,
+  {
+    registeredParticipants,
+  }
+);
 
   /* ==========================================
      LOG ACTIVITY
@@ -1524,12 +1548,12 @@ export const cancelRegistration = async (
     });
 
   await updateRegistrationCounters(
-    registration.event._id,
-    {
-      totalRegistrations:
-        activeRegistrations,
-    }
-  );
+  registration.event._id,
+  {
+    registeredParticipants:
+      activeRegistrations,
+  }
+);
 
   /* ==========================================
      LOG ACTIVITY

@@ -1,0 +1,154 @@
+/* ==========================================================
+   SECTION
+========================================================== */
+
+.assembly-section {
+  padding: 90px 0;
+
+  background: #f8fafc;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.assembly-header {
+  max-width: 760px;
+
+  margin: 0 auto 60px;
+
+  text-align: center;
+}
+
+.assembly-header .section-tag {
+  display: inline-block;
+
+  padding: 8px 18px;
+
+  border-radius: 999px;
+
+  background: rgba(0, 75, 141, 0.08);
+
+  color: #004b8d;
+
+  font-size: .82rem;
+
+  font-weight: 700;
+
+  letter-spacing: .08em;
+
+  text-transform: uppercase;
+}
+
+.assembly-header h2 {
+  margin: 18px 0 16px;
+
+  font-size: 2.6rem;
+
+  color: #0f172a;
+}
+
+.assembly-header p {
+  color: #64748b;
+
+  font-size: 1.05rem;
+
+  line-height: 1.9;
+}
+
+/* ==========================================================
+   GRID
+========================================================== */
+
+.assembly-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(270px, 1fr)
+    );
+
+  gap: 32px;
+
+  align-items: stretch;
+}
+
+/* ==========================================================
+   LARGE DESKTOP
+========================================================== */
+
+@media (min-width: 1400px) {
+
+  .assembly-grid {
+
+    grid-template-columns:
+      repeat(4, 1fr);
+
+  }
+
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 992px) {
+
+  .assembly-section {
+
+    padding: 70px 0;
+
+  }
+
+  .assembly-grid {
+
+    grid-template-columns:
+      repeat(
+        auto-fit,
+        minmax(240px, 1fr)
+      );
+
+    gap: 24px;
+
+  }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+
+  .assembly-section {
+
+    padding: 60px 0;
+
+  }
+
+  .assembly-header {
+
+    margin-bottom: 40px;
+
+  }
+
+  .assembly-header h2 {
+
+    font-size: 2rem;
+
+  }
+
+  .assembly-header p {
+
+    font-size: 1rem;
+
+  }
+
+  .assembly-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}

@@ -1,0 +1,233 @@
+/*======================================================
+  EVENT PARTNERS
+======================================================*/
+
+.event-partners{
+    display:flex;
+    flex-direction:column;
+    gap:40px;
+}
+
+/*======================================================
+  HEADER
+======================================================*/
+
+.partners-header{
+    max-width:700px;
+    margin:0 auto;
+    text-align:center;
+}
+
+.partners-header h2{
+    font-size:2rem;
+    color:#0f172a;
+    margin-bottom:12px;
+}
+
+.partners-header p{
+    color:#64748b;
+    line-height:1.8;
+}
+
+/*======================================================
+  GRID
+======================================================*/
+
+.partners-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:28px;
+}
+
+/*======================================================
+  CARD
+======================================================*/
+
+.partner-card{
+
+    position:relative;
+
+    display:flex;
+    flex-direction:column;
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    transition:.35s;
+
+    box-shadow:0 6px 18px rgba(15,23,42,.05);
+}
+
+.partner-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 20px 45px rgba(15,23,42,.12);
+}
+
+/*======================================================
+  FEATURED
+======================================================*/
+
+.partner-featured{
+
+    position:absolute;
+
+    top:16px;
+    right:16px;
+
+    background:#f59e0b;
+
+    color:#fff;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.75rem;
+
+    font-weight:600;
+
+    z-index:2;
+}
+
+/*======================================================
+  LOGO
+======================================================*/
+
+.partner-logo{
+
+    height:180px;
+
+    background:#f8fafc;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:24px;
+}
+
+.partner-logo img{
+
+    max-width:100%;
+
+    max-height:100%;
+
+    object-fit:contain;
+
+    transition:.35s;
+}
+
+.partner-card:hover img{
+
+    transform:scale(1.05);
+}
+
+/*======================================================
+  CONTENT
+======================================================*/
+
+.partner-content{
+
+    padding:24px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+}
+
+.partner-content h3{
+
+    color:#0f172a;
+}
+
+.partner-category{
+
+    align-self:flex-start;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    font-size:.8rem;
+
+    font-weight:600;
+}
+
+.partner-content p{
+
+    color:#64748b;
+
+    line-height:1.8;
+}
+
+/*======================================================
+  LINKS
+======================================================*/
+
+.partner-links{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:auto;
+}
+
+.partner-links a{
+
+    width:40px;
+
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    transition:.3s;
+}
+
+.partner-links a:hover{
+
+    background:#2563eb;
+
+    color:#fff;
+}
+
+/*======================================================
+  RESPONSIVE
+======================================================*/
+
+@media(max-width:768px){
+
+    .event-partners{
+        gap:30px;
+    }
+
+    .partner-content{
+        padding:20px;
+    }
+
+}

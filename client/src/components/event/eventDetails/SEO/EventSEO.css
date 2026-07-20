@@ -1,0 +1,251 @@
+/*=====================================================
+  EVENT SEO
+======================================================*/
+
+.event-seo{
+
+    display:flex;
+    flex-direction:column;
+
+    gap:36px;
+}
+
+/*=====================================================
+  HEADER
+======================================================*/
+
+.seo-header{
+
+    text-align:center;
+
+    max-width:720px;
+
+    margin:0 auto;
+}
+
+.seo-header h2{
+
+    font-size:2rem;
+
+    color:#0f172a;
+
+    margin-bottom:12px;
+}
+
+.seo-header p{
+
+    color:#64748b;
+
+    line-height:1.8;
+}
+
+/*=====================================================
+  SCORE
+======================================================*/
+
+.seo-score-card{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:24px;
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:20px;
+
+    padding:30px;
+}
+
+.seo-score-circle{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:1.5rem;
+
+    font-weight:700;
+}
+
+/*=====================================================
+  GRID
+======================================================*/
+
+.seo-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(300px,1fr));
+
+    gap:24px;
+}
+
+.seo-card{
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:18px;
+
+    padding:24px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+    transition:.3s;
+}
+
+.seo-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 10px 30px rgba(15,23,42,.08);
+}
+
+.seo-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-weight:600;
+
+    color:#0f172a;
+}
+
+.seo-card p{
+
+    color:#475569;
+
+    line-height:1.8;
+
+    word-break:break-word;
+}
+
+/*=====================================================
+  IMAGE
+======================================================*/
+
+.seo-image{
+
+    width:100%;
+
+    border-radius:14px;
+
+    object-fit:cover;
+}
+
+/*=====================================================
+  TAGS
+======================================================*/
+
+.seo-tags{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+}
+
+.seo-tags span{
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.85rem;
+
+    font-weight:600;
+}
+
+/*=====================================================
+  CHECKLIST
+======================================================*/
+
+.seo-checklist{
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:20px;
+
+    padding:28px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+}
+
+.seo-checklist h3{
+
+    color:#0f172a;
+
+    margin-bottom:8px;
+}
+
+.seo-check{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    color:#334155;
+}
+
+.seo-check svg{
+
+    color:#2563eb;
+}
+
+/*=====================================================
+  RESPONSIVE
+======================================================*/
+
+@media (max-width:768px){
+
+    .seo-score-card{
+
+        flex-direction:column;
+
+        text-align:center;
+    }
+
+    .seo-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
