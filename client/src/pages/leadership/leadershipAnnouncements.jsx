@@ -5,6 +5,7 @@ function LeadershipMembers() {
             <p>Coming Soon...</p>
         </div>
     );
+    
 }
 
 export default LeadershipMembers;
